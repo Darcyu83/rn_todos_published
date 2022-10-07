@@ -12,17 +12,22 @@
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc.js"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.8.5",
     "react": "18.1.0",
     "react-native": "0.70.2",
+    "react-redux": "^8.0.4",
+    "redux": "^4.2.0",
     "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
+    "@redux-devtools/core": "^3.13.1",
     "@tsconfig/react-native": "^2.0.2",
     "@types/jest": "^26.0.23",
     "@types/react-native": "^0.70.4",
+    "@types/react-redux": "^7.1.24",
     "@types/react-test-renderer": "^18.0.0",
     "@types/styled-components": "^5.1.26",
     "@types/styled-components-react-native": "^5.1.3",

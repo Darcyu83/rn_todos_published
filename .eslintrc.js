@@ -23,6 +23,9 @@ module.exports = {
     },
     "plugins": ["react", "react-hooks", "@typescript-eslint", "prettier"],
     "rules": {
+        'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
+        '@typescript-eslint/no-empty-interface':'warn',
+        'no-empty-pattern':'warn',
     },
     "settings": {
         "import/resolver": {
