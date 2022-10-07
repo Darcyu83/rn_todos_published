@@ -1,15 +1,7 @@
 // prettier-ignore
 {
   "extends": "@tsconfig/react-native/tsconfig.json",     /* Recommended React Native TSConfig base */
-  "include": [
-    // repeated from base config's "include" setting
-    "src",
-    "tests",
-
-    // these are the eslint-only inclusions
-    ".eslintrc.js",
-    ".prettierrc.js"
-],
+ 
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 

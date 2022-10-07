@@ -5,5 +5,5 @@ export interface TTodo {
 }
 
 export interface TTodosInitialState {
-	todos: TTodo[];
+	list: TTodo[];
 }

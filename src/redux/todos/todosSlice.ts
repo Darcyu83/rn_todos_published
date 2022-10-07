@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TTodosInitialState, TTodo } from './types';
 
 const initialState: TTodosInitialState = {
-	todos: [],
+	list: [],
 };
 
 const todosSlice = createSlice({
@@ -10,10 +10,10 @@ const todosSlice = createSlice({
 	initialState,
 	reducers: {
 		addTodo: (state, action: PayloadAction<TTodo>) => {
-			state.todos = state.todos.concat(action.payload);
+			state.list = state.list.concat(action.payload);
 		},
 		removeTodo: (state, action: PayloadAction<TTodo>) => {
-			state.todos = state.todos.filter((todo) => todo.id !== action.payload.id);
+			state.list = state.list.filter((todo) => todo.id !== action.payload.id);
 		},
 	},
 });

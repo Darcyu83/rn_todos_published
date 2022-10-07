@@ -6,26 +6,35 @@ module.exports = {
         "jest": true
     },
     "extends": [
-        "airbnb", "airbnb/hooks","airbnb-typescript",
-        "eslint:recommended",
-        "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
-        "prettier"
+        "airbnb", 
+        "airbnb/hooks",
+        "airbnb-typescript",
+        "prettier"      
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "project": "./tsconfig.json",
+        "sourceType": "module",
         "ecmaFeatures": {
             "jsx": true
         },
         "ecmaVersion": 12,
-        "sourceType": "module"
     },
     "plugins": ["react", "react-hooks", "@typescript-eslint", "prettier"],
     "rules": {
+        "@typescript-eslint/no-restricted-imports": [
+            "warn",
+            {
+              "name": "react-redux",
+              "importNames": ["useSelector", "useDispatch"],
+              "message": "Use typed hooks `useAppDispatch` and `useAppSelector` instead."
+            }
+          ],
         'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
-        '@typescript-eslint/no-empty-interface':'warn',
         'no-empty-pattern':'warn',
+        '@typescript-eslint/no-empty-interface':'warn',
+        '@typescript-eslint/no-unused-vars':'warn',
     },
     "settings": {
         "import/resolver": {
