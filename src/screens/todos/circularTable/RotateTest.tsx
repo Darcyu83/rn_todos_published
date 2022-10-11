@@ -27,11 +27,16 @@ function RotateTest() {
 	const animateRef = useRef<Animated.Value>(new Animated.Value(0));
 
 	useEffect(() => {
-		Animated.timing(animateRef.current, { useNativeDriver: true, toValue: 1, duration: 3000 }).start();
+		const roate = Animated.timing(animateRef.current, {
+			useNativeDriver: true,
+			toValue: 1,
+			duration: 3000,
+		});
+		Animated.loop(roate, { iterations: 9999 }).start();
 	}, []);
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={{}}>
 			<View style={layouts.lineLayout} />
 			<Animated.View
 				style={[

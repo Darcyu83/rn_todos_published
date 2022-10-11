@@ -2,7 +2,7 @@ module.exports = {
   "singleQuote": true,
   "parser": "typescript",
   "semi": true,
-  "useTabs": true,
-  "printWidth": 120,
+  "useTabs": false,
+  "printWidth": 80,
   "tabWidth": 2,
 };

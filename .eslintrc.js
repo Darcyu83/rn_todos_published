@@ -33,8 +33,12 @@ module.exports = {
           ],
         'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
         'no-empty-pattern':'warn',
+        'no-underscore-dangle': 'off',
+        'react/require-default-props': 'off', 
         '@typescript-eslint/no-empty-interface':'warn',
         '@typescript-eslint/no-unused-vars':'warn',
+        '@typescript-eslint/naming-convention':'off'
+
     },
     "settings": {
         "import/resolver": {
