@@ -34,6 +34,7 @@ module.exports = {
         'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
         'no-empty-pattern':'warn',
         'no-underscore-dangle': 'off',
+        'import/prefer-default-export':'warn',
         'react/require-default-props': 'off', 
         '@typescript-eslint/no-empty-interface':'warn',
         '@typescript-eslint/no-unused-vars':'warn',

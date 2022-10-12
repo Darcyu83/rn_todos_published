@@ -22,9 +22,13 @@ function TodoInput({}: IProps) {
     if (!todoTitle) return;
     dispatch(
       todosActions.addTodo({
+        category: 'vacation',
+        isInSingleDay: true,
         id: new Date().getTime(),
         title: todoTitle,
         todo: todoContent,
+        startDt: '',
+        endDt: '',
       })
     );
     setTodoTitle('');
@@ -41,11 +45,9 @@ function TodoInput({}: IProps) {
       <SectionTitle>What to do</SectionTitle>
       <TextInput value={todoContent} onChangeText={setTodoContent} />
 
-      {/* 할일 시작일 */}
+      {/* 일정 달력 */}
 
-      {/* 할일 종료일 */}
-
-      {/* 등록 버튼 */}
+      {/* 일정 등록 버튼 */}
       <OrangeTouchable onPress={onAddTodoHandler}>
         <SectionTitle>Click to Add</SectionTitle>
       </OrangeTouchable>

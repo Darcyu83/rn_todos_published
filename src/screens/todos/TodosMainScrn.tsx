@@ -1,9 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, FlatList, SafeAreaView, Text, View } from 'react-native';
 import styled from 'styled-components/native';
+import CalendarDatePickerModal from '../../components/calendar/CalendarDatePickerModal';
+import CalendarScheduled from '../../components/calendar/CalendarScheduled';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { ScrnTitle } from '../../styles/styledComponents/components';
-import CircularScheduleTable from './circularTable/CircularScheduleTable';
+import {
+  OrangeTouchable,
+  ScrnTitle,
+} from '../../styles/styledComponents/components';
+import CircularScheduleTable from './circularScheduled/CircularScheduleTable';
 
 import TodoCard from './TodoCard';
 import TodoInput from './TodoInput';
@@ -15,23 +20,30 @@ const Container = styled.View`
 interface IProps {}
 
 function TodosMainScrn({}: IProps) {
-  const todoList = useAppSelector((state) => state.todos.list);
+  const [isDatePickerModalShown, setIsDatePickerModalShown] = useState(false);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Container>
         {/* <CircularScheduleTable /> */}
         <ScrnTitle>TodosMainScrn</ScrnTitle>
-        <TodoInput />
-        <FlatList
-          data={todoList}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item, index }) => (
-            <TodoCard index={index} todo={item} />
-          )}
-        />
 
-        <CircularScheduleTable />
+        {/* 일정 달력 */}
+        <CalendarScheduled />
+
+        <OrangeTouchable
+          onPress={() => {
+            setIsDatePickerModalShown(true);
+          }}
+        >
+          <Text>Regist new Todos</Text>
+        </OrangeTouchable>
+
+        {/* 일정 등록 모달 */}
+        <CalendarDatePickerModal
+          visible={isDatePickerModalShown}
+          closeModal={() => setIsDatePickerModalShown(false)}
+        />
       </Container>
     </SafeAreaView>
   );
