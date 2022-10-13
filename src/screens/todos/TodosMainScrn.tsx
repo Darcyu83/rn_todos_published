@@ -1,17 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Animated, FlatList, SafeAreaView, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, Text, View } from 'react-native';
 import styled from 'styled-components/native';
-import CalendarDatePickerModal from '../../components/calendar/CalendarDatePickerModal';
 import CalendarScheduled from '../../components/calendar/CalendarScheduled';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
   OrangeTouchable,
   ScrnTitle,
 } from '../../styles/styledComponents/components';
-import CircularScheduleTable from './circularScheduled/CircularScheduleTable';
-
-import TodoCard from './TodoCard';
-import TodoInput from './TodoInput';
+import TodoRegisModal from './TodoRegistModal';
 
 const Container = styled.View`
   padding: 10px;
@@ -40,7 +35,7 @@ function TodosMainScrn({}: IProps) {
         </OrangeTouchable>
 
         {/* 일정 등록 모달 */}
-        <CalendarDatePickerModal
+        <TodoRegisModal
           visible={isDatePickerModalShown}
           closeModal={() => setIsDatePickerModalShown(false)}
         />

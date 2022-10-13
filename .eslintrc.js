@@ -35,10 +35,10 @@ module.exports = {
         'no-empty-pattern':'warn',
         'no-underscore-dangle': 'off',
         'import/prefer-default-export':'warn',
-        'react/require-default-props': 'off', 
+        'react/require-default-props': 'warn', 
+        '@typescript-eslint/naming-convention':'off',
         '@typescript-eslint/no-empty-interface':'warn',
         '@typescript-eslint/no-unused-vars':'warn',
-        '@typescript-eslint/naming-convention':'off'
 
     },
     "settings": {
