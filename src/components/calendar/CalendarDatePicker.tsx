@@ -14,6 +14,7 @@ import CalendarArrow from './CalendarArrow';
 import { DotStyle, periodStyle } from './calendarStyle';
 import { SCREEN_WIDTH } from '../../styles/constants';
 import { theme } from '../../styles/theme';
+import { IPeriod } from '../../screens/todos/types';
 
 const CalendarWrapper = styled.View`
   overflow: hidden;
@@ -22,9 +23,15 @@ const CalendarWrapper = styled.View`
   z-index: 10;
 `;
 
-interface IProps {}
+interface IProps {
+  setPeriod: React.Dispatch<React.SetStateAction<IPeriod>>;
+}
 
-function CalendarDatePicker({}: IProps) {
+function CalendarDatePicker({
+  startDtData,
+  endDtData,
+  setPeriod,
+}: IProps & IPeriod) {
   const [initialDate, setInitialDate] = useState(
     DateString.convertDateToYYYYMMDD(new Date())
   );
@@ -35,39 +42,36 @@ function CalendarDatePicker({}: IProps) {
     DateString.convertDateToYYYYMMDD(new Date(initialDate), 50)
   );
 
-  const [startDt, setStartDt] = useState<DateData | null>(null);
-  const [endDt, setEndDt] = useState<DateData | null>(null);
-
   const [markedDates, setMarkedDates] = useState<MarkedDates>();
 
   // 날짜 변경 후 달력에 MARKING 표시
   const onDateDataChangedHandler = useCallback(() => {
-    console.log('startDt, endDt === ', startDt, endDt);
+    console.log('startDt, endDt === ', startDtData, endDtData);
 
     let _markedDates: MarkedDates;
 
-    if (!startDt) return;
+    if (!startDtData) return;
     _markedDates = {
-      [startDt.dateString]: periodStyle.single,
+      [startDtData.dateString]: periodStyle.single,
     };
     setMarkedDates(_markedDates);
 
-    if (!endDt) return;
+    if (!endDtData) return;
     _markedDates = {};
 
     // 시작일 = 종료일
-    if (startDt.dateString === endDt.dateString) {
-      _markedDates = { [startDt.dateString]: periodStyle.single };
+    if (startDtData.dateString === endDtData.dateString) {
+      _markedDates = { [startDtData.dateString]: periodStyle.single };
       setMarkedDates(_markedDates);
       return;
     }
 
     // 시작일 !== 종료일
-    const startDateObj = new Date(startDt.dateString);
-    const endDateObj = new Date(endDt.dateString);
+    const startDateObj = new Date(startDtData.dateString);
+    const endDateObj = new Date(endDtData.dateString);
 
     const dateStrings = [
-      DateString.convertDateToYYYYMMDD(new Date(endDt.dateString)),
+      DateString.convertDateToYYYYMMDD(new Date(endDtData.dateString)),
     ];
 
     // 날짜 키 생성
@@ -100,33 +104,32 @@ function CalendarDatePicker({}: IProps) {
     });
 
     setMarkedDates(_markedDates);
-  }, [startDt, endDt]);
+  }, [startDtData, endDtData]);
 
   // 날짜 클릭
   const onClickDayHandler = (clickedDay: DateData) => {
     // start date null -> 시작일 바로 입력
-    if (!startDt) {
-      setStartDt(clickedDay);
+    if (!startDtData) {
+      setPeriod((currState) => ({ ...currState, startDtData: clickedDay }));
       return;
     }
 
     // 시작일 === 종료일
-    if (startDt.dateString === clickedDay.dateString) {
-      setEndDt(clickedDay);
+    if (startDtData.dateString === clickedDay.dateString) {
+      setPeriod((currState) => ({ ...currState, endDtData: clickedDay }));
       return;
     }
 
     // 종료일이 시작일보다 클때
-    if (Number(startDt.timestamp) > Number(clickedDay.timestamp)) {
-      setStartDt(clickedDay);
-      setEndDt(null);
+    if (Number(startDtData.timestamp) > Number(clickedDay.timestamp)) {
+      setPeriod({ startDtData: clickedDay, endDtData: null });
     }
   };
 
   // 시작일 종료일 바뀔경우
   useEffect(() => {
     onDateDataChangedHandler();
-  }, [startDt, endDt, onDateDataChangedHandler]);
+  }, [startDtData, endDtData, onDateDataChangedHandler]);
 
   return (
     <CalendarWrapper>
