@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
   Modal,
   ScrollView,
@@ -31,19 +32,33 @@ interface IProps {
   closeModal: () => void;
 }
 
+const periodInitialState = {
+  startDtData: null,
+  endDtData: null,
+};
 function TodoRegistModal({ visible, closeModal }: IProps) {
   const [todoTitle, setTodoTitle] = useState('');
   const [todoContent, setTodoContent] = useState('');
-  const [{ startDtData, endDtData }, setPeriodData] = useState<IPeriod>({
-    startDtData: null,
-    endDtData: null,
-  });
+  const [{ startDtData, endDtData }, setPeriodData] =
+    useState<IPeriod>(periodInitialState);
+
+  const onResetStates = () => {
+    setTodoTitle('');
+    setTodoContent('');
+    setPeriodData(periodInitialState);
+  };
 
   const dispatch = useAppDispatch();
 
   const onAddTodoHandler = () => {
-    if (!todoTitle) return;
-    if (!startDtData) return;
+    if (!todoTitle) {
+      Alert.alert('No Title');
+      return;
+    }
+    if (!startDtData) {
+      Alert.alert('No Start Date');
+      return;
+    }
     dispatch(
       todosActions.addTodo({
         category: 'vacation',
@@ -55,18 +70,21 @@ function TodoRegistModal({ visible, closeModal }: IProps) {
         endDtData: endDtData || startDtData,
       })
     );
-    setTodoTitle('');
-    setTodoContent('');
+    onResetStates();
   };
+
+  useEffect(
+    () => () => {
+      onResetStates();
+    },
+    []
+  );
+
   return (
     <Modal transparent visible>
-      <GestureRecognizer
-        onSwipe={(e) => console.log('onSwipe', e)}
-        onSwipeDown={(e) => console.log('onSwipeDown', e)}
-      >
-        <ModalTranspBgView>
-          {/* 닫기 버튼 */}
-          {/* <BtnClosingContainer
+      <ModalTranspBgView>
+        {/* 닫기 버튼 */}
+        {/* <BtnClosingContainer
           onPress={() => {
             closeModal();
           }}
@@ -74,49 +92,49 @@ function TodoRegistModal({ visible, closeModal }: IProps) {
           <Text>X</Text>
         </BtnClosingContainer> */}
 
-          {/* 달력 날짜 픽커 */}
-          <ScrollView
-            style={{ width: '100%', backgroundColor: 'yellow' }}
-            contentContainerStyle={{ padding: 10 }}
-          >
-            {/* 날짜 선택 */}
-            <CalendarWrapper>
-              <CalendarDatePicker
-                startDtData={startDtData}
-                endDtData={endDtData}
-                setPeriod={setPeriodData}
-              />
-            </CalendarWrapper>
+        {/* 달력 날짜 픽커 */}
+        <ScrollView
+          style={{ width: '100%', backgroundColor: 'yellow' }}
+          contentContainerStyle={{ padding: 10 }}
+        >
+          {/* 날짜 선택 */}
+          <CalendarWrapper>
+            <CalendarDatePicker
+              startDtData={startDtData}
+              endDtData={endDtData}
+              setPeriod={setPeriodData}
+            />
+          </CalendarWrapper>
 
-            {/* 데이터 입력 */}
-            <KeyboardAvoidingView>
-              <TodoInputWrapper>
-                {/* 할일 타이틀 */}
-                <SectionTitle>Todo Title</SectionTitle>
-                <TextInput
-                  value={todoTitle}
-                  onChangeText={(txt) => setTodoTitle(txt)}
-                />
+          {/* 데이터 입력 */}
 
-                {/* 할일 내용 */}
-                <SectionTitle>What to do</SectionTitle>
-                <TextInput value={todoContent} onChangeText={setTodoContent} />
-                {/* 시작일  */}
-                <SectionTitle>Start Date</SectionTitle>
-                <TextInput value={startDtData?.dateString} />
-                {/* 종료일  */}
-                <SectionTitle>End Date</SectionTitle>
-                <TextInput value={endDtData?.dateString} />
+          <TodoInputWrapper>
+            {/* 할일 타이틀 */}
+            <SectionTitle>Todo Title</SectionTitle>
+            <TextInput
+              value={todoTitle}
+              onChangeText={(txt) => setTodoTitle(txt)}
+            />
 
-                {/* 일정 등록 버튼 */}
-                <OrangeTouchable onPress={onAddTodoHandler}>
-                  <SectionTitle>Click to Add</SectionTitle>
-                </OrangeTouchable>
-              </TodoInputWrapper>
-            </KeyboardAvoidingView>
-          </ScrollView>
-        </ModalTranspBgView>
-      </GestureRecognizer>
+            {/* 할일 내용 */}
+            <SectionTitle>What to do</SectionTitle>
+            <TextInput value={todoContent} onChangeText={setTodoContent} />
+            {/* 시작일  */}
+            <SectionTitle>Start Date</SectionTitle>
+            <TextInput value={startDtData?.dateString} />
+            {/* 종료일  */}
+            <SectionTitle>End Date</SectionTitle>
+            <TextInput value={endDtData?.dateString} />
+          </TodoInputWrapper>
+        </ScrollView>
+
+        {/* 일정 등록 버튼 */}
+        <KeyboardAvoidingView>
+          <OrangeTouchable onPress={onAddTodoHandler}>
+            <SectionTitle>Click to Add</SectionTitle>
+          </OrangeTouchable>
+        </KeyboardAvoidingView>
+      </ModalTranspBgView>
     </Modal>
   );
 }

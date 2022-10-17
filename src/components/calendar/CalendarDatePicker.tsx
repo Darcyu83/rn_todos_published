@@ -15,6 +15,7 @@ import { DotStyle, periodStyle } from './calendarStyle';
 import { SCREEN_WIDTH } from '../../styles/constants';
 import { theme } from '../../styles/theme';
 import { IPeriod } from '../../screens/todos/types';
+import { createMarkedDates } from './calendarUtils';
 
 const CalendarWrapper = styled.View`
   overflow: hidden;
@@ -42,69 +43,22 @@ function CalendarDatePicker({
     DateString.convertDateToYYYYMMDD(new Date(initialDate), 50)
   );
 
+    const [_startDtData ,setStartDtData ] = useState<DateData | null>(startDtData)
+    const [_endDtData ,setEndDtData ] = useState<DateData | null>(startDtData)
+
   const [markedDates, setMarkedDates] = useState<MarkedDates>();
 
-  // 날짜 변경 후 달력에 MARKING 표시
+  // 날짜 변경 후 달력에 MARKING dates 표시
   const onDateDataChangedHandler = useCallback(() => {
-    console.log('startDt, endDt === ', startDtData, endDtData);
 
-    let _markedDates: MarkedDates;
 
-    if (!startDtData) return;
-    _markedDates = {
-      [startDtData.dateString]: periodStyle.single,
-    };
+    const _markedDates = createMarkedDates(_startDtData,_endDtData )
+
+    if(_markedDates)
     setMarkedDates(_markedDates);
 
-    if (!endDtData) return;
-    _markedDates = {};
 
-    // 시작일 = 종료일
-    if (startDtData.dateString === endDtData.dateString) {
-      _markedDates = { [startDtData.dateString]: periodStyle.single };
-      setMarkedDates(_markedDates);
-      return;
-    }
-
-    // 시작일 !== 종료일
-    const startDateObj = new Date(startDtData.dateString);
-    const endDateObj = new Date(endDtData.dateString);
-
-    const dateStrings = [
-      DateString.convertDateToYYYYMMDD(new Date(endDtData.dateString)),
-    ];
-
-    // 날짜 키 생성
-    while (endDateObj.getTime() !== startDateObj.getTime()) {
-      const dateString = DateString.convertDateToYYYYMMDD(
-        new Date(endDateObj.setDate(endDateObj.getDate() - 1))
-      );
-
-      dateStrings.unshift(dateString);
-    }
-
-    console.log('dateStrings === ', dateStrings);
-
-    dateStrings.map((key, index) => {
-      let style;
-
-      switch (index) {
-        case 0:
-          style = periodStyle.start;
-          break;
-        case dateStrings.length - 1:
-          style = periodStyle.end;
-          break;
-        default:
-          style = periodStyle.mid;
-      }
-
-      _markedDates = { ..._markedDates, [key]: style };
-      return null;
-    });
-
-    setMarkedDates(_markedDates);
-  }, [startDtData, endDtData]);
+  }, [_startDtData, _endDtData]);
 
   // 날짜 클릭
   const onClickDayHandler = (clickedDay: DateData) => {
