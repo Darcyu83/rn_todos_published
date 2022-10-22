@@ -8,11 +8,13 @@ import {
   Text,
   TextInput,
 } from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import styled from 'styled-components/native';
 import CalendarDatePicker from '../../components/calendar/CalendarDatePicker';
 import { useAppDispatch } from '../../redux/hooks';
 import { todosActions } from '../../redux/todos/todosSlice';
+import { DotStyle } from '../../styles/calendarStyle';
 import {
   ModalTranspBgView,
   OrangeTouchable,
@@ -48,6 +50,23 @@ function TodoRegistModal({ visible, closeModal }: IProps) {
   const [{ startDtData, endDtData }, setPeriodData] =
     useState<IPeriod>(periodInitialState);
 
+  //할일 카테고리 구분
+  const [isCatePickerOpen, setIsCatePickerOpen] = useState(false);
+  const onShowCatePickerHandler = () => {
+    setIsCatePickerOpen((curr) => !curr);
+  };
+  const [cateSelected, setCateSelected] = useState<
+    null | 'vacation' | 'massage' | 'workout' | 'meeting' | 'etc'
+  >(null);
+
+  useEffect(() => {
+    console.log(
+      'isCatePickerOpen---',
+      isCatePickerOpen,
+      'cateSelected---',
+      cateSelected
+    );
+  }, [isCatePickerOpen]);
   const onResetStates = () => {
     setTodoTitle('');
     setTodoContent('');
@@ -70,7 +89,7 @@ function TodoRegistModal({ visible, closeModal }: IProps) {
     }
     dispatch(
       todosActions.addTodo({
-        category: 'vacation',
+        category: cateSelected || 'vacation',
         isInSingleDay: startDtData.dateString === endDtData.dateString,
         id: new Date().getTime(),
         title: todoTitle,
@@ -116,7 +135,18 @@ function TodoRegistModal({ visible, closeModal }: IProps) {
 
           {/* 데이터 입력 */}
           {/* 카테고리 선택 */}
-
+          <DropDownPicker
+            multiple={false}
+            items={Object.keys(DotStyle).map((key) => ({
+              label: key.charAt(0).toUpperCase() + key.slice(1),
+              value: key,
+            }))}
+            open={isCatePickerOpen}
+            setOpen={onShowCatePickerHandler}
+            value={cateSelected}
+            setValue={setCateSelected}
+            listMode="SCROLLVIEW"
+          />
           <TodoInputWrapper>
             {/* 할일 타이틀 */}
             <SectionTitle>Todo Title</SectionTitle>

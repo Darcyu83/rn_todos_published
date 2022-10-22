@@ -70,13 +70,6 @@ function TodosMainScrn({}: IProps) {
           ListHeaderComponent={() => <CalendarScheduled />}
         /> */}
 
-          <Text style={{ color: 'blue' }}>
-            TODOSLIST: {JSON.stringify(todosList)}
-          </Text>
-          <Text style={{ color: 'teal' }}>
-            MARKEDDATES: {JSON.stringify(markedDates)}
-          </Text>
-
           {/* 등록 버튼 */}
           <KeyboardAvoidingView>
             <OrangeTouchable

@@ -9,6 +9,7 @@ import { MarkingProps } from 'react-native-calendars/src/calendar/day/marking';
 import { TTodo } from '../../redux/todos/types';
 import { MarkedDates } from 'react-native-calendars/src/types';
 import { IMarkedDatesCustomed } from './types';
+import Dot from 'react-native-calendars/src/calendar/day/dot';
 
 interface IProps {
   todosList: {
@@ -33,6 +34,11 @@ function CalendarScheduled({ todosList }: IProps) {
   );
 
   const [markedDates, setMarkedDates] = useState<IMarkedDatesCustomed>({});
+  console.log(
+    '%c markedDatesmarkedDates ===== 0000 ',
+    'color: blue; background-color: white',
+    markedDates
+  );
 
   useEffect(() => {
     // 캘린더 날짜 마킹 정보
@@ -40,7 +46,7 @@ function CalendarScheduled({ todosList }: IProps) {
 
     const taskIds = Object.keys(todosList);
     console.log(
-      '%c taskIds ===1 ',
+      '%c taskIds=== 0',
       'color: red; background-color: white',
       taskIds
     );
@@ -49,12 +55,30 @@ function CalendarScheduled({ todosList }: IProps) {
       const taskCate = todosList[id].info.category;
       const dateStringsArr = todosList[id].period;
 
+      console.log(
+        '%c taskIds=== 1',
+        'color: red; background-color: white',
+        taskIds,
+        id,
+        taskCate,
+        dateStringsArr
+      );
       // 스타일 정보
       const cateStyle = DotStyle[taskCate];
 
       for (let i = 0; i < dateStringsArr.length; i++) {
         // 해당 날짜가 처음 등록
-        if (!markedDates[dateStringsArr[i]]) {
+
+        console.log(
+          '%c markedDates[dateStringsArr[i]]=== 2',
+          'color: red; background-color: white',
+          i,
+          dateStringsArr,
+          dateStringsArr[i],
+          _markedDates[dateStringsArr[i]]
+        );
+
+        if (!_markedDates[dateStringsArr[i]]) {
           _markedDates = {
             // 기존 날짜값 복사
             ..._markedDates,
@@ -65,24 +89,40 @@ function CalendarScheduled({ todosList }: IProps) {
               ...{ taskCnt: 1 }, // 해당날짜 신규 타스크 : 카운트 1
             },
           };
-        } else {
-          // 해당 날짜가 이미 등록
-          // _markedDates = {
-          //   // 기존 날짜값 복사
-          //   ..._markedDates,
-          //   // 새로 추가할 날짜 추가 : 이미 추가되어 있음
-          //   [dateStringsArr[i]]: {
-          //     dots: [
-          //       // 카테고리 스타일 값이 이미 등록되어있는지 체크
-          //       _markedDates[dateStringsArr[i]].dots?.some(
-          //         (dotStyle) => dotStyle.key === taskCate
-          //       )
-          //         ? _markedDates[dateStringsArr[i]].dots
-          //         : _markedDates[dateStringsArr[i]].dots?.concat(cateStyle),
-          //     ], // taskCnt: _markedDates[dateStringsArr[i]].taskCnt + 1,
-          //   },
-          // };
+          continue;
         }
+        // 해당 날짜가 이미 등록
+
+        console.log(
+          '%c 날짜가 이미 존재함 === 1',
+          'color: red; background-color: white',
+          i,
+          dateStringsArr[i],
+          _markedDates[dateStringsArr[i]]
+        );
+
+        console.log(
+          '%c 날짜가 이미 존재함 === 2',
+          'color: red; background-color: white',
+          _markedDates[dateStringsArr[i]],
+          _markedDates[dateStringsArr[i]].dots
+        );
+
+        const existingDots = _markedDates[dateStringsArr[i]].dots || [];
+        // 카테고리 스타일 값이 이미 등록되어있는지 체크
+        const _dots = existingDots.some((dotStyle) => dotStyle.key === taskCate)
+          ? existingDots
+          : existingDots.concat(cateStyle);
+
+        _markedDates = {
+          // // 기존 날짜값 복사
+          ..._markedDates,
+          // // 새로 추가할 날짜 추가 : 이미 추가되어 있음
+          [dateStringsArr[i]]: {
+            dots: _dots,
+            taskCnt: _markedDates[dateStringsArr[i]].taskCnt + 1,
+          },
+        };
       }
     }
     console.log(
