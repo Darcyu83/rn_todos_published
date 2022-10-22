@@ -1,12 +1,10 @@
 import { MarkedDates } from 'react-native-calendars/src/types';
-import { store } from '../../redux/store';
-import { theme } from '../../styles/theme';
+import { store } from '../redux/store';
+import { getThemeStyle } from '../utils/themeUtils';
+import { theme } from './theme';
 
-const _theme = store.getState().theme.isDarkMode
-  ? theme.darkMode
-  : theme.lightMode;
-
-const { bg_primary, bg_primary_accent, text, text_white } = _theme;
+const { content_bg_primary, content_bg_primary_accent, text, text_white } =
+  getThemeStyle();
 
 export const DotStyle = {
   vacation: { key: 'vacation', color: 'red', selectedDotColor: 'blue' },
@@ -16,36 +14,40 @@ export const DotStyle = {
 };
 
 export const periodStyle = {
-  dot: { marked: true, dotColor: bg_primary_accent },
+  dot: { marked: true, dotColor: content_bg_primary_accent },
   single: {
     startingDay: true,
     endingDay: true,
-    color: bg_primary_accent,
+    color: content_bg_primary_accent,
     textColor: text_white,
   },
   start: {
     startingDay: true,
-    color: bg_primary_accent,
+    color: content_bg_primary_accent,
     textColor: text_white,
   },
   dot_start: {
     startingDay: true,
-    color: bg_primary_accent,
+    color: content_bg_primary_accent,
     textColor: text_white,
     marked: true,
     dotColor: text_white,
   },
-  mid: { color: bg_primary, textColor: text_white },
+  mid: { color: content_bg_primary, textColor: text_white },
   dot_mid: {
-    color: bg_primary,
+    color: content_bg_primary,
     textColor: text_white,
     marked: true,
     dotColor: text_white,
   },
-  end: { endingDay: true, color: bg_primary_accent, textColor: text_white },
+  end: {
+    endingDay: true,
+    color: content_bg_primary_accent,
+    textColor: text_white,
+  },
   dot_end: {
     endingDay: true,
-    color: bg_primary_accent,
+    color: content_bg_primary_accent,
     textColor: text_white,
     marked: true,
     dotColor: text_white,

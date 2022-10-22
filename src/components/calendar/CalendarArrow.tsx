@@ -7,13 +7,10 @@ const ArrowTouchable = styled.TouchableOpacity``;
 
 interface IProps {
   direction: 'left' | 'right';
-  // setInitialDate: React.Dispatch<React.SetStateAction<string>>;
+  setInitialDate: React.Dispatch<React.SetStateAction<string>>;
 }
 
-function CalendarArrow({
-  direction,
-}: //  setInitialDate
-IProps) {
+function CalendarArrow({ direction, setInitialDate }: IProps) {
   useEffect(() => {
     console.log('direction', direction);
   }, [direction]);
@@ -22,14 +19,12 @@ IProps) {
     <ArrowTouchable
       onPress={() => {
         const monthIncre = direction === 'left' ? -1 : 1;
-        // setInitialDate((initialDate) =>
-        //   DateString.convertDateToYYYYMMDD(new Date(initialDate), 0, monthIncre)
-        // );
+        setInitialDate((initialDate) =>
+          DateString.convertDateToYYYYMMDD(new Date(initialDate), 0, monthIncre)
+        );
       }}
     >
-      <Text style={{ backgroundColor: 'orange', fontSize: 18 }}>
-        {direction === 'right' ? '▶' : '◀'}
-      </Text>
+      <Text style={{ fontSize: 18 }}>{direction === 'right' ? '▶' : '◀'}</Text>
     </ArrowTouchable>
   );
 }

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
+  Button,
   KeyboardAvoidingView,
   Modal,
   ScrollView,
+  Text,
   TextInput,
 } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
@@ -18,6 +20,10 @@ import {
 } from '../../styles/styledComponents/components';
 import { IPeriod } from './types';
 
+const Container = styled.View`
+  flex: 1;
+  background-color: ${(props) => props.theme.bg};
+`;
 const CalendarWrapper = styled.View`
   width: 100%;
   margin-bottom: 10px;
@@ -50,51 +56,53 @@ function TodoRegistModal({ visible, closeModal }: IProps) {
 
   const dispatch = useAppDispatch();
 
+  const onClearTodoList = () => {
+    dispatch(todosActions.clearAllTodos());
+  };
   const onAddTodoHandler = () => {
     if (!todoTitle) {
       Alert.alert('No Title');
       return;
     }
-    if (!startDtData) {
-      Alert.alert('No Start Date');
+    if (!startDtData || !endDtData) {
+      Alert.alert('No Start / End Date');
       return;
     }
     dispatch(
       todosActions.addTodo({
         category: 'vacation',
-        isInSingleDay: true,
+        isInSingleDay: startDtData.dateString === endDtData.dateString,
         id: new Date().getTime(),
         title: todoTitle,
         todo: todoContent,
         startDtData,
-        endDtData: endDtData || startDtData,
+        endDtData: endDtData,
       })
     );
     onResetStates();
+    closeModal();
   };
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    return () => {
       onResetStates();
-    },
-    []
-  );
+    };
+  }, []);
 
   return (
-    <Modal transparent visible>
-      <ModalTranspBgView>
+    <Modal transparent visible={visible}>
+      <Container>
         {/* 닫기 버튼 */}
-        {/* <BtnClosingContainer
+        <Button
+          title="닫기"
           onPress={() => {
             closeModal();
           }}
-        >
-          <Text>X</Text>
-        </BtnClosingContainer> */}
+        />
 
         {/* 달력 날짜 픽커 */}
         <ScrollView
-          style={{ width: '100%', backgroundColor: 'yellow' }}
+          style={{ width: '100%' }}
           contentContainerStyle={{ padding: 10 }}
         >
           {/* 날짜 선택 */}
@@ -112,29 +120,46 @@ function TodoRegistModal({ visible, closeModal }: IProps) {
             {/* 할일 타이틀 */}
             <SectionTitle>Todo Title</SectionTitle>
             <TextInput
+              placeholder="Input Title..."
               value={todoTitle}
               onChangeText={(txt) => setTodoTitle(txt)}
             />
 
             {/* 할일 내용 */}
             <SectionTitle>What to do</SectionTitle>
-            <TextInput value={todoContent} onChangeText={setTodoContent} />
+            <TextInput
+              placeholder="Input Details..."
+              value={todoContent}
+              onChangeText={setTodoContent}
+            />
+
             {/* 시작일  */}
             <SectionTitle>Start Date</SectionTitle>
-            <TextInput value={startDtData?.dateString} />
+            <TextInput
+              editable={false}
+              value={
+                startDtData ? startDtData.dateString : '시작일을 선택하세요.'
+              }
+            />
             {/* 종료일  */}
             <SectionTitle>End Date</SectionTitle>
-            <TextInput value={endDtData?.dateString} />
+            <TextInput
+              editable={false}
+              value={endDtData ? endDtData.dateString : '종료일을 선택하세요.'}
+            />
           </TodoInputWrapper>
         </ScrollView>
 
         {/* 일정 등록 버튼 */}
         <KeyboardAvoidingView>
           <OrangeTouchable onPress={onAddTodoHandler}>
-            <SectionTitle>Click to Add</SectionTitle>
+            <Text>Click to Add</Text>
+          </OrangeTouchable>
+          <OrangeTouchable onPress={onClearTodoList}>
+            <Text>Remove All Todos</Text>
           </OrangeTouchable>
         </KeyboardAvoidingView>
-      </ModalTranspBgView>
+      </Container>
     </Modal>
   );
 }

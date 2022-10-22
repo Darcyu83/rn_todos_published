@@ -39,7 +39,7 @@ module.exports = {
         '@typescript-eslint/naming-convention':'off',
         '@typescript-eslint/no-empty-interface':'warn',
         '@typescript-eslint/no-unused-vars':'warn',
-
+        'arrow-parens': "always"
     },
     "settings": {
         "import/resolver": {

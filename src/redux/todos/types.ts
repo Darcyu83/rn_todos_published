@@ -11,5 +11,5 @@ export interface TTodo {
 }
 
 export interface TTodosInitialState {
-  list: TTodo[];
+  list: { [taskId: number]: { info: TTodo; period: string[] } };
 }

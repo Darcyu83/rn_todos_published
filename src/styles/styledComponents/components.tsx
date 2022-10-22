@@ -1,6 +1,10 @@
 import styled from 'styled-components/native';
 import { SCREEN_WIDTH } from '../constants';
 
+export const SafeAreaCustomized = styled.View`
+  flex: 1;
+`;
+
 export const ScrnTitle = styled.Text`
   color: white;
   background-color: orange;
@@ -10,6 +14,7 @@ export const ScrnTitle = styled.Text`
 export const SectionTitle = styled.Text`
   font-weight: bold;
   font-size: 18px;
+  color: ${(props) => props.theme.content_bg_primary_accent};
 `;
 
 export const OrangeTouchable = styled.TouchableOpacity`

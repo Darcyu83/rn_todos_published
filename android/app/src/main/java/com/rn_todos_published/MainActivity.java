@@ -47,9 +47,9 @@ public class MainActivity extends ReactActivity {
       return BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
     }
     //react navigator
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-      super.onCreate(null);
-    }
+   @Override
+   protected void onCreate(Bundle savedInstanceState) {
+     super.onCreate(null);
+   }
   }
 }

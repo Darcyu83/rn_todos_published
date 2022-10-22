@@ -4,7 +4,7 @@ import { Calendar } from 'react-native-calendars';
 import { OrangeTouchable } from '../../styles/styledComponents/components';
 import DateString from '../../utils/dateUtils';
 import CalendarArrow from './CalendarArrow';
-import { DotStyle } from './calendarStyle';
+import { DotStyle } from '../../styles/calendarStyle';
 
 interface IProps {}
 
@@ -50,7 +50,7 @@ function CalendarScheduled({}: IProps) {
         renderArrow={(direction) => (
           <CalendarArrow
             direction={direction}
-            // setInitialDate={setInitialDate}
+            setInitialDate={setInitialDate}
           />
         )}
         // Do not show days of other months in month page. Default = false
