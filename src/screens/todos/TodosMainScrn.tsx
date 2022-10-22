@@ -43,47 +43,21 @@ interface IProps {}
 function TodosMainScrn({}: IProps) {
   const [isDatePickerModalShown, setIsDatePickerModalShown] = useState(false);
 
-  const todosList = useAppSelector((state) => state.todos.list);
-
-  const [markedDates, setMarkedDates] = useState<MarkedDates>();
-
-  useEffect(() => {
-    const taskIdsArr = Object.keys(todosList);
-
-    console.log('taskIdsArr===', taskIdsArr);
-
-    if (!taskIdsArr || taskIdsArr.length === 0) return;
-
-    console.log('task===', todosList[Number(taskIdsArr[0])]);
-
-    let markedDates: MarkedDates = {};
-
-    for (let id of taskIdsArr) {
-      const taskPeriod = todosList[Number(id)].period;
-
-      for (let i = 0; i < taskPeriod.length - 1; i++) {
-        if (!markedDates[taskPeriod[i]])
-          markedDates = { ...markedDates, [taskPeriod[i]]: {} };
-        markedDates = {
-          ...markedDates,
-          [taskPeriod[i]]: { ...markedDates[taskPeriod[i]] },
-        };
-      }
-    }
-
-    setMarkedDates(markedDates);
-  }, [todosList]);
+  const { list: todosList, markedDates } = useAppSelector(
+    (state) => state.todos
+  );
 
   return (
     <SafeAreaCustomized>
       <Container>
-        {/* <ToggleThemeView>
+        <ScrollView>
+          {/* <ToggleThemeView>
           <Button title="Toggle DarkMode" onPress={onToggleDarkMode} />
         </ToggleThemeView> */}
-        {/* 일정 달력 */}
-        {/* <CalendarScheduled /> */}
+          {/* 일정 달력 */}
+          <CalendarScheduled todosList={todosList} />
 
-        {/* <FlatList
+          {/* <FlatList
           style={{
             width: '100%',
             backgroundColor: 'rgba(0,0,0,0.1)',
@@ -96,24 +70,30 @@ function TodosMainScrn({}: IProps) {
           ListHeaderComponent={() => <CalendarScheduled />}
         /> */}
 
-        <Text>{JSON.stringify(todosList)}</Text>
+          <Text style={{ color: 'blue' }}>
+            TODOSLIST: {JSON.stringify(todosList)}
+          </Text>
+          <Text style={{ color: 'teal' }}>
+            MARKEDDATES: {JSON.stringify(markedDates)}
+          </Text>
 
-        {/* 등록 버튼 */}
-        <KeyboardAvoidingView>
-          <OrangeTouchable
-            onPress={() => {
-              setIsDatePickerModalShown(true);
-            }}
-          >
-            <Text>Regist new Todos</Text>
-          </OrangeTouchable>
-        </KeyboardAvoidingView>
+          {/* 등록 버튼 */}
+          <KeyboardAvoidingView>
+            <OrangeTouchable
+              onPress={() => {
+                setIsDatePickerModalShown(true);
+              }}
+            >
+              <Text>Regist new Todos</Text>
+            </OrangeTouchable>
+          </KeyboardAvoidingView>
 
-        {/* 일정 등록 모달 */}
-        <TodoRegisModal
-          visible={isDatePickerModalShown}
-          closeModal={() => setIsDatePickerModalShown(false)}
-        />
+          {/* 일정 등록 모달 */}
+          <TodoRegisModal
+            visible={isDatePickerModalShown}
+            closeModal={() => setIsDatePickerModalShown(false)}
+          />
+        </ScrollView>
       </Container>
     </SafeAreaCustomized>
   );

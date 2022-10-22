@@ -115,6 +115,7 @@ function TodoRegistModal({ visible, closeModal }: IProps) {
           </CalendarWrapper>
 
           {/* 데이터 입력 */}
+          {/* 카테고리 선택 */}
 
           <TodoInputWrapper>
             {/* 할일 타이틀 */}

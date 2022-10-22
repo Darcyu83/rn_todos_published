@@ -4,6 +4,27 @@ import { TTodosInitialState, TTodo } from './types';
 
 const initialState: TTodosInitialState = {
   list: {},
+  // markedDates: {
+  // '2022-10-17': {
+  //   taskCnt: 0,
+  //   dots: [
+  //     DotStyle.vacation,
+  //     DotStyle.workout,
+  //     DotStyle.massage,
+  //     DotStyle.meeting,
+  //   ],
+  // },
+  // '2022-10-18': { taskCnt: 0, dots: [DotStyle.massage] },
+  // '2022-10-19': { taskCnt: 0, dots: [DotStyle.massage] },
+  // '2022-10-20': {
+  //   taskCnt: 0,
+  //   dots: [DotStyle.vacation, DotStyle.workout, DotStyle.massage],
+  // },
+  // '2022-10-21': {
+  //   taskCnt: 0,
+  //   dots: [DotStyle.vacation, DotStyle.workout, DotStyle.massage],
+  // },
+  // },
 };
 
 const todosSlice = createSlice({
@@ -14,22 +35,22 @@ const todosSlice = createSlice({
       const taskId = action.payload.id;
       const startDtString = action.payload.startDtData.dateString;
       const endDtString = action.payload.endDtData.dateString;
-      let newList = state.list;
+      const category = action.payload.category;
 
+      // 할일 정보 및 기간 정보
+      let todoList = state.list;
       const dateStringsArr = crateDatesStringArr(startDtString, endDtString);
 
-      // 할일 기간 정보
-
-      if (!newList[taskId]) {
-        newList[taskId] = { info: action.payload, period: dateStringsArr };
+      if (!todoList[taskId]) {
+        todoList[taskId] = { info: action.payload, period: dateStringsArr };
       } else {
-        newList[taskId] = {
-          info: { ...newList[taskId].info, ...action.payload },
+        todoList[taskId] = {
+          info: { ...todoList[taskId].info, ...action.payload },
           period: dateStringsArr,
         };
       }
 
-      state.list = newList;
+      state.list = todoList;
     },
     removeTodo: (state, action: PayloadAction<TTodo>) => {
       //   state.list = state.list.filter((todo) => todo.id !== action.payload.id);
@@ -37,6 +58,7 @@ const todosSlice = createSlice({
 
     clearAllTodos: (state) => {
       state.list = {};
+      state.markedDates = {};
     },
   },
 });

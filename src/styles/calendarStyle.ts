@@ -11,6 +11,7 @@ export const DotStyle = {
   massage: { key: 'massage', color: 'blue', selectedDotColor: 'blue' },
   workout: { key: 'workout', color: 'green' },
   meeting: { key: 'meeting', color: 'orange' },
+  etc: { key: 'etc', color: 'slategray' },
 };
 
 export const periodStyle = {
