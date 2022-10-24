@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PURGE } from 'redux-persist';
 import { crateDatesStringArr } from '../../utils/calendarUtils';
 import { TTodosInitialState, TTodo } from './types';
 
@@ -60,6 +61,10 @@ const todosSlice = createSlice({
       state.list = {};
       state.markedDates = {};
     },
+  },
+  //초기화하고 싶은 state가 있는 slice마다 아래를 추가해야한다.
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => initialState);
   },
 });
 

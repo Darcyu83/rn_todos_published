@@ -1,4 +1,9 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  createEntityAdapter,
+  createSlice,
+  PayloadAction,
+} from '@reduxjs/toolkit';
+import { PURGE } from 'redux-persist';
 import { TUserInfo, TUserInitialState } from './types';
 
 const initialState: TUserInitialState = {
@@ -16,6 +21,10 @@ const useSlice = createSlice({
     setUserInfo(state, action: PayloadAction<TUserInfo>) {
       state.info = { ...state.info, ...action.payload };
     },
+  },
+  //초기화하고 싶은 state가 있는 slice마다 아래를 추가해야한다.
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => initialState);
   },
 });
 

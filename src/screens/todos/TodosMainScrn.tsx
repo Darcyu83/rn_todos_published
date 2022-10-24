@@ -1,36 +1,20 @@
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  FlatList,
-  KeyboardAvoidingView,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, ScrollView, Text } from 'react-native';
 import { DateData, MarkedDates } from 'react-native-calendars/src/types';
 import styled from 'styled-components/native';
 import CalendarScheduled from '../../components/calendar/CalendarScheduled';
 import { TMarkedDatesCustomed } from '../../components/calendar/types';
-import { returnLoadingScrn } from '../../components/loader/Loading';
 import { TTodosNavParams } from '../../navigator/branches/todos/types';
 import { TRootNavParamsList } from '../../navigator/types';
 import { useAppSelector } from '../../redux/hooks';
-import { TTodo, TTodosInitialState } from '../../redux/todos/types';
+import { TTodo } from '../../redux/todos/types';
 import { DotStyle } from '../../styles/calendarStyle';
 import {
   OrangeTouchable,
   SafeAreaCustomized,
-  ScrnTitle,
 } from '../../styles/styledComponents/components';
-import { theme } from '../../styles/theme';
-import { getThemeStyle, onToggleDarkMode } from '../../utils/themeUtils';
-import TodoCard from './TodoCard';
 import TodoRegisModal from './TodoRegistModal';
-import TodosDetailedList from './TodosDetailedListScrn';
 
 const Container = styled.View`
   flex: 1;
@@ -58,6 +42,12 @@ function TodosMainScrn({ route, navigation }: IProps) {
   const [isRegModalShown, setIsRegModalShown] = useState(false);
 
   const onMoveToDailyTasks = (day: DateData) => {
+    if (
+      !markedDates[day.dateString] ||
+      !markedDates[day.dateString].tskIds.length
+    )
+      return;
+
     // 리스트 생성
     let _dailyTasks: TTodo[] = [];
 
@@ -160,10 +150,10 @@ function TodosMainScrn({ route, navigation }: IProps) {
           </KeyboardAvoidingView>
 
           {/* 일정 등록 모달 */}
-
           <TodoRegisModal
             visible={isRegModalShown}
             closeModal={() => setIsRegModalShown(false)}
+            taskModified={null}
           />
         </ScrollView>
       </Container>

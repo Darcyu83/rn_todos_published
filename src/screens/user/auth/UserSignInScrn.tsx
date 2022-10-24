@@ -27,7 +27,7 @@ const UserSignInScrn = ({}: IProps) => {
   };
 
   return (
-    <View style={{}}>
+    <View>
       <TextInput
         placeholder="Input your name"
         value={userNm}

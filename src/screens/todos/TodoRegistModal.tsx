@@ -14,6 +14,7 @@ import styled from 'styled-components/native';
 import CalendarDatePicker from '../../components/calendar/CalendarDatePicker';
 import { useAppDispatch } from '../../redux/hooks';
 import { todosActions } from '../../redux/todos/todosSlice';
+import { TTodo } from '../../redux/todos/types';
 import { DotStyle } from '../../styles/calendarStyle';
 import {
   ModalTranspBgView,
@@ -38,13 +39,14 @@ const TodoInputWrapper = styled.View`
 interface IProps {
   visible: boolean;
   closeModal: () => void;
+  taskModified: TTodo | null;
 }
 
 const periodInitialState = {
   startDtData: null,
   endDtData: null,
 };
-function TodoRegistModal({ visible, closeModal }: IProps) {
+function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
   const [todoTitle, setTodoTitle] = useState('');
   const [todoContent, setTodoContent] = useState('');
   const [{ startDtData, endDtData }, setPeriodData] =
@@ -93,6 +95,18 @@ function TodoRegistModal({ visible, closeModal }: IProps) {
     onResetStates();
     closeModal();
   };
+
+  useEffect(() => {
+    if (taskModified) {
+      setCateSelected(taskModified.category);
+      setTodoTitle(taskModified.title);
+      setTodoContent(taskModified.todo);
+      setPeriodData({
+        startDtData: taskModified.startDtData,
+        endDtData: taskModified.endDtData,
+      });
+    }
+  }, [taskModified]);
 
   useEffect(() => {
     return () => {
