@@ -1,4 +1,6 @@
+import { TTodo } from '../../../redux/todos/types';
+
 export type TTodosNavParams = {
   TodosMainScrn: undefined;
-  TodosDetailedList: undefined;
+  TodosDetailedListScrn: { dailyTasks: TTodo[] };
 };

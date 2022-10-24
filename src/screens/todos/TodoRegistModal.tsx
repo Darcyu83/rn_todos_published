@@ -59,14 +59,6 @@ function TodoRegistModal({ visible, closeModal }: IProps) {
     null | 'vacation' | 'massage' | 'workout' | 'meeting' | 'etc'
   >(null);
 
-  useEffect(() => {
-    console.log(
-      'isCatePickerOpen---',
-      isCatePickerOpen,
-      'cateSelected---',
-      cateSelected
-    );
-  }, [isCatePickerOpen]);
   const onResetStates = () => {
     setTodoTitle('');
     setTodoContent('');

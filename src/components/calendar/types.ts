@@ -1,5 +1,6 @@
 import { MarkingProps } from 'react-native-calendars/src/calendar/day/marking';
+import { Storage } from 'redux-persist/lib/types';
 
-export interface IMarkedDatesCustomed {
-  [key: string]: MarkingProps & { taskCnt: number };
+export interface TMarkedDatesCustomed {
+  [key: string]: MarkingProps & { tskIds: string[] };
 }

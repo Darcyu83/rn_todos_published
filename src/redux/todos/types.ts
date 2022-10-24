@@ -12,8 +12,11 @@ export interface TTodo {
   endDtData: DateData;
 }
 
+export interface TTodoList {
+  [taskId: number]: { info: TTodo; period: string[] };
+}
 export interface TTodosInitialState {
-  list: { [taskId: number]: { info: TTodo; period: string[] } };
+  list: TTodoList;
   markedDates?: {
     [key: string]: MarkingProps & { taskCnt: number };
   };

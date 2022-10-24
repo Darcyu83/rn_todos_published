@@ -33,15 +33,20 @@ function TodoCard({ todo, index }: IProps) {
     <Container>
       <RowContainer>
         <SectionTitle>
-          [ {index} ] {todo.title}
+          [ {todo.category.charAt(0).toUpperCase() + todo.category.slice(1)} ]
+          {todo.title}
         </SectionTitle>
-        <OrangeTouchable onPress={onRemoveTodohandler}>
-          <Text>DEL</Text>
-        </OrangeTouchable>
       </RowContainer>
-      <Text numberOfLines={1} ellipsizeMode="tail">
-        {todo.todo}
-      </Text>
+
+      <RowContainer>
+        <Text numberOfLines={1} ellipsizeMode="tail">
+          {todo.todo}
+        </Text>
+      </RowContainer>
+
+      <OrangeTouchable onPress={onRemoveTodohandler}>
+        <Text>DEL</Text>
+      </OrangeTouchable>
     </Container>
   );
 }
