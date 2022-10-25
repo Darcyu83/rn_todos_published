@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import { SCREEN_WIDTH } from '../constants';
 
-export const SafeAreaCustomized = styled.View`
+export const SafeAreaCustomized = styled.SafeAreaView`
   flex: 1;
 `;
 
@@ -18,6 +18,7 @@ export const SectionTitle = styled.Text`
 `;
 
 export const OrangeTouchable = styled.TouchableOpacity`
+  width: 100%;
   background-color: orange;
   border-radius: 5px;
   overflow: hidden;

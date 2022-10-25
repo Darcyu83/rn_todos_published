@@ -1,9 +1,15 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Text, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  Animated,
+  FlatList,
+  KeyboardAvoidingView,
+  Text,
+  View,
+} from 'react-native';
+import styled from 'styled-components/native';
 import { TTodosNavParams } from '../../navigator/branches/todos/types';
-import { TRootNavParamsList } from '../../navigator/types';
-import { useAppSelector } from '../../redux/hooks';
+
 import { TTodo, TTodoList } from '../../redux/todos/types';
 import {
   OrangeTouchable,
@@ -11,6 +17,11 @@ import {
 } from '../../styles/styledComponents/components';
 import TodoCard from './TodoCard';
 import TodoRegistModal from './TodoRegistModal';
+
+const BtnWrapper = styled.View`
+  width: 100%;
+  padding: 2px 5px;
+`;
 
 interface IProps {
   route: NativeStackScreenProps<
@@ -32,44 +43,56 @@ function TodosDetailedListScrn({ route }: IProps) {
     setIsRegModalShown(true);
   };
 
+  const scrollY = new Animated.Value(0);
+  const flatlistRef = useRef<FlatList>(null);
   useEffect(() => {
     console.log('todosList[Number(id)]', dailyTasks);
+    console.log('flatlistRef', flatlistRef.current);
   }, []);
-
   return (
     <SafeAreaCustomized>
       <FlatList
+        ref={flatlistRef}
         data={dailyTasks}
         keyExtractor={(item, index) => item.id.toString() + index}
         renderItem={({ item, index }) => (
           <TodoCard
             index={index}
+            scrollY={scrollY}
             todo={item}
             onPressTodoCardToModify={() => onPressTodoCardToModify(item)}
           />
         )}
+        onScroll={(e) =>
+          console.log(
+            'onScroll e.nativeEvent.contentOffset === ',
+            e.nativeEvent
+          )
+        }
+        onLayout={(e) => {
+          console.log('onLayout === ', e.nativeEvent.layout);
+        }}
         style={{
-          width: '100%',
+          flex: 1,
           padding: 10,
-          borderWidth: 2,
-          borderColor: 'blue',
-          borderStyle: 'dotted',
         }}
         contentContainerStyle={{
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           alignItems: 'center',
         }}
       />
 
       {/* 등록 버튼 */}
       <KeyboardAvoidingView>
-        <OrangeTouchable
-          onPress={() => {
-            setIsRegModalShown(true);
-          }}
-        >
-          <Text>Regist new Todos</Text>
-        </OrangeTouchable>
+        <BtnWrapper>
+          <OrangeTouchable
+            onPress={() => {
+              setIsRegModalShown(true);
+            }}
+          >
+            <Text>Regist new Todos</Text>
+          </OrangeTouchable>
+        </BtnWrapper>
       </KeyboardAvoidingView>
 
       {/* 일정 등록 모달 */}

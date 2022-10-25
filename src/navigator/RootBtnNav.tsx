@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React, { useEffect } from 'react';
 import { Text, View } from 'react-native';
 import { ThemeProvider } from 'styled-components/native';
+import { ListIcon, UserIcon } from '../components/icons/pngs';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setUserToken } from '../redux/user/userSlice';
 import TodosMainScrn from '../screens/todos/TodosMainScrn';
@@ -31,13 +32,27 @@ const RootBtnNav = ({}: IProps) => {
   const isDarkMode = useAppSelector((state) => state.theme.isDarkMode);
   return (
     <ThemeProvider theme={isDarkMode ? theme.darkMode : theme.lightMode}>
-      <Root.Navigator screenOptions={{ headerShown: false }}>
+      <Root.Navigator
+        screenOptions={{ headerShown: false, tabBarActiveTintColor: '#70d7c7' }}
+      >
         {/* 로그인 여부에 따른 구분 */}
         {
           userToken ? (
             <>
-              <Root.Screen name="todos" component={TodosStackNav} />
-              <Root.Screen name="user" component={UserStackNav} />
+              <Root.Screen
+                name="todos"
+                component={TodosStackNav}
+                options={{
+                  title: 'ToDos',
+
+                  tabBarIcon: () => <ListIcon />,
+                }}
+              />
+              <Root.Screen
+                name="user"
+                component={UserStackNav}
+                options={{ title: 'user', tabBarIcon: () => <UserIcon /> }}
+              />
             </>
           ) : (
             <Root.Screen name="auth" component={UserAuthStackNav} />

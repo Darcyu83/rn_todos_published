@@ -5,6 +5,7 @@ import { DateData, MarkedDates } from 'react-native-calendars/src/types';
 import styled from 'styled-components/native';
 import CalendarScheduled from '../../components/calendar/CalendarScheduled';
 import { TMarkedDatesCustomed } from '../../components/calendar/types';
+import { PlusIcon } from '../../components/icons/pngs';
 import { TTodosNavParams } from '../../navigator/branches/todos/types';
 import { TRootNavParamsList } from '../../navigator/types';
 import { useAppSelector } from '../../redux/hooks';
@@ -27,6 +28,12 @@ const ToggleThemeView = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+`;
+
+const BtnWrapper = styled.View`
+  position: absolute;
+  bottom: 10;
+  right: 10;
 `;
 
 interface IProps {
@@ -138,17 +145,6 @@ function TodosMainScrn({ route, navigation }: IProps) {
           ListHeaderComponent={() => <CalendarScheduled />}
         /> */}
 
-          {/* 등록 버튼 */}
-          <KeyboardAvoidingView>
-            <OrangeTouchable
-              onPress={() => {
-                setIsRegModalShown(true);
-              }}
-            >
-              <Text>Regist new Todos</Text>
-            </OrangeTouchable>
-          </KeyboardAvoidingView>
-
           {/* 일정 등록 모달 */}
           <TodoRegisModal
             visible={isRegModalShown}
@@ -157,6 +153,17 @@ function TodosMainScrn({ route, navigation }: IProps) {
           />
         </ScrollView>
       </Container>
+      {/* 등록 버튼 */}
+
+      <BtnWrapper>
+        <OrangeTouchable
+          onPress={() => {
+            setIsRegModalShown(true);
+          }}
+        >
+          <PlusIcon />
+        </OrangeTouchable>
+      </BtnWrapper>
     </SafeAreaCustomized>
   );
 }
