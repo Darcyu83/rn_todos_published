@@ -15,6 +15,7 @@ import {
   OrangeTouchable,
   SafeAreaCustomized,
 } from '../../styles/styledComponents/components';
+import BedTimeSetScrn from '../bedTime/BedTimeSetScrn';
 import TodoRegisModal from './TodoRegistModal';
 
 const Container = styled.View`
@@ -32,8 +33,8 @@ const ToggleThemeView = styled.View`
 
 const BtnWrapper = styled.View`
   position: absolute;
-  bottom: 10;
-  right: 10;
+  bottom: 10px;
+  right: 10px;
 `;
 
 interface IProps {
@@ -122,6 +123,9 @@ function TodosMainScrn({ route, navigation }: IProps) {
   return (
     <SafeAreaCustomized>
       <Container>
+        {/* Svg Circular schedule table */}
+        <BedTimeSetScrn />
+
         <ScrollView>
           {/* <ToggleThemeView>
           <Button title="Toggle DarkMode" onPress={onToggleDarkMode} />
@@ -144,13 +148,6 @@ function TodosMainScrn({ route, navigation }: IProps) {
           )}
           ListHeaderComponent={() => <CalendarScheduled />}
         /> */}
-
-          {/* 일정 등록 모달 */}
-          <TodoRegisModal
-            visible={isRegModalShown}
-            closeModal={() => setIsRegModalShown(false)}
-            taskModified={null}
-          />
         </ScrollView>
       </Container>
       {/* 등록 버튼 */}
@@ -164,6 +161,12 @@ function TodosMainScrn({ route, navigation }: IProps) {
           <PlusIcon />
         </OrangeTouchable>
       </BtnWrapper>
+      {/* 일정 등록 모달 */}
+      <TodoRegisModal
+        visible={isRegModalShown}
+        closeModal={() => setIsRegModalShown(false)}
+        taskModified={null}
+      />
     </SafeAreaCustomized>
   );
 }

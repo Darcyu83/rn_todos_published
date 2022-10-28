@@ -8,6 +8,7 @@ import { setUserToken } from '../redux/user/userSlice';
 import TodosMainScrn from '../screens/todos/TodosMainScrn';
 import { theme } from '../styles/theme';
 import { sleep } from '../utils/etc';
+import BedTimeStackNav from './branches/bedTime/BedTimeStackNav';
 import TodosStackNav from './branches/todos/TodosStackNav';
 import UserAuthStackNav from './branches/user/auth/UserAuthStackNav';
 import UserStackNav from './branches/user/auth/UserAuthStackNav';
@@ -52,6 +53,11 @@ const RootBtnNav = ({}: IProps) => {
                 name="user"
                 component={UserStackNav}
                 options={{ title: 'user', tabBarIcon: () => <UserIcon /> }}
+              />
+              <Root.Screen
+                name="bedtime"
+                component={BedTimeStackNav}
+                options={{ title: 'Bed Time', tabBarIcon: () => <UserIcon /> }}
               />
             </>
           ) : (
