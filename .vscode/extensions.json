@@ -2,6 +2,7 @@
     "recommendations": [
         "styled-components.vscode-styled-components",
         "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint"
+        "dbaeumer.vscode-eslint",
+        "naumovs.color-highlight"
     ]
 }

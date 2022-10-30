@@ -6,16 +6,16 @@ import { SCREEN_WIDTH, WINDOW_WIDTH } from '../../styles/constants';
 interface IProps {}
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-function convertToFixed(m, integer, decimal = '', sign, power) {
-  const fixed = integer + decimal;
-  return sign === '+'
-    ? fixed + '0'.repeat(power - decimal.length)
-    : '0.' + '0'.repeat(power - 1) + fixed;
-}
+// function convertToFixed(m, integer, decimal = '', sign, power) {
+//   const fixed = integer + decimal;
+//   return sign === '+'
+//     ? fixed + '0'.repeat(power - decimal.length)
+//     : '0.' + '0'.repeat(power - 1) + fixed;
+// }
 
-function exponentialToFixedNotation(num) {
-  return num.replace(/(\d)(?:\.(\d+))?e([+-])(\d+)/g, convertToFixed);
-}
+// function exponentialToFixedNotation(num) {
+//   return num.replace(/(\d)(?:\.(\d+))?e([+-])(\d+)/g, convertToFixed);
+// }
 
 const BedTimeSetScrn = ({
   data,
@@ -31,10 +31,10 @@ const BedTimeSetScrn = ({
 }: any) => {
   const animatedValue = useMemo(() => new Animated.Value(0), []);
 
-  const arcGenerator = arcShape()
-    .outerRadius(outerRadius)
-    .innerRadius(innerRadius)
-    .padAngle(padAngle);
+  // const arcGenerator = arcShape()
+  //   .outerRadius(outerRadius)
+  //   .innerRadius(innerRadius)
+  //   .padAngle(padAngle);
 
   useEffect(() => {
     const anim = Animated.timing(animatedValue, {
@@ -48,12 +48,12 @@ const BedTimeSetScrn = ({
     return () => anim.stop();
   }, []);
 
-  const pieSlices = pieShape().value((d) => valueAccessor(d))(data);
+  // const pieSlices = pieShape().value((d) => valueAccessor(d))(data);
 
   return (
     <Svg style={{ height: size, width: size }}>
       <G x={size / 2} y={size / 2}>
-        {pieSlices.map((slice, index) => {
+        {/* {pieSlices.map((slice, index) => {
           const startPath = arcGenerator({
             ...slice,
             startAngle: 0,
@@ -72,7 +72,7 @@ const BedTimeSetScrn = ({
               fill={colors[index]}
             />
           );
-        })}
+        })} */}
       </G>
     </Svg>
   );
