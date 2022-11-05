@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import InlineTextButton from '../../../components/bottons/InlineTextButton';
+import useAuthContext from '../../../context/auth/hooks/useAuthContext';
 import { TUserAuthNavParams } from '../../../navigator/branches/user/auth/types';
 import { TRootNavParamsList } from '../../../navigator/types';
 import { useAppDispatch } from '../../../redux/hooks';
@@ -35,6 +36,7 @@ function UserSignInScrn({
 }: {
   navigation: NativeStackNavigationProp<TUserAuthNavParams>;
 }) {
+  const { login } = useAuthContext();
   const [email, setEmail] = useState('');
   const [userPw, setUserPw] = useState('');
 
@@ -100,7 +102,11 @@ function UserSignInScrn({
         </View>
 
         {/* Login 버튼 */}
-        <Button title="Login" color={'#ffd966'} />
+        <Button
+          title="Login"
+          color={'#ffd966'}
+          onPress={() => login(email, userPw)}
+        />
       </KeyboardAvoidingView>
     </ImageBackground>
   );

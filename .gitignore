@@ -64,4 +64,5 @@ buck-out/
 /vendor/bundle/
 
 
-firebaseConfig.ts
+
+google-services.json

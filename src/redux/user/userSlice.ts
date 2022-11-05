@@ -9,7 +9,7 @@ import { TUserInfo, TUserInitialState } from './types';
 const initialState: TUserInitialState = {
   isLoading: true,
   isSignIn: false,
-  info: { userNm: null, userPw: null, userToken: null },
+  info: { userNm: null, userToken: null },
 };
 const useSlice = createSlice({
   name: 'user',

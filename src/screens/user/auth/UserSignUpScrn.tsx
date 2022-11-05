@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Button,
   ImageBackground,
@@ -10,6 +10,8 @@ import {
   View,
 } from 'react-native';
 import InlineTextButton from '../../../components/bottons/InlineTextButton';
+import { AuthContext } from '../../../context/auth/AuthProvider';
+import useAuthContext from '../../../context/auth/hooks/useAuthContext';
 import { TRootNavParamsList } from '../../../navigator/types';
 import { AppStyles } from '../../../styles/appStyles';
 
@@ -18,6 +20,7 @@ interface IProps {
 }
 
 const UserSignUpScrn = ({ navigation }: IProps) => {
+  const { register } = useAuthContext();
   const [email, setEmail] = useState('');
   const [userPw, setUserPw] = useState('');
   const [confirmUserPw, setConfirmUserPw] = useState('');
@@ -107,7 +110,11 @@ const UserSignUpScrn = ({ navigation }: IProps) => {
         </View>
 
         {/* Sign up 버튼 */}
-        <Button title="Sign Up" color={'#ffd966'} />
+        <Button
+          title="Sign Up"
+          color={'#ffd966'}
+          onPress={() => register(email, userPw)}
+        />
       </KeyboardAvoidingView>
     </ImageBackground>
   );

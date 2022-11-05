@@ -4,6 +4,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ThemeProvider } from 'styled-components/native';
+import AuthProvider from './src/context/auth/AuthProvider';
 import RootBtnNav from './src/navigator/RootBtnNav';
 import { useAppSelector } from './src/redux/hooks';
 
@@ -17,9 +18,11 @@ function App({}: IProps) {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <NavigationContainer>
-            <RootBtnNav />
-          </NavigationContainer>
+          <AuthProvider>
+            <NavigationContainer>
+              <RootBtnNav />
+            </NavigationContainer>
+          </AuthProvider>
         </PersistGate>
       </Provider>
     </GestureHandlerRootView>

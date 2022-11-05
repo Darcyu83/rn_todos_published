@@ -7,5 +7,4 @@ export interface TUserInitialState {
 export interface TUserInfo {
   userToken: string | null;
   userNm: string | null;
-  userPw: string | null;
 }

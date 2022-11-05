@@ -1,10 +1,16 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
+import styled from 'styled-components/native';
 
+const Container = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;
 export const returnLoadingScrn = (isLoading: boolean) => {
   return (
-    <View>
-      <Text>Now Loading...</Text>
-    </View>
+    <Container>
+      <ActivityIndicator size="large" color="#ffd966" />
+    </Container>
   );
 };
