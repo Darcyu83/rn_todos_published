@@ -52,7 +52,10 @@ const RootBtnNav = ({}: IProps) => {
               <Root.Screen
                 name="user"
                 component={UserStackNav}
-                options={{ title: 'user', tabBarIcon: () => <UserIcon /> }}
+                options={{
+                  title: 'user',
+                  tabBarIcon: () => <UserIcon />,
+                }}
               />
               <Root.Screen
                 name="bedtime"
