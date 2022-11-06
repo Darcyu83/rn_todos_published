@@ -124,7 +124,7 @@ function TodosMainScrn({ route, navigation }: IProps) {
     <SafeAreaCustomized>
       <Container>
         {/* Svg Circular schedule table */}
-        <BedTimeSetScrn />
+        {/* <BedTimeSetScrn /> */}
 
         <ScrollView>
           {/* <ToggleThemeView>

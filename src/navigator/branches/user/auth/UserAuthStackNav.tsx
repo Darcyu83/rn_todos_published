@@ -26,7 +26,11 @@ const UserAuthStackNav = ({ navigation }: IProps) => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {userToken ? (
-        <Stack.Screen name="UserLogOutScrn" component={UserLogOutScrn} />
+        <Stack.Screen
+          name="UserLogOutScrn"
+          component={UserLogOutScrn}
+          options={{ headerShown: true }}
+        />
       ) : (
         <>
           <Stack.Screen name="UserSignInScrn" component={UserSignInScrn} />
