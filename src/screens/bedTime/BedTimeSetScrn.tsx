@@ -1,80 +1,66 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Animated, Text, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import Svg, { Rect, Circle, Path, G } from 'react-native-svg';
 import { SCREEN_WIDTH, WINDOW_WIDTH } from '../../styles/constants';
 
-interface IProps {}
-const AnimatedPath = Animated.createAnimatedComponent(Path);
+import firestore from '@react-native-firebase/firestore';
+import InlineTextButton from '../../components/bottons/InlineTextButton';
+import { TTodo } from '../../redux/todos/types';
+import TodoCard from '../todos/TodoCard';
 
-// function convertToFixed(m, integer, decimal = '', sign, power) {
-//   const fixed = integer + decimal;
-//   return sign === '+'
-//     ? fixed + '0'.repeat(power - decimal.length)
-//     : '0.' + '0'.repeat(power - 1) + fixed;
-// }
+const BedTimeSetScrn = ({}: any) => {
+  const todosCollection = firestore().collection('todos');
 
-// function exponentialToFixedNotation(num) {
-//   return num.replace(/(\d)(?:\.(\d+))?e([+-])(\d+)/g, convertToFixed);
-// }
-
-const BedTimeSetScrn = ({
-  data,
-  innerRadius,
-  outerRadius,
-  padAngle,
-  animate,
-  animationDuration,
-  valueAccessor,
-  size,
-  colors,
-  id,
-}: any) => {
-  const animatedValue = useMemo(() => new Animated.Value(0), []);
-
-  // const arcGenerator = arcShape()
-  //   .outerRadius(outerRadius)
-  //   .innerRadius(innerRadius)
-  //   .padAngle(padAngle);
+  const [todos, setTodos] = useState<TTodo[]>([]);
 
   useEffect(() => {
-    const anim = Animated.timing(animatedValue, {
-      toValue: 1,
-      duration: animationDuration,
-      useNativeDriver: false, // also tried true
+    console.log('todosCollection.id ==== ', todosCollection.id);
+    todosCollection.id;
+    const subscriber = todosCollection.onSnapshot((querySnapshot) => {
+      console.log('querySnapshot ==== update', querySnapshot);
+
+      let newDoc: TTodo[] = [];
+      querySnapshot.forEach((doc) => {
+        const todo = doc.data() as TTodo;
+        doc.id;
+
+        console.log('todo ==== todo', doc.id, todo);
+
+        newDoc.push(todo);
+      });
+
+      setTodos(newDoc);
     });
 
-    anim.start();
-
-    return () => anim.stop();
+    return () => subscriber();
   }, []);
 
-  // const pieSlices = pieShape().value((d) => valueAccessor(d))(data);
-
   return (
-    <Svg style={{ height: size, width: size }}>
-      <G x={size / 2} y={size / 2}>
-        {/* {pieSlices.map((slice, index) => {
-          const startPath = arcGenerator({
-            ...slice,
-            startAngle: 0,
-            endAngle: 0,
-          });
-          const endPath = arcGenerator(slice);
-          const outputRange = [startPath, endPath].map(
-            exponentialToFixedNotation
-          );
-          return (
-            <AnimatedPath
-              d={animatedValue.interpolate({
-                inputRange: [0, 1],
-                outputRange,
-              })}
-              fill={colors[index]}
-            />
-          );
-        })} */}
-      </G>
-    </Svg>
+    <View>
+      <Text>Temporary Test Screen for Firestore</Text>
+      <ScrollView>
+        <Text>List of Todos</Text>
+
+        {todos.map((todo, index) => (
+          <TodoCard
+            key={index}
+            index={index}
+            todo={todo}
+            onPressTodoCardToModify={() => {}}
+          />
+        ))}
+      </ScrollView>
+      <InlineTextButton
+        title="delete all data"
+        onPress={async () => {
+          await todosCollection.doc(String(todos[0].id)).delete();
+          console.log('User deleted!');
+        }}
+      />
+      <InlineTextButton title="Load Todos" onPress={() => {}} />
+      <InlineTextButton title="Load Todos" onPress={() => {}} />
+    </View>
   );
 };
 

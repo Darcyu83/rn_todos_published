@@ -43,12 +43,12 @@ function TodosDetailedListScrn({ route }: IProps) {
     setIsRegModalShown(true);
   };
 
-  const scrollY = new Animated.Value(0);
   const flatlistRef = useRef<FlatList>(null);
   useEffect(() => {
     console.log('todosList[Number(id)]', dailyTasks);
     console.log('flatlistRef', flatlistRef.current);
   }, []);
+
   return (
     <SafeAreaCustomized>
       <FlatList
@@ -58,7 +58,6 @@ function TodosDetailedListScrn({ route }: IProps) {
         renderItem={({ item, index }) => (
           <TodoCard
             index={index}
-            scrollY={scrollY}
             todo={item}
             onPressTodoCardToModify={() => onPressTodoCardToModify(item)}
           />

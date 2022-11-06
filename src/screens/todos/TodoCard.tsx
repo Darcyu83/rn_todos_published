@@ -41,12 +41,12 @@ const BtnWrapper = styled.View`
 
 interface IProps {
   todo: TTodo;
-  scrollY: Animated.Value;
+
   index: number;
   onPressTodoCardToModify: () => void;
 }
 
-function TodoCard({ todo, scrollY, index, onPressTodoCardToModify }: IProps) {
+function TodoCard({ todo, index, onPressTodoCardToModify }: IProps) {
   const dispatch = useAppDispatch();
   const onRemoveTodohandler = () => {
     dispatch(todosActions.removeTodo(todo));

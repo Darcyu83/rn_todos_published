@@ -12,9 +12,9 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import styled from 'styled-components/native';
 import CalendarDatePicker from '../../components/calendar/CalendarDatePicker';
-import { useAppDispatch } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { todosActions } from '../../redux/todos/todosSlice';
-import { TTodo } from '../../redux/todos/types';
+import { TTodo, TTodoList } from '../../redux/todos/types';
 import { DotStyle } from '../../styles/calendarStyle';
 import {
   ModalTranspBgView,
@@ -22,6 +22,9 @@ import {
   SectionTitle,
 } from '../../styles/styledComponents/components';
 import { IPeriod } from './types';
+
+import firestore from '@react-native-firebase/firestore';
+import { onCreateTodoParams } from './todosUtils';
 
 const Container = styled.View`
   flex: 1;
@@ -47,6 +50,7 @@ const periodInitialState = {
   endDtData: null,
 };
 function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
+  const user = useAppSelector((state) => state.user);
   const [todoTitle, setTodoTitle] = useState('');
   const [todoContent, setTodoContent] = useState('');
   const [{ startDtData, endDtData }, setPeriodData] =
@@ -81,17 +85,15 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
       Alert.alert('No Start / End Date');
       return;
     }
-    dispatch(
-      todosActions.addTodo({
-        category: cateSelected || 'vacation',
-        isInSingleDay: startDtData.dateString === endDtData.dateString,
-        id: new Date().getTime(),
-        title: todoTitle,
-        todo: todoContent,
-        startDtData,
-        endDtData: endDtData,
-      })
+
+    const params = onCreateTodoParams(
+      cateSelected,
+      startDtData,
+      endDtData,
+      todoTitle,
+      todoContent
     );
+    dispatch(todosActions.addTodo(params));
     onResetStates();
     closeModal();
   };
@@ -114,6 +116,36 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
     };
   }, []);
 
+  // firestore==============================================================
+  const todosCollection = firestore().collection('todos');
+
+  const addTodoInFirestore = async () => {
+    if (!todoTitle) {
+      Alert.alert('No Title');
+      return;
+    }
+    if (!startDtData || !endDtData) {
+      Alert.alert('No Start / End Date');
+      return;
+    }
+    const params: TTodo = onCreateTodoParams(
+      cateSelected,
+      startDtData,
+      endDtData,
+      todoTitle,
+      todoContent
+    );
+    // const documentData = await todosCollection.add(params);
+    if (!user.info.userNm) return;
+
+    const documentData = await todosCollection
+      .doc(String(params.id))
+      .set(params);
+
+    console.log('documentData=== ', documentData);
+    onResetStates();
+    closeModal();
+  };
   return (
     <Modal transparent visible={visible}>
       <Container>
@@ -189,6 +221,9 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
 
         {/* 일정 등록 버튼 */}
         <KeyboardAvoidingView>
+          <OrangeTouchable onPress={addTodoInFirestore}>
+            <Text>Click to Add todos in firestore</Text>
+          </OrangeTouchable>
           <OrangeTouchable onPress={onAddTodoHandler}>
             <Text>Click to Add</Text>
           </OrangeTouchable>

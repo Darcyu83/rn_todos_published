@@ -123,31 +123,12 @@ function TodosMainScrn({ route, navigation }: IProps) {
   return (
     <SafeAreaCustomized>
       <Container>
-        {/* Svg Circular schedule table */}
-        {/* <BedTimeSetScrn /> */}
-
         <ScrollView>
-          {/* <ToggleThemeView>
-          <Button title="Toggle DarkMode" onPress={onToggleDarkMode} />
-        </ToggleThemeView> */}
           {/* 일정 달력 */}
           <CalendarScheduled
             markedDates={markedDates}
             onMoveToDailyTasks={onMoveToDailyTasks}
           />
-
-          {/* <FlatList
-          style={{
-            width: '100%',
-            backgroundColor: 'rgba(0,0,0,0.1)',
-          }}
-          contentContainerStyle={{ borderRadius: 3, marginTop: 3 }}
-          data={todosList}
-          renderItem={({ item, index }) => (
-            <TodoCard todo={item} index={index} />
-          )}
-          ListHeaderComponent={() => <CalendarScheduled />}
-        /> */}
         </ScrollView>
       </Container>
       {/* 등록 버튼 */}
@@ -161,6 +142,7 @@ function TodosMainScrn({ route, navigation }: IProps) {
           <PlusIcon />
         </OrangeTouchable>
       </BtnWrapper>
+
       {/* 일정 등록 모달 */}
       <TodoRegisModal
         visible={isRegModalShown}

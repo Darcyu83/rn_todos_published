@@ -59,7 +59,7 @@ const todosSlice = createSlice({
 
     clearAllTodos: (state) => {
       state.list = {};
-      state.markedDates = {};
+      // state.markedDates = {};
     },
   },
   //초기화하고 싶은 state가 있는 slice마다 아래를 추가해야한다.

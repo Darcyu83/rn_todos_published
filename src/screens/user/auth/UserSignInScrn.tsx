@@ -37,8 +37,8 @@ function UserSignInScrn({
   navigation: NativeStackNavigationProp<TUserAuthNavParams>;
 }) {
   const { login } = useAuthContext();
-  const [email, setEmail] = useState('');
-  const [userPw, setUserPw] = useState('');
+  const [email, setEmail] = useState('123456@test.com');
+  const [userPw, setUserPw] = useState('123456');
 
   return (
     <ImageBackground
@@ -61,7 +61,7 @@ function UserSignInScrn({
           ]}
           value={email}
           onChangeText={setEmail}
-          placeholder="Username"
+          placeholder={`Username ${email}`}
           placeholderTextColor={'#bebebe'}
         />
 
@@ -74,7 +74,7 @@ function UserSignInScrn({
           ]}
           value={userPw}
           onChangeText={setUserPw}
-          placeholder="Password"
+          placeholder={`Password ${userPw}`}
           placeholderTextColor={'#bebebe'}
           secureTextEntry
         />
