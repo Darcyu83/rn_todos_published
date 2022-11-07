@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button, Text, View } from 'react-native';
+import { Button, ImageBackground, Text, View } from 'react-native';
 import useAuthContext from '../../../context/auth/hooks/useAuthContext';
 import { persistor } from '../../../redux/store';
+import { AppStyles } from '../../../styles/appStyles';
 
 interface IProps {}
 
@@ -11,15 +12,19 @@ const UserLogOutScrn = ({}: IProps) => {
     await persistor.purge();
   };
   return (
-    <View style={{}}>
+    <ImageBackground
+      source={require('../../../assets/backgroundImg/bg_coffee.jpg')}
+      style={AppStyles.container}
+    >
       <Button
         title="Log Out"
         onPress={async () => {
           await onPurgePersistedState();
           await logout();
         }}
+        color="#ffd966"
       />
-    </View>
+    </ImageBackground>
   );
 };
 

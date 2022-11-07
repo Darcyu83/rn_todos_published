@@ -6,80 +6,174 @@ import { ICON_SIZE } from '../../styles/constants';
 interface IProps {
   width?: number | string;
   height?: number | string;
+  focused?: boolean;
+  color?: string;
+  size?: number;
+  isBtmLineShown?: boolean;
 }
 
 const style = StyleSheet.create({
-  icon: { width: ICON_SIZE, height: ICON_SIZE },
+  icon: { width: '100%', height: '100%' },
 });
 
-export const AddIcon = ({ width, height }: IProps) => {
+export const AddIcon = ({
+  width = '100%',
+  height = '100%',
+  focused,
+  color,
+  size,
+  isBtmLineShown,
+}: IProps) => {
   return (
     <View
-      style={width && height ? { width: width, height: height } : style.icon}
+      style={[
+        { width: '100%', height: '100%' },
+        isBtmLineShown
+          ? {
+              borderBottomColor: color,
+              borderBottomWidth: 2,
+            }
+          : {},
+      ]}
     >
       <Image
-        style={{ width: 45, height: 45 }}
+        style={[{ width: '100%', height: '100%' }]}
         source={require('../../assets/icons/add-80.png')}
       />
     </View>
   );
 };
 
-export const EditIcon = ({ width, height }: IProps) => {
+export const EditIcon = ({
+  width = '100%',
+  height = '100%',
+  focused,
+  color,
+  size,
+  isBtmLineShown,
+}: IProps) => {
   return (
     <View
-      style={width && height ? { width: width, height: height } : style.icon}
+      style={[
+        size ? { width: size * 1.5, height: size * 1.5 } : { width, height },
+        isBtmLineShown
+          ? {
+              borderBottomColor: color,
+              borderBottomWidth: 2,
+            }
+          : {},
+      ]}
     >
       <Image
-        style={{ width: 45, height: 45 }}
+        style={[{ width: '100%', height: '100%' }]}
         source={require('../../assets/icons/edit-80.png')}
       />
     </View>
   );
 };
-export const ListIcon = ({ width, height }: IProps) => {
+export const ListIcon = ({
+  width = '100%',
+  height = '100%',
+  focused,
+  color,
+  size,
+  isBtmLineShown,
+}: IProps) => {
   return (
     <View
-      style={width && height ? { width: width, height: height } : style.icon}
+      style={[
+        size ? { width: size * 1.5, height: size * 1.5 } : { width, height },
+        isBtmLineShown
+          ? {
+              borderBottomColor: color,
+              borderBottomWidth: 3,
+            }
+          : {},
+      ]}
     >
       <Image
-        style={{ width: 45, height: 45 }}
+        style={[{ width: '100%', height: '100%' }]}
         source={require('../../assets/icons/list-100.png')}
       />
     </View>
   );
 };
-export const PlusIcon = ({ width, height }: IProps) => {
+export const PlusIcon = ({
+  width = '100%',
+  height = '100%',
+  focused,
+  color,
+  size,
+  isBtmLineShown,
+}: IProps) => {
   return (
     <View
-      style={width && height ? { width: width, height: height } : style.icon}
+      style={[
+        size ? { width: size * 1.5, height: size * 1.5 } : { width, height },
+        isBtmLineShown
+          ? {
+              borderBottomColor: color,
+              borderBottomWidth: 2,
+            }
+          : {},
+      ]}
     >
       <Image
-        style={{ width: 45, height: 45 }}
+        style={[{ width: '100%', height: '100%' }]}
         source={require('../../assets/icons/plus-50.png')}
       />
     </View>
   );
 };
-export const TrashBinIcon = ({ width, height }: IProps) => {
+export const TrashBinIcon = ({
+  width = '100%',
+  height = '100%',
+  focused,
+  color,
+  size,
+  isBtmLineShown,
+}: IProps) => {
   return (
     <View
-      style={width && height ? { width: width, height: height } : style.icon}
+      style={[
+        size ? { width: size * 1.5, height: size * 1.5 } : { width, height },
+        isBtmLineShown
+          ? {
+              borderBottomColor: color,
+              borderBottomWidth: 2,
+            }
+          : {},
+      ]}
     >
       <Image
-        style={{ width: 45, height: 45 }}
+        style={[{ width: '100%', height: '100%' }]}
         source={require('../../assets/icons/remove-50.png')}
       />
     </View>
   );
 };
-export const UserIcon = ({ width, height }: IProps) => {
+export const UserIcon = ({
+  width = '100%',
+  height = '100%',
+  focused,
+  color,
+  size,
+  isBtmLineShown,
+}: IProps) => {
   return (
     <View
-      style={width && height ? { width: width, height: height } : style.icon}
+      style={[
+        size ? { width: size * 1.5, height: size * 1.5 } : { width, height },
+        isBtmLineShown
+          ? {
+              borderBottomColor: color,
+              borderBottomWidth: 2,
+            }
+          : {},
+      ]}
     >
       <Image
-        style={{ width: 45, height: 45 }}
+        style={[{ width: '100%', height: '100%' }]}
         source={require('../../assets/icons/user-64.png')}
       />
     </View>

@@ -1,12 +1,16 @@
-import { MarkedDates } from 'react-native-calendars/src/types';
-import { store } from '../redux/store';
+import { DotProps } from 'react-native-calendars/src/calendar/day/dot';
+import { MarkingProps } from 'react-native-calendars/src/calendar/day/marking';
+import { TDot } from '../components/calendar/types';
+import { TTodoCate } from '../redux/todos/types';
 import { getThemeStyle } from '../utils/themeUtils';
-import { theme } from './theme';
 
 const { content_bg_primary, content_bg_primary_accent, text, text_white } =
   getThemeStyle();
 
-export const DotStyle = {
+export type TDotStyle = {
+  [key in TTodoCate]: TDot;
+};
+export const DotStyle: TDotStyle = {
   vacation: { key: 'vacation', color: 'red', selectedDotColor: 'blue' },
   massage: { key: 'massage', color: 'blue', selectedDotColor: 'blue' },
   workout: { key: 'workout', color: 'green' },

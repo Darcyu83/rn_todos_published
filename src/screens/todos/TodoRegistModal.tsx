@@ -7,6 +7,7 @@ import {
   ScrollView,
   Text,
   TextInput,
+  View,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import GestureRecognizer from 'react-native-swipe-gestures';
@@ -25,6 +26,8 @@ import { IPeriod } from './types';
 
 import firestore from '@react-native-firebase/firestore';
 import { onCreateTodoParams } from './todosUtils';
+import { capitalizeFirstLetter } from '../../utils/stringUtils';
+import { AddIcon, PlusIcon } from '../../components/icons/pngs';
 
 const Container = styled.View`
   flex: 1;
@@ -37,6 +40,15 @@ const CalendarWrapper = styled.View`
 
 const TodoInputWrapper = styled.View`
   width: 100%;
+`;
+
+const BtnWrapper = styled.View`
+  position: absolute;
+  width: ${28}px;
+  height: ${28}px;
+  right: 5px;
+  top: 5px;
+  z-index: 99;
 `;
 
 interface IProps {
@@ -76,6 +88,7 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
   const onClearTodoList = () => {
     dispatch(todosActions.clearAllTodos());
   };
+
   const onAddTodoHandler = () => {
     if (!todoTitle) {
       Alert.alert('No Title');
@@ -98,7 +111,38 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
     closeModal();
   };
 
+  const onUpdateTodoHandler = () => {
+    if (!taskModified) {
+      Alert.alert('No target to update');
+      return;
+    }
+
+    if (!todoTitle) {
+      Alert.alert('No Title');
+      return;
+    }
+    if (!startDtData || !endDtData) {
+      Alert.alert('No Start / End Date');
+      return;
+    }
+
+    const params = onCreateTodoParams(
+      cateSelected,
+      startDtData,
+      endDtData,
+      todoTitle,
+      todoContent
+    );
+
+    params.id = taskModified.id;
+    dispatch(todosActions.updateTodo(params));
+    onResetStates();
+    closeModal();
+  };
+
   useEffect(() => {
+    // 수정 보드인지 체크
+    console.log('taskModified', taskModified);
     if (taskModified) {
       setCateSelected(taskModified.category);
       setTodoTitle(taskModified.title);
@@ -150,12 +194,17 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
     <Modal transparent visible={visible}>
       <Container>
         {/* 닫기 버튼 */}
-        <Button
-          title="닫기"
-          onPress={() => {
-            closeModal();
-          }}
-        />
+        <BtnWrapper>
+          <OrangeTouchable
+            onPress={() => {
+              closeModal();
+            }}
+          >
+            <View style={{ transform: [{ rotate: '45deg' }] }}>
+              <PlusIcon />
+            </View>
+          </OrangeTouchable>
+        </BtnWrapper>
 
         {/* 달력 날짜 픽커 */}
         <ScrollView
@@ -176,7 +225,7 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
           <DropDownPicker
             multiple={false}
             items={Object.keys(DotStyle).map((key) => ({
-              label: key.charAt(0).toUpperCase() + key.slice(1),
+              label: capitalizeFirstLetter(key),
               value: key,
             }))}
             open={isCatePickerOpen}
@@ -220,14 +269,24 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
         </ScrollView>
 
         {/* 일정 등록 버튼 */}
-        <KeyboardAvoidingView>
-          <OrangeTouchable onPress={addTodoInFirestore}>
+        <KeyboardAvoidingView style={{}}>
+          <OrangeTouchable
+            style={{ marginVertical: 3 }}
+            onPress={addTodoInFirestore}
+          >
             <Text>Click to Add todos in firestore</Text>
           </OrangeTouchable>
-          <OrangeTouchable onPress={onAddTodoHandler}>
-            <Text>Click to Add</Text>
+
+          <OrangeTouchable
+            style={{ marginVertical: 3 }}
+            onPress={taskModified ? onUpdateTodoHandler : onAddTodoHandler}
+          >
+            <Text>Click to Add or Update</Text>
           </OrangeTouchable>
-          <OrangeTouchable onPress={onClearTodoList}>
+          <OrangeTouchable
+            style={{ marginVertical: 3 }}
+            onPress={onClearTodoList}
+          >
             <Text>Remove All Todos</Text>
           </OrangeTouchable>
         </KeyboardAvoidingView>

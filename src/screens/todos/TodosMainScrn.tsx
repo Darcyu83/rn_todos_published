@@ -4,6 +4,7 @@ import { KeyboardAvoidingView, ScrollView, Text } from 'react-native';
 import { DateData, MarkedDates } from 'react-native-calendars/src/types';
 import styled from 'styled-components/native';
 import CalendarScheduled from '../../components/calendar/CalendarScheduled';
+import TaskIndicator from '../../components/calendar/TaskIndicator';
 import { TMarkedDatesCustomed } from '../../components/calendar/types';
 import { PlusIcon } from '../../components/icons/pngs';
 import { TTodosNavParams } from '../../navigator/branches/todos/types';
@@ -11,11 +12,12 @@ import { TRootNavParamsList } from '../../navigator/types';
 import { useAppSelector } from '../../redux/hooks';
 import { TTodo } from '../../redux/todos/types';
 import { DotStyle } from '../../styles/calendarStyle';
+import { ICON_SIZE } from '../../styles/constants';
 import {
   OrangeTouchable,
   SafeAreaCustomized,
 } from '../../styles/styledComponents/components';
-import BedTimeSetScrn from '../bedTime/BedTimeSetScrn';
+import BedTimeSetScrn from '../todosFirestore/TodosFirestoreScrn';
 import TodoRegisModal from './TodoRegistModal';
 
 const Container = styled.View`
@@ -35,6 +37,8 @@ const BtnWrapper = styled.View`
   position: absolute;
   bottom: 10px;
   right: 10px;
+  width: ${28}px;
+  height: ${28}px;
 `;
 
 interface IProps {
@@ -124,6 +128,9 @@ function TodosMainScrn({ route, navigation }: IProps) {
     <SafeAreaCustomized>
       <Container>
         <ScrollView>
+          {/* 할일 구분 */}
+          <TaskIndicator />
+
           {/* 일정 달력 */}
           <CalendarScheduled
             markedDates={markedDates}

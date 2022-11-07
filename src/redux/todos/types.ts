@@ -2,8 +2,10 @@ import { DateData } from 'react-native-calendars';
 import { MarkingProps } from 'react-native-calendars/src/calendar/day/marking';
 import { MarkedDates } from 'react-native-calendars/src/types';
 
+export type TTodoCate = 'vacation' | 'massage' | 'workout' | 'meeting' | 'etc';
+
 export interface TTodo {
-  category: 'vacation' | 'massage' | 'workout' | 'meeting' | 'etc';
+  category: TTodoCate;
   isInSingleDay: boolean;
   id: number;
   title: string;

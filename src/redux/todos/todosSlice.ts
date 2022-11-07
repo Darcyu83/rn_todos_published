@@ -53,6 +53,16 @@ const todosSlice = createSlice({
 
       state.list = todoList;
     },
+    updateTodo: (state, action: PayloadAction<TTodo>) => {
+      const startDtString = action.payload.startDtData.dateString;
+      const endDtString = action.payload.endDtData.dateString;
+      const dateStringsArr = crateDatesStringArr(startDtString, endDtString);
+
+      state.list[action.payload.id] = {
+        info: action.payload,
+        period: dateStringsArr,
+      };
+    },
     removeTodo: (state, action: PayloadAction<TTodo>) => {
       //   state.list = state.list.filter((todo) => todo.id !== action.payload.id);
     },

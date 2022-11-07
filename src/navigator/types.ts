@@ -1,9 +1,12 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
 import { TBedTimeNavParams } from './branches/bedTime/types';
 import { TTodosNavParams } from './branches/todos/types';
+import { TUserNavParams } from './branches/user/types';
 
 export type TRootNavParamsList = {
-  todos: TTodosNavParams;
-  auth: undefined;
-  user: undefined;
+  todos: NavigatorScreenParams<TTodosNavParams>;
+  todosFiresstore: undefined;
+
+  user: TUserNavParams;
   bedtime: TBedTimeNavParams;
 };

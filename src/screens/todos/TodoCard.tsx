@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import styled from 'styled-components/native';
-import { TrashBinIcon } from '../../components/icons/pngs';
+import { AddIcon, EditIcon, TrashBinIcon } from '../../components/icons/pngs';
 import { useAppDispatch } from '../../redux/hooks';
 import { todosActions } from '../../redux/todos/todosSlice';
 import { TTodo } from '../../redux/todos/types';
@@ -18,7 +18,7 @@ import {
   SectionTitle,
 } from '../../styles/styledComponents/components';
 
-const ContainerTouchable = styled.TouchableOpacity`
+const Container = styled.View`
   /* background-color: rgba(30, 144, 255, 0.5); */
   width: 100%;
   min-width: 100%;
@@ -31,12 +31,13 @@ const RowContainer = styled.View`
   width: 100%;
 `;
 
-const BtnWrapper = styled.View`
-  height: 16px;
+const BtnWrapper = styled.View<{ right: number }>`
+  width: ${20}px;
+  height: ${20}px;
+  z-index: 99;
   position: absolute;
   top: 50%;
-  right: 10px;
-  transform: translateY(-8px);
+  right: ${(props) => props.right}px;
 `;
 
 interface IProps {
@@ -88,7 +89,7 @@ function TodoCard({ todo, index, onPressTodoCardToModify }: IProps) {
         },
       ]}
     >
-      <ContainerTouchable onLongPress={onPressTodoCardToModify}>
+      <Container>
         <RowContainer>
           {/*ROW1 :  타이틀 */}
           <Text>{`[${
@@ -100,14 +101,21 @@ function TodoCard({ todo, index, onPressTodoCardToModify }: IProps) {
         <RowContainer>
           <Text>{todo.todo}</Text>
         </RowContainer>
+      </Container>
 
-        {/* 삭제 버튼 */}
-        <BtnWrapper>
-          <OrangeTouchable onPress={onRemoveTodohandler}>
-            <TrashBinIcon width={'100%'} height={'100%'} />
-          </OrangeTouchable>
-        </BtnWrapper>
-      </ContainerTouchable>
+      {/* 수정 버튼 */}
+      <BtnWrapper right={30}>
+        <TouchableOpacity onPress={onPressTodoCardToModify}>
+          <EditIcon />
+        </TouchableOpacity>
+      </BtnWrapper>
+
+      {/* 삭제 버튼 */}
+      <BtnWrapper right={5}>
+        <TouchableOpacity onPress={onRemoveTodohandler}>
+          <TrashBinIcon width={'100%'} height={'100%'} />
+        </TouchableOpacity>
+      </BtnWrapper>
     </Animated.View>
   );
 }

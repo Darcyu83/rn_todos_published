@@ -12,7 +12,7 @@ import {
 import styled from 'styled-components/native';
 import InlineTextButton from '../../../components/bottons/InlineTextButton';
 import useAuthContext from '../../../context/auth/hooks/useAuthContext';
-import { TUserAuthNavParams } from '../../../navigator/branches/user/auth/types';
+import { TUserNavParams } from '../../../navigator/branches/user/types';
 import { TRootNavParamsList } from '../../../navigator/types';
 import { useAppDispatch } from '../../../redux/hooks';
 import { toggleDarkMode } from '../../../redux/theme/themeSlice';
@@ -34,11 +34,11 @@ interface IProps {}
 function UserSignInScrn({
   navigation,
 }: {
-  navigation: NativeStackNavigationProp<TUserAuthNavParams>;
+  navigation: NativeStackNavigationProp<TUserNavParams>;
 }) {
   const { login } = useAuthContext();
-  const [email, setEmail] = useState('123456@test.com');
-  const [userPw, setUserPw] = useState('123456');
+  const [email, setEmail] = useState('');
+  const [userPw, setUserPw] = useState('');
 
   return (
     <ImageBackground

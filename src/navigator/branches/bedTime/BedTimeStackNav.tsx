@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Text, View } from 'react-native';
-import BedTimeSetScrn from '../../../screens/bedTime/BedTimeSetScrn';
+import BedTimeSetScrn from '../../../screens/todosFirestore/TodosFirestoreScrn';
 import { TBedTimeNavParams } from './types';
 
 interface IProps {}
