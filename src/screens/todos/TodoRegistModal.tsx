@@ -55,13 +55,19 @@ interface IProps {
   visible: boolean;
   closeModal: () => void;
   taskModified: TTodo | null;
+  setIsRegOrUpdatedDone?: (bool: boolean) => void;
 }
 
 const periodInitialState = {
   startDtData: null,
   endDtData: null,
 };
-function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
+function TodoRegistModal({
+  visible,
+  closeModal,
+  taskModified,
+}: // setIsRegOrUpdatedDone,
+IProps) {
   const user = useAppSelector((state) => state.user);
   const [todoTitle, setTodoTitle] = useState('');
   const [todoContent, setTodoContent] = useState('');
@@ -109,6 +115,7 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
     dispatch(todosActions.addTodo(params));
     onResetStates();
     closeModal();
+    // setIsRegOrUpdatedDone && setIsRegOrUpdatedDone(true);
   };
 
   const onUpdateTodoHandler = () => {
@@ -138,6 +145,7 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
     dispatch(todosActions.updateTodo(params));
     onResetStates();
     closeModal();
+    // setIsRegOrUpdatedDone && setIsRegOrUpdatedDone(true);
   };
 
   useEffect(() => {

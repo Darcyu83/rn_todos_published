@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import { TTodosNavParams } from '../../navigator/branches/todos/types';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { todosActions } from '../../redux/todos/todosSlice';
 
 import { TTodo, TTodoList } from '../../redux/todos/types';
 import {
@@ -17,6 +19,7 @@ import {
 } from '../../styles/styledComponents/components';
 import TodoCard from './TodoCard';
 import TodoRegistModal from './TodoRegistModal';
+import { createDailyDetailedTaskList } from './todosUtils';
 
 const BtnWrapper = styled.View`
   width: 100%;
@@ -24,42 +27,55 @@ const BtnWrapper = styled.View`
 `;
 
 interface IProps {
-  route: NativeStackScreenProps<
-    TTodosNavParams,
-    'TodosDetailedListScrn'
-  >['route'];
+  route: ['route'];
 }
 
-function TodosDetailedListScrn({ route }: IProps) {
-  const { dailyTasks } = route.params;
+function TodosDetailedListScrn({
+  route,
+  navigation,
+}: NativeStackScreenProps<TTodosNavParams, 'TodosDetailedListScrn'>) {
+  const { clickedDateData } = route.params;
+
+  const { list: todosList } = useAppSelector((state) => state.todos);
+  const [isRegOrUpdatedDone, setIsRegOrUpdatedDone] = useState(false);
 
   // 할일 등록 모달 토글
   const [isRegModalShown, setIsRegModalShown] = useState(false);
+  // 해당 날짜의 할일's
+  const [dailyTaskList, setdailyTaskList] = useState<TTodo[] | null>(null);
 
+  // 수정할 할일 정보
   const [taskModified, setTaskModified] = useState<TTodo | null>(null);
 
-  const onPressTodoCardToModify = (taskInfo: TTodo) => {
+  const onPressToModify = (taskInfo: TTodo) => {
     setTaskModified(taskInfo);
     setIsRegModalShown(true);
   };
 
-  const flatlistRef = useRef<FlatList>(null);
+  const moveToMainScrn = () => {
+    navigation.navigate('TodosMainScrn');
+  };
+
   useEffect(() => {
-    console.log('todosList[Number(id)]', dailyTasks);
-    console.log('flatlistRef', flatlistRef.current);
-  }, []);
+    //새 일정 등록 또는 수정 후 메인 화면으로
+    if (isRegOrUpdatedDone) moveToMainScrn();
+  }, [isRegOrUpdatedDone]);
+
+  useEffect(() => {}, [clickedDateData, todosList]);
+
+  const flatlistRef = useRef<FlatList>(null);
 
   return (
     <SafeAreaCustomized>
       <FlatList
         ref={flatlistRef}
-        data={dailyTasks}
+        data={createDailyDetailedTaskList(todosList, clickedDateData)}
         keyExtractor={(item, index) => item.id.toString() + index}
         renderItem={({ item, index }) => (
           <TodoCard
             index={index}
             todo={item}
-            onPressTodoCardToModify={() => onPressTodoCardToModify(item)}
+            onPressToModify={() => onPressToModify(item)}
           />
         )}
         onScroll={(e) =>
@@ -97,6 +113,7 @@ function TodosDetailedListScrn({ route }: IProps) {
       {/* 일정 등록 모달 */}
       <TodoRegistModal
         visible={isRegModalShown}
+        setIsRegOrUpdatedDone={setIsRegOrUpdatedDone}
         closeModal={() => setIsRegModalShown(false)}
         taskModified={taskModified}
       />

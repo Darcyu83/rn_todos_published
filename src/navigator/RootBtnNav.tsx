@@ -1,14 +1,10 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React, { useEffect } from 'react';
-import { Text, View } from 'react-native';
 import { ThemeProvider } from 'styled-components/native';
 import { ListIcon, UserIcon } from '../components/icons/pngs';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { setUserToken } from '../redux/user/userSlice';
-import TodosMainScrn from '../screens/todos/TodosMainScrn';
 import TodosFirestoreScrn from '../screens/todosFirestore/TodosFirestoreScrn';
 import { theme } from '../styles/theme';
-import { sleep } from '../utils/etc';
 import BedTimeStackNav from './branches/bedTime/BedTimeStackNav';
 import TodosStackNav from './branches/todos/TodosStackNav';
 import UserStackNav from './branches/user/UserStackNav';

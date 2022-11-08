@@ -44,13 +44,13 @@ interface IProps {
   todo: TTodo;
 
   index: number;
-  onPressTodoCardToModify: () => void;
+  onPressToModify: () => void;
 }
 
-function TodoCard({ todo, index, onPressTodoCardToModify }: IProps) {
+function TodoCard({ todo, index, onPressToModify }: IProps) {
   const dispatch = useAppDispatch();
   const onRemoveTodohandler = () => {
-    dispatch(todosActions.removeTodo(todo));
+    dispatch(todosActions.removeTodo({ taskId: todo.id }));
   };
 
   const rotateAni = useRef(new Animated.Value(0));
@@ -105,7 +105,7 @@ function TodoCard({ todo, index, onPressTodoCardToModify }: IProps) {
 
       {/* 수정 버튼 */}
       <BtnWrapper right={30}>
-        <TouchableOpacity onPress={onPressTodoCardToModify}>
+        <TouchableOpacity onPress={onPressToModify}>
           <EditIcon />
         </TouchableOpacity>
       </BtnWrapper>

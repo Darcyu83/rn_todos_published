@@ -63,8 +63,9 @@ const todosSlice = createSlice({
         period: dateStringsArr,
       };
     },
-    removeTodo: (state, action: PayloadAction<TTodo>) => {
+    removeTodo: (state, action: PayloadAction<{ taskId: number }>) => {
       //   state.list = state.list.filter((todo) => todo.id !== action.payload.id);
+      delete state.list[action.payload.taskId];
     },
 
     clearAllTodos: (state) => {

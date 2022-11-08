@@ -15,7 +15,7 @@ import { DotStyle, periodStyle } from '../../styles/calendarStyle';
 import { SCREEN_WIDTH } from '../../styles/constants';
 import { theme } from '../../styles/theme';
 import { IPeriod } from '../../screens/todos/types';
-import { createMarkedDates } from '../../utils/calendarUtils';
+import { createPeriodMarkedDates } from '../../utils/calendarUtils';
 
 const CalendarWrapper = styled.View`
   overflow: hidden;
@@ -75,7 +75,7 @@ function CalendarDatePicker({
 
   // 날짜 변경 후 달력에 MARKING dates 표시
   const onDateDataChangedHandler = useCallback(() => {
-    const _markedDates = createMarkedDates(_startDtData, _endDtData);
+    const _markedDates = createPeriodMarkedDates(_startDtData, _endDtData);
     setMarkedDates(_markedDates);
     setPeriod((curr) => ({
       startDtData: _startDtData,
