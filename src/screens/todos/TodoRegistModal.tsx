@@ -169,7 +169,6 @@ IProps) {
   }, []);
 
   // firestore==============================================================
-  const todosCollection = firestore().collection('todos');
 
   const addTodoInFirestore = async () => {
     if (!todoTitle) {
@@ -180,24 +179,41 @@ IProps) {
       Alert.alert('No Start / End Date');
       return;
     }
-    const params: TTodo = onCreateTodoParams(
+    const thisTodoParams: TTodo = onCreateTodoParams(
       cateSelected,
       startDtData,
       endDtData,
       todoTitle,
       todoContent
     );
-    // const documentData = await todosCollection.add(params);
     if (!user.info.userNm) return;
 
-    const documentData = await todosCollection
-      .doc(String(params.id))
-      .set(params);
+    const isNewUser = await firestore()
+      .collection(user.info.userNm)
+      .doc('todoList')
+      .collection(String(thisTodoParams.id))
+      .add(thisTodoParams);
+    // .add({ [thisTodoParams.id]: thisTodoParams });
 
-    console.log('documentData=== ', documentData);
+    // const isNewUser = await firestore()
+    //   .collection(user.info.userNm)
+    //   .doc('todoList')
+    //   .set({ [thisTodoParams.id]: thisTodoParams });
+
+    console.log('isNewUser=== isNewUser', isNewUser);
+
     onResetStates();
     closeModal();
   };
+
+  const addUserInfoFirestore = async () => {
+    if (!user.info.userNm) return;
+    await firestore()
+      .collection(user.info.userNm)
+      .doc('userInfo')
+      .set(user.info);
+  };
+
   return (
     <Modal transparent visible={visible}>
       <Container>
@@ -280,7 +296,14 @@ IProps) {
         <KeyboardAvoidingView style={{}}>
           <OrangeTouchable
             style={{ marginVertical: 3 }}
-            onPress={addTodoInFirestore}
+            onPress={async () => await addUserInfoFirestore()}
+          >
+            <Text>Add User Info to firestore</Text>
+          </OrangeTouchable>
+
+          <OrangeTouchable
+            style={{ marginVertical: 3 }}
+            onPress={async () => await addTodoInFirestore()}
           >
             <Text>Click to Add todos in firestore</Text>
           </OrangeTouchable>
@@ -295,7 +318,7 @@ IProps) {
             style={{ marginVertical: 3 }}
             onPress={onClearTodoList}
           >
-            <Text>Remove All Todos</Text>
+            <Text>Remove All Todos in redux</Text>
           </OrangeTouchable>
         </KeyboardAvoidingView>
       </Container>

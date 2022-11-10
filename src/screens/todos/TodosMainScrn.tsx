@@ -23,6 +23,9 @@ import {
 } from '../../utils/calendarUtils';
 import BedTimeSetScrn from '../todosFirestore/TodosFirestoreScrn';
 import TodoRegisModal from './TodoRegistModal';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
 
 const Container = styled.View`
   flex: 1;
@@ -51,6 +54,7 @@ interface IProps {
 }
 
 function TodosMainScrn({ route, navigation }: IProps) {
+  const user = useAppSelector((state) => state.user);
   const { list: todosList } = useAppSelector((state) => state.todos);
   const [markedDates, setMarkedDates] = useState<TMarkedDatesCustomed>({});
 
@@ -70,6 +74,39 @@ function TodosMainScrn({ route, navigation }: IProps) {
     setMarkedDates(_markedDates);
   }, [todosList]);
 
+  // firebase data changes listener
+  useEffect(() => {
+    if (!user.info.userNm) return;
+    console.log('onSnapshot useEffect here ran', user.info.userNm);
+
+    let dataMap: { [taskId: number]: TTodo } = {};
+
+    firestore()
+      .collection(user.info.userNm)
+      .onSnapshot((qeurySnapshot) => {
+        console.log(
+          '%c path : ./userEmail/',
+          'background-color: orange',
+          qeurySnapshot.metadata
+        );
+      });
+
+    firestore()
+      .collection(user.info.userNm)
+      .doc('todoList')
+      .onSnapshot((docUpdated) =>
+        console.log(
+          '%c path : ./userEmail/todoList/',
+          'background-color: orange',
+          docUpdated.metadata
+        )
+      );
+
+    return () => {
+      console.log('onSnapshot useEffect unsubscriber here ran');
+    };
+  }, [user.info.userNm]);
+
   return (
     <SafeAreaCustomized>
       <Container>
@@ -84,8 +121,8 @@ function TodosMainScrn({ route, navigation }: IProps) {
           />
         </ScrollView>
       </Container>
-      {/* 등록 버튼 */}
 
+      {/* 등록 버튼 */}
       <BtnWrapper>
         <OrangeTouchable
           onPress={() => {
