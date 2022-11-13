@@ -80,7 +80,7 @@ IProps) {
     setIsCatePickerOpen((curr) => !curr);
   };
   const [cateSelected, setCateSelected] = useState<
-    null | 'vacation' | 'massage' | 'workout' | 'meeting' | 'etc'
+    null | 'vacation' | 'message' | 'workout' | 'meeting' | 'etc'
   >(null);
 
   const onResetStates = () => {
@@ -188,19 +188,20 @@ IProps) {
     );
     if (!user.info.userNm) return;
 
-    const isNewUser = await firestore()
-      .collection(user.info.userNm)
-      .doc('todoList')
-      .collection(String(thisTodoParams.id))
-      .add(thisTodoParams);
-    // .add({ [thisTodoParams.id]: thisTodoParams });
+    try {
+      console.log('firebase saving Start... ');
+      await firestore()
+        .collection('users')
+        .doc(user.info.userNm)
+        .collection('todoList')
+        .doc(String(thisTodoParams.id))
+        .set(thisTodoParams)
+        .then((v) => console.log('firebase saving then... '));
 
-    // const isNewUser = await firestore()
-    //   .collection(user.info.userNm)
-    //   .doc('todoList')
-    //   .set({ [thisTodoParams.id]: thisTodoParams });
-
-    console.log('isNewUser=== isNewUser', isNewUser);
+      console.log('firebase saving end... ');
+    } catch (error) {
+      console.log('try catching error firebase saving end... ', error);
+    }
 
     onResetStates();
     closeModal();

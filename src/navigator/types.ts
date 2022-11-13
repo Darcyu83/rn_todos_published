@@ -6,7 +6,7 @@ import { TUserNavParams } from './branches/user/types';
 export type TRootNavParamsList = {
   todos: NavigatorScreenParams<TTodosNavParams>;
   todosFiresstore: undefined;
-
+  auth: TUserNavParams;
   user: TUserNavParams;
   bedtime: TBedTimeNavParams;
 };

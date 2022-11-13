@@ -105,17 +105,17 @@ function CalendarScheduled({ markedDates, onMoveToDailyTasks }: IProps) {
           //     dots: [
           //       DotStyle.vacation,
           //       DotStyle.workout,
-          //       DotStyle.massage,
+          //       DotStyle.message,
           //       DotStyle.meeting,
           //     ],
           //   },
-          //   '2022-10-18': { dots: [DotStyle.massage] },
-          //   '2022-10-19': { dots: [DotStyle.massage] },
+          //   '2022-10-18': { dots: [DotStyle.message] },
+          //   '2022-10-19': { dots: [DotStyle.message] },
           //   '2022-10-20': {
-          //     dots: [DotStyle.vacation, DotStyle.workout, DotStyle.massage],
+          //     dots: [DotStyle.vacation, DotStyle.workout, DotStyle.message],
           //   },
           //   '2022-10-21': {
-          //     dots: [DotStyle.vacation, DotStyle.workout, DotStyle.massage],
+          //     dots: [DotStyle.vacation, DotStyle.workout, DotStyle.message],
           //   },
           // }
         }

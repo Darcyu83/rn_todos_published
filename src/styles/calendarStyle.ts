@@ -12,7 +12,7 @@ export type TDotStyle = {
 };
 export const DotStyle: TDotStyle = {
   vacation: { key: 'vacation', color: 'red', selectedDotColor: 'blue' },
-  massage: { key: 'massage', color: 'blue', selectedDotColor: 'blue' },
+  message: { key: 'message', color: 'blue', selectedDotColor: 'blue' },
   workout: { key: 'workout', color: 'green' },
   meeting: { key: 'meeting', color: 'orange' },
   etc: { key: 'etc', color: 'slategray' },

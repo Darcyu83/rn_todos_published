@@ -11,19 +11,19 @@ const initialState: TTodosInitialState = {
   //   dots: [
   //     DotStyle.vacation,
   //     DotStyle.workout,
-  //     DotStyle.massage,
+  //     DotStyle.message,
   //     DotStyle.meeting,
   //   ],
   // },
-  // '2022-10-18': { taskCnt: 0, dots: [DotStyle.massage] },
-  // '2022-10-19': { taskCnt: 0, dots: [DotStyle.massage] },
+  // '2022-10-18': { taskCnt: 0, dots: [DotStyle.message] },
+  // '2022-10-19': { taskCnt: 0, dots: [DotStyle.message] },
   // '2022-10-20': {
   //   taskCnt: 0,
-  //   dots: [DotStyle.vacation, DotStyle.workout, DotStyle.massage],
+  //   dots: [DotStyle.vacation, DotStyle.workout, DotStyle.message],
   // },
   // '2022-10-21': {
   //   taskCnt: 0,
-  //   dots: [DotStyle.vacation, DotStyle.workout, DotStyle.massage],
+  //   dots: [DotStyle.vacation, DotStyle.workout, DotStyle.message],
   // },
   // },
 };

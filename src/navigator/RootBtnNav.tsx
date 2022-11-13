@@ -35,6 +35,7 @@ const RootBtnNav = ({}: IProps) => {
           tabBarActiveTintColor: '#70d7c7',
           tabBarShowLabel: true,
         }}
+        initialRouteName={'todos'}
       >
         {/* 로그인 여부에 따른 구분 */}
         {userToken ? (
@@ -105,7 +106,7 @@ const RootBtnNav = ({}: IProps) => {
           </>
         ) : (
           <Tab.Screen
-            name="user"
+            name="auth"
             component={UserStackNav}
             // tab bar invisible
             options={{ tabBarStyle: { display: 'none' } }}

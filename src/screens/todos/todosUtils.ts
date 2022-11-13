@@ -4,7 +4,7 @@ import { TTodo, TTodoList } from '../../redux/todos/types';
 import { DotStyle } from '../../styles/calendarStyle';
 
 export const onCreateTodoParams = (
-  cateSelected: 'vacation' | 'massage' | 'workout' | 'meeting' | 'etc' | null,
+  cateSelected: 'vacation' | 'message' | 'workout' | 'meeting' | 'etc' | null,
   startDtData: DateData,
   endDtData: DateData,
   todoTitle: string,
