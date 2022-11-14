@@ -7,10 +7,8 @@ const Container = styled.View`
   align-items: center;
   justify-content: center;
 `;
-export const returnLoadingScrn = (isLoading: boolean) => {
-  return (
+export const returnLoadingScrn = (isLoading: boolean) => (
     <Container>
       <ActivityIndicator size="large" color="#ffd966" />
     </Container>
   );
-};

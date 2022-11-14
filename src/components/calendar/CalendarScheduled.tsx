@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import { MarkingProps } from 'react-native-calendars/src/calendar/day/marking';
+import { DateData, MarkedDates } from 'react-native-calendars/src/types';
+import Dot from 'react-native-calendars/src/calendar/day/dot';
 import { OrangeTouchable } from '../../styles/styledComponents/components';
 import DateString from '../../utils/dateUtils';
 import CalendarArrow from './CalendarArrow';
 import { DotStyle } from '../../styles/calendarStyle';
-import { MarkingProps } from 'react-native-calendars/src/calendar/day/marking';
 import { TTodo } from '../../redux/todos/types';
-import { DateData, MarkedDates } from 'react-native-calendars/src/types';
 import { TMarkedDatesCustomed } from './types';
-import Dot from 'react-native-calendars/src/calendar/day/dot';
 
 interface IProps {
   markedDates: TMarkedDatesCustomed;

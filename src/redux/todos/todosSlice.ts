@@ -36,10 +36,10 @@ const todosSlice = createSlice({
       const taskId = action.payload.id;
       const startDtString = action.payload.startDtData.dateString;
       const endDtString = action.payload.endDtData.dateString;
-      const category = action.payload.category;
+      const {category} = action.payload;
 
       // 할일 정보 및 기간 정보
-      let todoList = state.list;
+      const todoList = state.list;
       const dateStringsArr = crateDatesStringArr(startDtString, endDtString);
 
       if (!todoList[taskId]) {
@@ -73,7 +73,7 @@ const todosSlice = createSlice({
       // state.markedDates = {};
     },
   },
-  //초기화하고 싶은 state가 있는 slice마다 아래를 추가해야한다.
+  // 초기화하고 싶은 state가 있는 slice마다 아래를 추가해야한다.
   extraReducers: (builder) => {
     builder.addCase(PURGE, () => initialState);
   },

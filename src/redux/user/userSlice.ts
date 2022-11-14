@@ -22,7 +22,7 @@ const useSlice = createSlice({
       state.info = { ...state.info, ...action.payload };
     },
   },
-  //초기화하고 싶은 state가 있는 slice마다 아래를 추가해야한다.
+  // 초기화하고 싶은 state가 있는 slice마다 아래를 추가해야한다.
   extraReducers: (builder) => {
     builder.addCase(PURGE, () => initialState);
   },

@@ -16,14 +16,14 @@ const style = StyleSheet.create({
   icon: { width: '100%', height: '100%' },
 });
 
-export const AddIcon = ({
+export function AddIcon({
   width = '100%',
   height = '100%',
   focused,
   color,
   size,
   isBtmLineShown,
-}: IProps) => {
+}: IProps) {
   return (
     <View
       style={[
@@ -42,16 +42,16 @@ export const AddIcon = ({
       />
     </View>
   );
-};
+}
 
-export const EditIcon = ({
+export function EditIcon({
   width = '100%',
   height = '100%',
   focused,
   color,
   size,
   isBtmLineShown,
-}: IProps) => {
+}: IProps) {
   return (
     <View
       style={[
@@ -70,15 +70,15 @@ export const EditIcon = ({
       />
     </View>
   );
-};
-export const ListIcon = ({
+}
+export function ListIcon({
   width = '100%',
   height = '100%',
   focused,
   color,
   size,
   isBtmLineShown,
-}: IProps) => {
+}: IProps) {
   return (
     <View
       style={[
@@ -97,15 +97,15 @@ export const ListIcon = ({
       />
     </View>
   );
-};
-export const PlusIcon = ({
+}
+export function PlusIcon({
   width = '100%',
   height = '100%',
   focused,
   color,
   size,
   isBtmLineShown,
-}: IProps) => {
+}: IProps) {
   return (
     <View
       style={[
@@ -124,15 +124,15 @@ export const PlusIcon = ({
       />
     </View>
   );
-};
-export const TrashBinIcon = ({
+}
+export function TrashBinIcon({
   width = '100%',
   height = '100%',
   focused,
   color,
   size,
   isBtmLineShown,
-}: IProps) => {
+}: IProps) {
   return (
     <View
       style={[
@@ -151,15 +151,15 @@ export const TrashBinIcon = ({
       />
     </View>
   );
-};
-export const UserIcon = ({
+}
+export function UserIcon({
   width = '100%',
   height = '100%',
   focused,
   color,
   size,
   isBtmLineShown,
-}: IProps) => {
+}: IProps) {
   return (
     <View
       style={[
@@ -178,7 +178,7 @@ export const UserIcon = ({
       />
     </View>
   );
-};
+}
 
 export default {
   AddIcon,

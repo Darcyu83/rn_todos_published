@@ -91,13 +91,13 @@ function TodoCard({ todo, index, onPressToModify }: IProps) {
     >
       <Container>
         <RowContainer>
-          {/*ROW1 :  타이틀 */}
+          {/* ROW1 :  타이틀 */}
           <Text>{`[${
             todo.category.charAt(0).toUpperCase() + todo.category.slice(1)
           }] ${todo.title}`}</Text>
         </RowContainer>
 
-        {/*ROW2 :   내용 */}
+        {/* ROW2 :   내용 */}
         <RowContainer>
           <Text>{todo.todo}</Text>
         </RowContainer>
@@ -113,7 +113,7 @@ function TodoCard({ todo, index, onPressToModify }: IProps) {
       {/* 삭제 버튼 */}
       <BtnWrapper right={5}>
         <TouchableOpacity onPress={onRemoveTodohandler}>
-          <TrashBinIcon width={'100%'} height={'100%'} />
+          <TrashBinIcon width="100%" height="100%" />
         </TouchableOpacity>
       </BtnWrapper>
     </Animated.View>

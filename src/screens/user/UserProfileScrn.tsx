@@ -8,9 +8,9 @@ import { ScrnTitle } from '../../styles/styledComponents/components';
 
 interface IProps {}
 
-const UserProfileScrn = ({
+function UserProfileScrn({
   navigation,
-}: NativeStackScreenProps<TUserNavParams>) => {
+}: NativeStackScreenProps<TUserNavParams>) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.4)' }}>
       <ScrnTitle>UserProfileScrn</ScrnTitle>
@@ -23,6 +23,6 @@ const UserProfileScrn = ({
       />
     </SafeAreaView>
   );
-};
+}
 
 export default UserProfileScrn;

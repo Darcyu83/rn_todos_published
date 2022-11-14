@@ -10,10 +10,11 @@ import {
   REGISTER,
   REHYDRATE,
 } from 'redux-persist';
+import { createLogger } from 'redux-logger';
 import { themeReducer } from './theme/themeSlice';
 import { todosReducer } from './todos/todosSlice';
 import { userReducer } from './user/userSlice';
-import { createLogger } from 'redux-logger';
+
 const persistConfig = {
   key: 'root',
   version: 1,

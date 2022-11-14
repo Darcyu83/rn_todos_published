@@ -7,13 +7,13 @@ import { TAppInfoNavParams } from './types';
 
 interface IProps {}
 const Stack = createNativeStackNavigator<TAppInfoNavParams>();
-const AppInfoNav = ({}: IProps) => {
+function AppInfoNav({}: IProps) {
   return (
     <Stack.Navigator>
       <Stack.Screen name="HelpScrn" component={HelpScrn} />
       <Stack.Screen name="AboutScrn" component={AboutScrn} />
     </Stack.Navigator>
   );
-};
+}
 
 export default AppInfoNav;

@@ -18,7 +18,7 @@ interface IProps {
   navigation: NativeStackNavigationProp<TRootNavParamsList>;
 }
 
-const UserResetPwScrn = ({ navigation }: IProps) => {
+function UserResetPwScrn({ navigation }: IProps) {
   const [email, setEmail] = useState('');
   const [validationMsg, setValidationMsg] = useState('');
   return (
@@ -47,7 +47,7 @@ const UserResetPwScrn = ({ navigation }: IProps) => {
           value={email}
           onChangeText={setEmail}
           placeholder="Email"
-          placeholderTextColor={'#bebebe'}
+          placeholderTextColor="#bebebe"
         />
 
         {/* Login 버튼 */}
@@ -62,10 +62,10 @@ const UserResetPwScrn = ({ navigation }: IProps) => {
         </View>
 
         {/* Reset 버튼 */}
-        <Button title="Reset Password" color={'#ffd966'} />
+        <Button title="Reset Password" color="#ffd966" />
       </KeyboardAvoidingView>
     </ImageBackground>
   );
-};
+}
 
 export default UserResetPwScrn;

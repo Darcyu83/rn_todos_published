@@ -7,7 +7,7 @@ import { TTodosNavParams } from './types';
 
 interface IProps {}
 const Stack = createNativeStackNavigator<TTodosNavParams>();
-const TodosStackNav = ({}: IProps) => {
+function TodosStackNav({}: IProps) {
   return (
     <Stack.Navigator>
       <Stack.Screen name="TodosMainScrn" component={TodosMainScrn} />
@@ -17,6 +17,6 @@ const TodosStackNav = ({}: IProps) => {
       />
     </Stack.Navigator>
   );
-};
+}
 
 export default TodosStackNav;

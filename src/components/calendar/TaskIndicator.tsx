@@ -8,7 +8,7 @@ import { capitalizeFirstLetter } from '../../utils/stringUtils';
 
 interface IProps {}
 
-const TaskIndicator = ({}: IProps) => {
+function TaskIndicator({}: IProps) {
   const arry = Object.keys(DotStyle) as Array<TTodoCate>;
   return (
     <View>
@@ -22,8 +22,7 @@ const TaskIndicator = ({}: IProps) => {
           flexWrap: 'wrap',
         }}
       >
-        {arry.map((key) => {
-          return (
+        {arry.map((key) => (
             <View
               key={key}
               style={{
@@ -46,11 +45,10 @@ const TaskIndicator = ({}: IProps) => {
                 }}
               />
             </View>
-          );
-        })}
+          ))}
       </View>
     </View>
   );
-};
+}
 
 export default TaskIndicator;

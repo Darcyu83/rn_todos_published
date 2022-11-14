@@ -11,7 +11,7 @@ interface IProps {
 
 export const AuthContext = createContext<AuthContextState | null>(null);
 
-const AuthProvider = ({ children }: IProps) => {
+function AuthProvider({ children }: IProps) {
   const [_user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
 
   const user = useAppSelector((state) => state.user);
@@ -76,6 +76,6 @@ const AuthProvider = ({ children }: IProps) => {
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
 export default AuthProvider;

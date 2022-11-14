@@ -34,8 +34,9 @@ export const createScheduledDotMakredDates = (todosList: TTodoList) => {
 
   const taskIds = Object.keys(todosList);
 
-  for (let tskId of taskIds) {
-    let id = Number(tskId);
+  for (let j = 0; j < taskIds.length; j++) {
+    const tskId = taskIds[j];
+    const id = Number(tskId);
     const taskCate = todosList[id].info.category;
     const dateStringsArr = todosList[id].period;
 
@@ -55,8 +56,9 @@ export const createScheduledDotMakredDates = (todosList: TTodoList) => {
             ...{ tskIds: [tskId] }, // 해당날짜 신규 타스크 : 카운트 1
           },
         };
-        continue;
+        // continue;
       }
+
       // 해당 날짜가 이미 등록
       const existingDots = _markedDates[dateStringsArr[i]].dots || [];
       // 카테고리 스타일 값이 이미 등록되어있는지 체크

@@ -19,7 +19,7 @@ interface IProps {
   navigation: NativeStackNavigationProp<TRootNavParamsList>;
 }
 
-const UserSignUpScrn = ({ navigation }: IProps) => {
+function UserSignUpScrn({ navigation }: IProps) {
   const { register } = useAuthContext();
   const [email, setEmail] = useState('');
   const [userPw, setUserPw] = useState('');
@@ -63,7 +63,7 @@ const UserSignUpScrn = ({ navigation }: IProps) => {
           value={email}
           onChangeText={setEmail}
           placeholder="Email"
-          placeholderTextColor={'#bebebe'}
+          placeholderTextColor="#bebebe"
         />
 
         {/* 비밀번호 */}
@@ -78,7 +78,7 @@ const UserSignUpScrn = ({ navigation }: IProps) => {
             validateInfo(pw, confirmUserPw, setUserPw);
           }}
           placeholder="Password"
-          placeholderTextColor={'#bebebe'}
+          placeholderTextColor="#bebebe"
           secureTextEntry
         />
 
@@ -94,7 +94,7 @@ const UserSignUpScrn = ({ navigation }: IProps) => {
             validateInfo(pw, userPw, setConfirmUserPw);
           }}
           placeholder="Confirm Password"
-          placeholderTextColor={'#bebebe'}
+          placeholderTextColor="#bebebe"
           secureTextEntry
         />
 
@@ -112,12 +112,12 @@ const UserSignUpScrn = ({ navigation }: IProps) => {
         {/* Sign up 버튼 */}
         <Button
           title="Sign Up"
-          color={'#ffd966'}
+          color="#ffd966"
           onPress={() => register(email, userPw)}
         />
       </KeyboardAvoidingView>
     </ImageBackground>
   );
-};
+}
 
 export default UserSignUpScrn;

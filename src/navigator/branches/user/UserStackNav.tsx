@@ -11,7 +11,7 @@ interface IProps {}
 
 export const UserStack = createNativeStackNavigator<TUserNavParams>();
 
-const UserStackNav = ({}: IProps) => {
+function UserStackNav({}: IProps) {
   const userToken = useAppSelector((state) => state.user.info.userToken);
   return (
     <UserStack.Navigator>
@@ -42,5 +42,5 @@ const UserStackNav = ({}: IProps) => {
       )}
     </UserStack.Navigator>
   );
-};
+}
 export default UserStackNav;

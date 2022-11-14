@@ -14,17 +14,8 @@ interface IProps {}
 
 const Tab = createBottomTabNavigator<TRootNavParamsList>();
 
-const RootBtnNav = ({}: IProps) => {
+function RootBtnNav({}: IProps) {
   const userToken = useAppSelector((state) => state.user.info.userToken);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    // const saveUserTokenAsync = async () => {
-    //   sleep(10000);
-    //   dispatch(setUserToken('temporary token2'));
-    // };
-    // saveUserTokenAsync();
-  }, []);
 
   const isDarkMode = useAppSelector((state) => state.theme.isDarkMode);
   return (
@@ -35,7 +26,6 @@ const RootBtnNav = ({}: IProps) => {
           tabBarActiveTintColor: '#70d7c7',
           tabBarShowLabel: true,
         }}
-        initialRouteName={'todos'}
       >
         {/* 로그인 여부에 따른 구분 */}
         {userToken ? (
@@ -55,23 +45,6 @@ const RootBtnNav = ({}: IProps) => {
                 ),
               }}
             />
-            <Tab.Screen
-              name="todosFiresstore"
-              component={TodosFirestoreScrn}
-              options={{
-                title: 'todosFiresstore',
-
-                tabBarIcon: ({ color, size, focused }) => (
-                  <ListIcon
-                    color={color}
-                    size={size}
-                    focused={focused}
-                    isBtmLineShown
-                  />
-                ),
-              }}
-            />
-
             <Tab.Screen
               name="user"
               component={UserStackNav}
@@ -115,6 +88,6 @@ const RootBtnNav = ({}: IProps) => {
       </Tab.Navigator>
     </ThemeProvider>
   );
-};
+}
 
 export default RootBtnNav;

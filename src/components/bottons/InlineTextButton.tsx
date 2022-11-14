@@ -9,7 +9,7 @@ interface IProps {
   onPress: () => void;
 }
 
-const InlineTextButton = ({ title, onPress }: IProps) => {
+function InlineTextButton({ title, onPress }: IProps) {
   return (
     <ContainerPressable onPress={onPress}>
       {({ pressed }) => (
@@ -26,6 +26,6 @@ const InlineTextButton = ({ title, onPress }: IProps) => {
       )}
     </ContainerPressable>
   );
-};
+}
 
 export default InlineTextButton;

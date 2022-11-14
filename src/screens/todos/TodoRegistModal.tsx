@@ -12,6 +12,7 @@ import {
 import DropDownPicker from 'react-native-dropdown-picker';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import styled from 'styled-components/native';
+import firestore from '@react-native-firebase/firestore';
 import CalendarDatePicker from '../../components/calendar/CalendarDatePicker';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { todosActions } from '../../redux/todos/todosSlice';
@@ -24,7 +25,6 @@ import {
 } from '../../styles/styledComponents/components';
 import { IPeriod } from './types';
 
-import firestore from '@react-native-firebase/firestore';
 import { onCreateTodoParams } from './todosUtils';
 import { capitalizeFirstLetter } from '../../utils/stringUtils';
 import { AddIcon, PlusIcon } from '../../components/icons/pngs';
@@ -55,7 +55,6 @@ interface IProps {
   visible: boolean;
   closeModal: () => void;
   taskModified: TTodo | null;
-  setIsRegOrUpdatedDone?: (bool: boolean) => void;
 }
 
 const periodInitialState = {
@@ -74,7 +73,7 @@ IProps) {
   const [{ startDtData, endDtData }, setPeriodData] =
     useState<IPeriod>(periodInitialState);
 
-  //할일 카테고리 구분
+  // 할일 카테고리 구분
   const [isCatePickerOpen, setIsCatePickerOpen] = useState(false);
   const onShowCatePickerHandler = () => {
     setIsCatePickerOpen((curr) => !curr);
@@ -162,11 +161,9 @@ IProps) {
     }
   }, [taskModified]);
 
-  useEffect(() => {
-    return () => {
+  useEffect(() => () => {
       onResetStates();
-    };
-  }, []);
+    }, []);
 
   // firestore==============================================================
 
@@ -297,14 +294,14 @@ IProps) {
         <KeyboardAvoidingView style={{}}>
           <OrangeTouchable
             style={{ marginVertical: 3 }}
-            onPress={async () => await addUserInfoFirestore()}
+            onPress={async () => addUserInfoFirestore()}
           >
             <Text>Add User Info to firestore</Text>
           </OrangeTouchable>
 
           <OrangeTouchable
             style={{ marginVertical: 3 }}
-            onPress={async () => await addTodoInFirestore()}
+            onPress={async () => addTodoInFirestore()}
           >
             <Text>Click to Add todos in firestore</Text>
           </OrangeTouchable>

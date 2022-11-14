@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Animated,
   FlatList,
@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useFrameCallback } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import { TTodosNavParams } from '../../navigator/branches/todos/types';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -26,9 +27,7 @@ const BtnWrapper = styled.View`
   padding: 2px 5px;
 `;
 
-interface IProps {
-  route: ['route'];
-}
+interface IProps {}
 
 function TodosDetailedListScrn({
   route,
@@ -52,14 +51,14 @@ function TodosDetailedListScrn({
     setIsRegModalShown(true);
   };
 
-  const moveToMainScrn = () => {
+  const moveToMainScrn = useCallback(() => {
     navigation.navigate('TodosMainScrn');
-  };
+  }, [navigation]);
 
   useEffect(() => {
-    //새 일정 등록 또는 수정 후 메인 화면으로
+    // 새 일정 등록 또는 수정 후 메인 화면으로
     if (isRegOrUpdatedDone) moveToMainScrn();
-  }, [isRegOrUpdatedDone]);
+  }, [isRegOrUpdatedDone, moveToMainScrn]);
 
   useEffect(() => {}, [clickedDateData, todosList]);
 

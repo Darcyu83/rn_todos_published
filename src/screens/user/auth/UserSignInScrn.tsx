@@ -13,12 +13,8 @@ import styled from 'styled-components/native';
 import InlineTextButton from '../../../components/bottons/InlineTextButton';
 import useAuthContext from '../../../context/auth/hooks/useAuthContext';
 import { TUserNavParams } from '../../../navigator/branches/user/types';
-import { TRootNavParamsList } from '../../../navigator/types';
-import { useAppDispatch } from '../../../redux/hooks';
-import { toggleDarkMode } from '../../../redux/theme/themeSlice';
-import { setUserInfo, setUserToken } from '../../../redux/user/userSlice';
+
 import { AppStyles } from '../../../styles/appStyles';
-import { onToggleDarkMode } from '../../../utils/themeUtils';
 
 const ToggleThemeView = styled.View`
   background-color: ${(props) => props.theme.content_bg_primary};
@@ -62,7 +58,7 @@ function UserSignInScrn({
           value={email}
           onChangeText={setEmail}
           placeholder={`Username ${email}`}
-          placeholderTextColor={'#bebebe'}
+          placeholderTextColor="#bebebe"
         />
 
         {/* 비밀번호 */}
@@ -75,13 +71,13 @@ function UserSignInScrn({
           value={userPw}
           onChangeText={setUserPw}
           placeholder={`Password ${userPw}`}
-          placeholderTextColor={'#bebebe'}
+          placeholderTextColor="#bebebe"
           secureTextEntry
         />
 
         {/* Sign Up 버튼 */}
         <View style={[AppStyles.rowContainer]}>
-          <Text style={[AppStyles.lightText]}>Don't have an account? </Text>
+          <Text style={[AppStyles.lightText]}>Don`t have an account?</Text>
           <InlineTextButton
             title="Sign Up"
             onPress={() => {
@@ -104,7 +100,7 @@ function UserSignInScrn({
         {/* Login 버튼 */}
         <Button
           title="Login"
-          color={'#ffd966'}
+          color="#ffd966"
           onPress={() => login(email, userPw)}
         />
       </KeyboardAvoidingView>

@@ -6,12 +6,12 @@ import { TBedTimeNavParams } from './types';
 
 interface IProps {}
 const Stack = createNativeStackNavigator<TBedTimeNavParams>();
-const BedTimeStackNav = ({}: IProps) => {
+function BedTimeStackNav({}: IProps) {
   return (
     <Stack.Navigator>
       <Stack.Screen name="BedTimeSetScrn" component={BedTimeSetScrn} />
     </Stack.Navigator>
   );
-};
+}
 
 export default BedTimeStackNav;

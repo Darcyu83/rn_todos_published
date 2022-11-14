@@ -17,7 +17,7 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
 //   return num.replace(/(\d)(?:\.(\d+))?e([+-])(\d+)/g, convertToFixed);
 // }
 
-const BedTimeSetScrn = ({
+function BedTimeSetScrn({
   data,
   innerRadius,
   outerRadius,
@@ -28,7 +28,7 @@ const BedTimeSetScrn = ({
   size,
   colors,
   id,
-}: any) => {
+}: any) {
   const animatedValue = useMemo(() => new Animated.Value(0), []);
 
   // const arcGenerator = arcShape()
@@ -76,6 +76,6 @@ const BedTimeSetScrn = ({
       </G>
     </Svg>
   );
-};
+}
 
 export default BedTimeSetScrn;

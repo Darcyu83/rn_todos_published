@@ -8,9 +8,11 @@ import React, {
 import { Alert, Animated, Modal, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Svg, { Rect, Circle, Path, G } from 'react-native-svg';
+import firestore from '@react-native-firebase/firestore';
+import { DateData } from 'react-native-calendars';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SCREEN_WIDTH, WINDOW_WIDTH } from '../../styles/constants';
 
-import firestore from '@react-native-firebase/firestore';
 import InlineTextButton from '../../components/bottons/InlineTextButton';
 import { TTodo, TTodoList } from '../../redux/todos/types';
 import TodoCard from '../todos/TodoCard';
@@ -22,8 +24,13 @@ import DateString from '../../utils/dateUtils';
 import TodoRegistModal from '../todos/TodoRegistModal';
 import TaskIndicator from '../../components/calendar/TaskIndicator';
 import CalendarScheduled from '../../components/calendar/CalendarScheduled';
-import { crateDatesStringArr } from '../../utils/calendarUtils';
+import {
+  crateDatesStringArr,
+  createScheduledDotMakredDates,
+} from '../../utils/calendarUtils';
 import { returnLoadingScrn } from '../../components/loader/Loading';
+import { TMarkedDatesCustomed } from '../../components/calendar/types';
+import { TRootNavParamsList } from '../../navigator/types';
 
 const structureStr = ` ─ project name : rnTodosPublished
               └ users as ID(Collection) - listener point 
@@ -56,66 +63,18 @@ const structureStr = ` ─ project name : rnTodosPublished
                                               dateString: string;
                                           };
                                   }`;
-const TodosFirestoreScrn = ({}: any) => {
+function TodosFirestoreScrn({
+  navigation,
+}: NativeStackScreenProps<TRootNavParamsList, 'todos'>) {
   const {
     info: { userNm },
   } = useAppSelector((state) => state.user);
 
   const [isRegModalShown, setIsRegModalShown] = useState(false);
-  const [todoList, setTodoList] = useState<TTodoList>({});
-
-  const [input1, setInput1] = useState('');
-  const [input2, setInput2] = useState('');
+  const [markedDates, setMarkedDates] = useState<TMarkedDatesCustomed>({});
   const [isProcessing, setIsProcessing] = useState(false);
-
-  const makeId = (): Promise<string | null> => {
-    const date = new Date();
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        res(`id${date.getTime()}`);
-      }, 3000);
-    });
-  };
-
-  const addUserInfoToFirestore = useCallback(async () => {
-    if (!userNm) return;
-
-    firestore()
-      .collection('users')
-      .doc(userNm)
-      .set({ id: userNm, birth: input1, country: input2 });
-  }, [input1, input2]);
-
-  const addTaskToFirestore = async () => {
-    console.log('3초 경과 아이디 발행시작');
-    setIsProcessing(true);
-
-    const id = await makeId();
-    console.log('3초 경과 아이디 발행완료', id);
-    if (!userNm) return;
-    if (!id) return;
-    if (!input1) return;
-    if (!input2) return;
-
-    try {
-      await firestore()
-        .collection('users')
-        .doc(userNm)
-        .collection('todoList')
-        .doc(id)
-        .set({
-          id,
-          input1,
-          input2,
-        });
-      setInput1('');
-      setInput2('');
-      setIsProcessing(false);
-    } catch (error) {
-      console.log(error);
-      setIsProcessing(false);
-    }
-    setIsProcessing(false);
+  const onMoveToDailyTasks = (clickedDateData: DateData) => {
+    // navigation.navigate('todosFirestore');
   };
 
   useEffect(() => {
@@ -175,9 +134,10 @@ const TodosFirestoreScrn = ({}: any) => {
           };
         });
 
-        setTodoList(todoListObj);
+        const _markedDates = createScheduledDotMakredDates(todoListObj);
+        setMarkedDates(_markedDates);
       });
-  }, []);
+  }, [userNm]);
 
   returnLoadingScrn(isProcessing);
 
@@ -187,17 +147,6 @@ const TodosFirestoreScrn = ({}: any) => {
       <ScrollView>
         <Text>List of Todos</Text>
 
-        <TextInput
-          style={[AppStyles.textInput]}
-          value={input1}
-          onChangeText={setInput1}
-        />
-        <TextInput
-          style={[AppStyles.textInput]}
-          value={input2}
-          onChangeText={setInput2}
-        />
-
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <InlineTextButton
             title="Click to open regitst modal"
@@ -206,46 +155,25 @@ const TodosFirestoreScrn = ({}: any) => {
             }}
           />
         </View>
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <InlineTextButton
-            title="Click to add task to firestore"
-            onPress={() => {
-              addTaskToFirestore();
-            }}
-          />
-        </View>
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <InlineTextButton
-            title="Click to add userInfo to firestore"
-            onPress={() => {
-              addUserInfoToFirestore();
-            }}
-          />
-        </View>
-        {Object.keys(todoList).map((key, idx) => (
-          <Text key={idx} style={{ color: 'white', backgroundColor: 'teal' }}>
-            {todoList[Number(key)].info.title} /{' '}
-            {todoList[Number(key)].info.todo}/{' '}
-            {todoList[Number(key)].info.startDtData.dateString}~
-            {todoList[Number(key)].info.endDtData.dateString}
-          </Text>
-        ))}
 
         {/* 할일 구분 */}
         {/* <TaskIndicator /> */}
 
         {/* 일정 달력 */}
-        {/* <CalendarScheduled
+        <CalendarScheduled
           markedDates={markedDates}
           onMoveToDailyTasks={onMoveToDailyTasks}
-        /> */}
+        />
 
         <Text style={[{ fontWeight: 'bold' }, AppStyles.lightText]}>
           Data structure
         </Text>
 
         {structureStr.split('\n').map((lineTxt, idx) => (
-          <Text key={idx} style={{ color: 'white', fontSize: 12 }}>
+          <Text
+            key={`${idx.toString()}1`}
+            style={{ color: 'white', fontSize: 12 }}
+          >
             {lineTxt}
           </Text>
         ))}
@@ -260,6 +188,6 @@ const TodosFirestoreScrn = ({}: any) => {
       />
     </View>
   );
-};
+}
 
 export default TodosFirestoreScrn;

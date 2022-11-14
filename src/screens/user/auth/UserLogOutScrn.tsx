@@ -6,7 +6,7 @@ import { AppStyles } from '../../../styles/appStyles';
 
 interface IProps {}
 
-const UserLogOutScrn = ({}: IProps) => {
+function UserLogOutScrn({}: IProps) {
   const { logout } = useAuthContext();
   const onPurgePersistedState = async () => {
     await persistor.purge();
@@ -26,6 +26,6 @@ const UserLogOutScrn = ({}: IProps) => {
       />
     </ImageBackground>
   );
-};
+}
 
 export default UserLogOutScrn;

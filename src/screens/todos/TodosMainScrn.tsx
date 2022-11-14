@@ -3,12 +3,15 @@ import React, { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, Text } from 'react-native';
 import { DateData, MarkedDates } from 'react-native-calendars/src/types';
 import styled from 'styled-components/native';
-import CalendarScheduled from '../../components/calendar/CalendarScheduled';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 import TaskIndicator from '../../components/calendar/TaskIndicator';
 import { TMarkedDatesCustomed } from '../../components/calendar/types';
 import { PlusIcon } from '../../components/icons/pngs';
 import { TTodosNavParams } from '../../navigator/branches/todos/types';
-import { TRootNavParamsList } from '../../navigator/types';
+import { TStackScrnProps_Todos } from '../../navigator/types';
 import { useAppSelector } from '../../redux/hooks';
 import { TTodo } from '../../redux/todos/types';
 import { DotStyle } from '../../styles/calendarStyle';
@@ -23,9 +26,7 @@ import {
 } from '../../utils/calendarUtils';
 import BedTimeSetScrn from '../todosFirestore/TodosFirestoreScrn';
 import TodoRegisModal from './TodoRegistModal';
-import firestore, {
-  FirebaseFirestoreTypes,
-} from '@react-native-firebase/firestore';
+import CalendarScheduled from '../../components/calendar/CalendarScheduled';
 
 const Container = styled.View`
   flex: 1;
@@ -48,12 +49,9 @@ const BtnWrapper = styled.View`
   height: ${28}px;
 `;
 
-interface IProps {
-  route: NativeStackScreenProps<TRootNavParamsList>['route'];
-  navigation: NativeStackScreenProps<TTodosNavParams>['navigation'];
-}
+interface IProps {}
 
-function TodosMainScrn({ route, navigation }: IProps) {
+function TodosMainScrn({ route, navigation }: TStackScrnProps_Todos) {
   const user = useAppSelector((state) => state.user);
   const { list: todosList } = useAppSelector((state) => state.todos);
   const [markedDates, setMarkedDates] = useState<TMarkedDatesCustomed>({});
@@ -62,9 +60,7 @@ function TodosMainScrn({ route, navigation }: IProps) {
   const [isRegModalShown, setIsRegModalShown] = useState(false);
 
   const onMoveToDailyTasks = (clickedDateData: DateData) => {
-    navigation.navigate('TodosDetailedListScrn', {
-      clickedDateData,
-    });
+    navigation.navigate('TodosDetailedListScrn', { clickedDateData });
   };
 
   // 캘린더 스케쥴 마킹 데이터 생성
@@ -73,39 +69,6 @@ function TodosMainScrn({ route, navigation }: IProps) {
     // 마킹 날짜 및 스타일 매칭 정보 생성
     setMarkedDates(_markedDates);
   }, [todosList]);
-
-  // firebase data changes listener
-  useEffect(() => {
-    if (!user.info.userNm) return;
-    console.log('onSnapshot useEffect here ran', user.info.userNm);
-
-    let dataMap: { [taskId: number]: TTodo } = {};
-
-    firestore()
-      .collection(user.info.userNm)
-      .onSnapshot((qeurySnapshot) => {
-        console.log(
-          '%c path : ./userEmail/',
-          'background-color: orange',
-          qeurySnapshot.metadata
-        );
-      });
-
-    firestore()
-      .collection(user.info.userNm)
-      .doc('todoList')
-      .onSnapshot((docUpdated) =>
-        console.log(
-          '%c path : ./userEmail/todoList/',
-          'background-color: orange',
-          docUpdated.metadata
-        )
-      );
-
-    return () => {
-      console.log('onSnapshot useEffect unsubscriber here ran');
-    };
-  }, [user.info.userNm]);
 
   return (
     <SafeAreaCustomized>

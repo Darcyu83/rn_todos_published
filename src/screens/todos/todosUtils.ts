@@ -9,17 +9,15 @@ export const onCreateTodoParams = (
   endDtData: DateData,
   todoTitle: string,
   todoContent: string
-) => {
-  return {
+) => ({
     category: cateSelected || 'vacation',
     isInSingleDay: startDtData.dateString === endDtData.dateString,
     id: new Date().getTime(),
     title: todoTitle,
     todo: todoContent,
     startDtData,
-    endDtData: endDtData,
-  };
-};
+    endDtData,
+  });
 
 export const createDailyDetailedTaskList = (
   todosList: TTodoList,
