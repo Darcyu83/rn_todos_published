@@ -44,6 +44,8 @@ module.exports = {
     '@typescript-eslint/naming-convention': 'off',
     '@typescript-eslint/no-empty-interface': 'warn',
     '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/no-unused-expressions': 'warn',
+    'no-unused-expressions': 'off',
     'arrow-parens': 0,
     'import/no-cycle': 0,
     'no-param-reassign': [

@@ -67,7 +67,7 @@ function TodosFirestoreScrn({
   navigation,
 }: NativeStackScreenProps<TRootNavParamsList, 'todos'>) {
   const {
-    info: { userNm },
+    info: { userId },
   } = useAppSelector((state) => state.user);
 
   const [isRegModalShown, setIsRegModalShown] = useState(false);
@@ -78,7 +78,7 @@ function TodosFirestoreScrn({
   };
 
   useEffect(() => {
-    if (!userNm) return;
+    if (!userId) return;
 
     // users collection listener
     firestore()
@@ -96,7 +96,7 @@ function TodosFirestoreScrn({
     // users/userEmail document listener
     firestore()
       .collection('users')
-      .doc(userNm)
+      .doc(userId)
       .onSnapshot((documentSnapshot) => {
         console.log(
           '%c users/userEmail documentSnapshot',
@@ -108,7 +108,7 @@ function TodosFirestoreScrn({
     // users/userEmail/todoList collection listener
     firestore()
       .collection('users')
-      .doc(userNm)
+      .doc(userId)
       .collection('todoList')
       .onSnapshot((querySnapshot) => {
         let todoListObj: TTodoList = {};
@@ -137,7 +137,7 @@ function TodosFirestoreScrn({
         const _markedDates = createScheduledDotMakredDates(todoListObj);
         setMarkedDates(_markedDates);
       });
-  }, [userNm]);
+  }, [userId]);
 
   returnLoadingScrn(isProcessing);
 

@@ -1,22 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Animated,
-  Image,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Text, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
-import { AddIcon, EditIcon, TrashBinIcon } from '../../components/icons/pngs';
-import { useAppDispatch } from '../../redux/hooks';
+import { EditIcon, TrashBinIcon } from '../../components/icons/pngs';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { todosActions } from '../../redux/todos/todosSlice';
 import { TTodo } from '../../redux/todos/types';
 import { CustomStyle } from '../../styles/shadowStyle';
-import {
-  OrangeTouchable,
-  SectionTitle,
-} from '../../styles/styledComponents/components';
 
 const Container = styled.View`
   /* background-color: rgba(30, 144, 255, 0.5); */
@@ -48,9 +38,41 @@ interface IProps {
 }
 
 function TodoCard({ todo, index, onPressToModify }: IProps) {
+  const { userId } = useAppSelector((state) => state.user.info);
   const dispatch = useAppDispatch();
-  const onRemoveTodohandler = () => {
-    dispatch(todosActions.removeTodo({ taskId: todo.id }));
+
+  const onRemoveTodohandler = async () => {
+    if (!userId) return;
+
+    console.log(
+      '%c Remove todo ==== ',
+      'background-color: tomato',
+      userId,
+      todo.id
+    );
+
+    try {
+      await firestore()
+        .collection('users')
+        .doc(userId)
+        .collection('todoList')
+        .doc(`${todo.id}`)
+        .delete()
+        .then(() => {
+          console.log(
+            '%c Remove todo ==== Done',
+            'background-color: lightgreen'
+          );
+        });
+    } catch (error) {
+      console.log(
+        '%c Remove todo ==== error:: ',
+        'background-color: tomato',
+        error
+      );
+    }
+
+    // dispatch(todosActions.removeTodo({ taskId: todo.id }));
   };
 
   const rotateAni = useRef(new Animated.Value(0));
@@ -112,7 +134,11 @@ function TodoCard({ todo, index, onPressToModify }: IProps) {
 
       {/* 삭제 버튼 */}
       <BtnWrapper right={5}>
-        <TouchableOpacity onPress={onRemoveTodohandler}>
+        <TouchableOpacity
+          onPress={async () => {
+            await onRemoveTodohandler();
+          }}
+        >
           <TrashBinIcon width="100%" height="100%" />
         </TouchableOpacity>
       </BtnWrapper>

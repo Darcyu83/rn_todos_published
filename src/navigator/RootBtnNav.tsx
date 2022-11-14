@@ -5,6 +5,7 @@ import { ListIcon, UserIcon } from '../components/icons/pngs';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import TodosFirestoreScrn from '../screens/todosFirestore/TodosFirestoreScrn';
 import { theme } from '../styles/theme';
+import { addFirestoreListenerOnTodoList } from '../utils/firestore';
 import BedTimeStackNav from './branches/bedTime/BedTimeStackNav';
 import TodosStackNav from './branches/todos/TodosStackNav';
 import UserStackNav from './branches/user/UserStackNav';
@@ -18,6 +19,14 @@ function RootBtnNav({}: IProps) {
   const userToken = useAppSelector((state) => state.user.info.userToken);
 
   const isDarkMode = useAppSelector((state) => state.theme.isDarkMode);
+
+  useEffect(() => {
+    const unsubscriber = addFirestoreListenerOnTodoList();
+
+    return () => {
+      unsubscriber && unsubscriber();
+    };
+  }, []);
   return (
     <ThemeProvider theme={isDarkMode ? theme.darkMode : theme.lightMode}>
       <Tab.Navigator

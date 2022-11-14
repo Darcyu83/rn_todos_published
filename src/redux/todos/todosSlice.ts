@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { PURGE } from 'redux-persist';
 import { crateDatesStringArr } from '../../utils/calendarUtils';
-import { TTodosInitialState, TTodo } from './types';
+import { TTodosInitialState, TTodo, TTodoList } from './types';
 
 const initialState: TTodosInitialState = {
   list: {},
@@ -36,7 +36,7 @@ const todosSlice = createSlice({
       const taskId = action.payload.id;
       const startDtString = action.payload.startDtData.dateString;
       const endDtString = action.payload.endDtData.dateString;
-      const {category} = action.payload;
+      const { category } = action.payload;
 
       // 할일 정보 및 기간 정보
       const todoList = state.list;
@@ -52,6 +52,9 @@ const todosSlice = createSlice({
       }
 
       state.list = todoList;
+    },
+    addTodoList: (state, action: PayloadAction<TTodoList>) => {
+      state.list = action.payload;
     },
     updateTodo: (state, action: PayloadAction<TTodo>) => {
       const startDtString = action.payload.startDtData.dateString;

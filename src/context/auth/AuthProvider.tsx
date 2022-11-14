@@ -17,8 +17,8 @@ function AuthProvider({ children }: IProps) {
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
-  const dispatchUserInfo = (userNm: string, userToken: string) => {
-    dispatch(setUserInfo({ userNm, userToken }));
+  const dispatchUserInfo = (userId: string, userToken: string) => {
+    dispatch(setUserInfo({ userId, userToken }));
   };
 
   const login = async (email: string, password: string) => {

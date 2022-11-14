@@ -40,6 +40,7 @@ function TodosDetailedListScrn({
 
   // 할일 등록 모달 토글
   const [isRegModalShown, setIsRegModalShown] = useState(false);
+
   // 해당 날짜의 할일's
   const [dailyTaskList, setdailyTaskList] = useState<TTodo[] | null>(null);
 
@@ -77,15 +78,6 @@ function TodosDetailedListScrn({
             onPressToModify={() => onPressToModify(item)}
           />
         )}
-        onScroll={(e) =>
-          console.log(
-            'onScroll e.nativeEvent.contentOffset === ',
-            e.nativeEvent
-          )
-        }
-        onLayout={(e) => {
-          console.log('onLayout === ', e.nativeEvent.layout);
-        }}
         style={{
           flex: 1,
           padding: 10,
@@ -112,7 +104,6 @@ function TodosDetailedListScrn({
       {/* 일정 등록 모달 */}
       <TodoRegistModal
         visible={isRegModalShown}
-        setIsRegOrUpdatedDone={setIsRegOrUpdatedDone}
         closeModal={() => setIsRegModalShown(false)}
         taskModified={taskModified}
       />

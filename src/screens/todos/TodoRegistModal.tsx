@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Alert,
   Button,
+  Keyboard,
   KeyboardAvoidingView,
   Modal,
   ScrollView,
@@ -13,6 +14,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import styled from 'styled-components/native';
 import firestore from '@react-native-firebase/firestore';
+import { useIsFocused } from '@react-navigation/native';
 import CalendarDatePicker from '../../components/calendar/CalendarDatePicker';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { todosActions } from '../../redux/todos/todosSlice';
@@ -28,6 +30,8 @@ import { IPeriod } from './types';
 import { onCreateTodoParams } from './todosUtils';
 import { capitalizeFirstLetter } from '../../utils/stringUtils';
 import { AddIcon, PlusIcon } from '../../components/icons/pngs';
+import { theme } from '../../styles/theme';
+import { AppStyles } from '../../styles/appStyles';
 
 const Container = styled.View`
   flex: 1;
@@ -61,17 +65,14 @@ const periodInitialState = {
   startDtData: null,
   endDtData: null,
 };
-function TodoRegistModal({
-  visible,
-  closeModal,
-  taskModified,
-}: // setIsRegOrUpdatedDone,
-IProps) {
+function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
   const user = useAppSelector((state) => state.user);
   const [todoTitle, setTodoTitle] = useState('');
   const [todoContent, setTodoContent] = useState('');
   const [{ startDtData, endDtData }, setPeriodData] =
     useState<IPeriod>(periodInitialState);
+
+  const [isOnSaving, setIsOnSaving] = useState(false);
 
   // 할일 카테고리 구분
   const [isCatePickerOpen, setIsCatePickerOpen] = useState(false);
@@ -82,9 +83,11 @@ IProps) {
     null | 'vacation' | 'message' | 'workout' | 'meeting' | 'etc'
   >(null);
 
+  // 입력값 초기화
   const onResetStates = () => {
     setTodoTitle('');
     setTodoContent('');
+    setCateSelected(null);
     setPeriodData(periodInitialState);
   };
 
@@ -114,7 +117,6 @@ IProps) {
     dispatch(todosActions.addTodo(params));
     onResetStates();
     closeModal();
-    // setIsRegOrUpdatedDone && setIsRegOrUpdatedDone(true);
   };
 
   const onUpdateTodoHandler = () => {
@@ -144,7 +146,6 @@ IProps) {
     dispatch(todosActions.updateTodo(params));
     onResetStates();
     closeModal();
-    // setIsRegOrUpdatedDone && setIsRegOrUpdatedDone(true);
   };
 
   useEffect(() => {
@@ -161,12 +162,17 @@ IProps) {
     }
   }, [taskModified]);
 
-  useEffect(() => () => {
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    console.log('Modal be mounted ', isFocused);
+
+    return () => {
+      console.log('Modal be unmounted ', isFocused);
       onResetStates();
-    }, []);
+    };
+  }, [isFocused]);
 
   // firestore==============================================================
-
   const addTodoInFirestore = async () => {
     if (!todoTitle) {
       Alert.alert('No Title');
@@ -183,38 +189,52 @@ IProps) {
       todoTitle,
       todoContent
     );
-    if (!user.info.userNm) return;
+
+    if (!user.info.userId) return;
 
     try {
+      setIsOnSaving(true);
       console.log('firebase saving Start... ');
       await firestore()
         .collection('users')
-        .doc(user.info.userNm)
+        .doc(user.info.userId)
         .collection('todoList')
         .doc(String(thisTodoParams.id))
-        .set(thisTodoParams)
-        .then((v) => console.log('firebase saving then... '));
+        .set(thisTodoParams);
 
       console.log('firebase saving end... ');
+      setIsOnSaving(false);
+      onResetStates();
+      closeModal();
     } catch (error) {
+      setIsOnSaving(false);
       console.log('try catching error firebase saving end... ', error);
     }
-
-    onResetStates();
-    closeModal();
-  };
-
-  const addUserInfoFirestore = async () => {
-    if (!user.info.userNm) return;
-    await firestore()
-      .collection(user.info.userNm)
-      .doc('userInfo')
-      .set(user.info);
   };
 
   return (
     <Modal transparent visible={visible}>
       <Container>
+        {isOnSaving && (
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.4)',
+              zIndex: 999,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ color: theme.darkMode.text, fontSize: 24 }}>
+              Saving...
+            </Text>
+          </View>
+        )}
+
         {/* 닫기 버튼 */}
         <BtnWrapper>
           <OrangeTouchable
@@ -275,6 +295,7 @@ IProps) {
 
             {/* 시작일  */}
             <SectionTitle>Start Date</SectionTitle>
+
             <TextInput
               editable={false}
               value={
@@ -294,14 +315,10 @@ IProps) {
         <KeyboardAvoidingView style={{}}>
           <OrangeTouchable
             style={{ marginVertical: 3 }}
-            onPress={async () => addUserInfoFirestore()}
-          >
-            <Text>Add User Info to firestore</Text>
-          </OrangeTouchable>
-
-          <OrangeTouchable
-            style={{ marginVertical: 3 }}
-            onPress={async () => addTodoInFirestore()}
+            onPress={async () => {
+              Keyboard.dismiss();
+              await addTodoInFirestore();
+            }}
           >
             <Text>Click to Add todos in firestore</Text>
           </OrangeTouchable>
@@ -310,7 +327,7 @@ IProps) {
             style={{ marginVertical: 3 }}
             onPress={taskModified ? onUpdateTodoHandler : onAddTodoHandler}
           >
-            <Text>Click to Add or Update</Text>
+            <Text>Click to Add or Update in Redux</Text>
           </OrangeTouchable>
           <OrangeTouchable
             style={{ marginVertical: 3 }}

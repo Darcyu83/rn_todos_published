@@ -1,6 +1,6 @@
 import { DefaultTheme } from 'styled-components/native';
 
-export const theme: { [key: string]: DefaultTheme } = {
+export const theme: { [key in 'lightMode' | 'darkMode']: DefaultTheme } = {
   lightMode: {
     bg: 'white',
     text: 'black',
@@ -8,6 +8,7 @@ export const theme: { [key: string]: DefaultTheme } = {
     content_bg_primary_accent: '#50cebb',
     text_white: 'white',
   },
+
   darkMode: {
     bg: 'black',
     text: 'white',
