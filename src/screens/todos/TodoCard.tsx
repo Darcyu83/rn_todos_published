@@ -52,18 +52,8 @@ function TodoCard({ todo, index, onPressToModify }: IProps) {
     );
 
     try {
-      await firestore()
-        .collection('users')
-        .doc(userId)
-        .collection('todoList')
-        .doc(`${todo.id}`)
-        .delete()
-        .then(() => {
-          console.log(
-            '%c Remove todo ==== Done',
-            'background-color: lightgreen'
-          );
-        });
+      dispatch(todosActions.deleteTodo({ taskId: todo.id }));
+      console.log('%c Remove todo ==== Done', 'background-color: lightgreen');
     } catch (error) {
       console.log(
         '%c Remove todo ==== error:: ',
@@ -71,8 +61,6 @@ function TodoCard({ todo, index, onPressToModify }: IProps) {
         error
       );
     }
-
-    // dispatch(todosActions.removeTodo({ taskId: todo.id }));
   };
 
   const rotateAni = useRef(new Animated.Value(0));

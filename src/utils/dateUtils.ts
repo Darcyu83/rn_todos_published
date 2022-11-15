@@ -17,7 +17,9 @@ const DateString = {
     const month = makeDoubleDigit(dateObject.getMonth() + 1 + monthIncre);
     const day = makeDoubleDigit(dateObject.getDate() + dateIncre);
 
-    return [year, month, day].join(delimeter);
+    const result = [year, month, day].join(delimeter);
+
+    return result;
   },
 };
 

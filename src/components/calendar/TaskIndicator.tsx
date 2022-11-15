@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import Dot from 'react-native-calendars/src/calendar/day/dot';
+import styled from 'styled-components/native';
 import { TTodoCate } from '../../redux/todos/types';
 import { DotStyle } from '../../styles/calendarStyle';
 import { SectionTitle } from '../../styles/styledComponents/components';
@@ -8,46 +9,56 @@ import { capitalizeFirstLetter } from '../../utils/stringUtils';
 
 interface IProps {}
 
+const Container = styled.View`
+  margin-top: 5px;
+  margin-bottom: 5px;
+`;
+
+const CategorySection = styled.View`
+  width: 100%;
+  max-width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+`;
+
+const Category = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2.5px;
+`;
+
+const DotCircle = styled.View<{ dotColor: string }>`
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background-color: ${(props) => props.dotColor};
+  margin-left: 3px;
+`;
+
 function TaskIndicator({}: IProps) {
   const arry = Object.keys(DotStyle) as Array<TTodoCate>;
   return (
-    <View>
+    <Container
+      style={{
+        borderBottomColor: 'black',
+        borderBottomWidth: 2,
+        borderStyle: 'solid',
+      }}
+    >
       <SectionTitle>Category</SectionTitle>
-      <View
-        style={{
-          width: '100%',
-          maxWidth: '100%',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-        }}
-      >
+      <CategorySection>
         {arry.map((key) => (
-            <View
-              key={key}
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                margin: 2.5,
-              }}
-            >
-              <Text style={{ textAlign: 'center' }}>
-                {capitalizeFirstLetter(DotStyle[key].key)}
-              </Text>
-              <View
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: 999,
-                  backgroundColor: DotStyle[key].color,
-                  marginLeft: 3,
-                }}
-              />
-            </View>
-          ))}
-      </View>
-    </View>
+          <Category key={key}>
+            <Text style={{ textAlign: 'center' }}>
+              {capitalizeFirstLetter(DotStyle[key].key)}
+            </Text>
+            <DotCircle dotColor={DotStyle[key].color} />
+          </Category>
+        ))}
+      </CategorySection>
+    </Container>
   );
 }
 

@@ -11,9 +11,11 @@ import {
   REHYDRATE,
 } from 'redux-persist';
 import { createLogger } from 'redux-logger';
+import createSagaMiddleware from 'redux-saga';
 import { themeReducer } from './theme/themeSlice';
 import { todosReducer } from './todos/todosSlice';
 import { userReducer } from './user/userSlice';
+import rootSaga from './rootSaga';
 
 const persistConfig = {
   key: 'root',
@@ -28,6 +30,8 @@ const rootReducer = combineReducers({
   theme: themeReducer,
 });
 
+const sagaMiddleware = createSagaMiddleware();
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
@@ -37,8 +41,13 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(createLogger()),
+    })
+      .concat(sagaMiddleware)
+      .concat(createLogger()),
+  devTools: __DEV__,
 });
+
+sagaMiddleware.run(rootSaga);
 
 export const persistor = persistStore(store);
 

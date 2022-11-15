@@ -1,4 +1,5 @@
 import { DefaultTheme } from 'styled-components/native';
+import { store } from '../redux/store';
 
 export const theme: { [key in 'lightMode' | 'darkMode']: DefaultTheme } = {
   lightMode: {
@@ -17,3 +18,6 @@ export const theme: { [key in 'lightMode' | 'darkMode']: DefaultTheme } = {
     text_white: 'white',
   },
 };
+
+export const GlobalTheme = () =>
+  store.getState().theme.isDarkMode ? theme.darkMode : theme.lightMode;

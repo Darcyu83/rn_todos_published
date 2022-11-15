@@ -19,7 +19,6 @@ export interface TTodoList {
 }
 export interface TTodosInitialState {
   list: TTodoList;
-  // markedDates?: {
-  //   [key: string]: MarkingProps & { taskCnt: number };
-  // };
+  isProcessing: 'ready' | 'processing' | 'done';
+  error: string | null;
 }

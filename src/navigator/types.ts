@@ -11,7 +11,7 @@ type TNavScrnParams_Bedtime = NavigatorScreenParams<TBedTimeNavParams>;
 
 export type TRootNavParamsList = {
   todos: TNavScrnParams_Todos;
-  firestore: undefined;
+
   auth: TNavScrnParams_User;
   user: TNavScrnParams_User;
   bedtime: TNavScrnParams_Bedtime;

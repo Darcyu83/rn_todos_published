@@ -5,7 +5,7 @@ import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ThemeProvider } from 'styled-components/native';
 import AuthProvider from './src/context/auth/AuthProvider';
-import RootBtnNav from './src/navigator/RootBtnNav';
+import RootBtmTabNav from './src/navigator/RootBtmTabNav';
 import { useAppSelector } from './src/redux/hooks';
 
 import { persistor, store } from './src/redux/store';
@@ -20,7 +20,7 @@ function App({}: IProps) {
         <PersistGate loading={null} persistor={persistor}>
           <AuthProvider>
             <NavigationContainer>
-              <RootBtnNav />
+              <RootBtmTabNav />
             </NavigationContainer>
           </AuthProvider>
         </PersistGate>

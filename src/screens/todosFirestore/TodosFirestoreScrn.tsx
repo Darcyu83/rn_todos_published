@@ -5,7 +5,15 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Alert, Animated, Modal, Text, TextInput, View } from 'react-native';
+import {
+  Alert,
+  Animated,
+  Modal,
+  SafeAreaView,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Svg, { Rect, Circle, Path, G } from 'react-native-svg';
 import firestore from '@react-native-firebase/firestore';
@@ -142,7 +150,7 @@ function TodosFirestoreScrn({
   returnLoadingScrn(isProcessing);
 
   return (
-    <View style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}>
+    <SafeAreaView style={{ backgroundColor: 'rgba(0,0,0,0.3)', padding: 5 }}>
       <Text>Temporary Test Screen for Firestore</Text>
       <ScrollView>
         <Text>List of Todos</Text>
@@ -186,7 +194,7 @@ function TodosFirestoreScrn({
         }}
         taskModified={null}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

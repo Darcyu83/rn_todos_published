@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import React, { useCallback, useMemo, useState } from 'react';
+import { View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import { MarkingProps } from 'react-native-calendars/src/calendar/day/marking';
-import { DateData, MarkedDates } from 'react-native-calendars/src/types';
-import Dot from 'react-native-calendars/src/calendar/day/dot';
-import { OrangeTouchable } from '../../styles/styledComponents/components';
+import { DateData } from 'react-native-calendars/src/types';
+import { BORDER_RADIUS } from '../../styles/constants';
 import DateString from '../../utils/dateUtils';
 import CalendarArrow from './CalendarArrow';
-import { DotStyle } from '../../styles/calendarStyle';
-import { TTodo } from '../../redux/todos/types';
 import { TMarkedDatesCustomed } from './types';
 
 interface IProps {
@@ -17,10 +13,16 @@ interface IProps {
 }
 
 function CalendarScheduled({ markedDates, onMoveToDailyTasks }: IProps) {
+  const today = useMemo<string>(() => {
+    const _today = DateString.convertDateToYYYYMMDD(new Date());
+    console.log('today = useMemo ', _today);
+    return _today;
+  }, []);
   // 오늘 날짜
   const [initialDate, setInitialDate] = useState(
     DateString.convertDateToYYYYMMDD(new Date())
   );
+
   // 검색 가능한 범위 : 50년
   const [minDate, setMinDate] = useState(
     DateString.convertDateToYYYYMMDD(new Date(initialDate), -50)
@@ -30,8 +32,16 @@ function CalendarScheduled({ markedDates, onMoveToDailyTasks }: IProps) {
   );
 
   return (
-    <View style={{}}>
+    <View
+      style={{
+        overflow: 'hidden',
+        borderRadius: BORDER_RADIUS,
+      }}
+    >
       <Calendar
+        style={{
+          padding: 5,
+        }}
         // Initially visible month. Default = now
         initialDate={initialDate}
         // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
@@ -40,29 +50,44 @@ function CalendarScheduled({ markedDates, onMoveToDailyTasks }: IProps) {
         maxDate={maxDate}
         // Handler which gets executed on day press. Default = undefined
         onDayPress={(day) => {
-          console.log('selected day', day);
+          // console.log('selected day', day);
           onMoveToDailyTasks(day);
         }}
         // Handler which gets executed on day long press. Default = undefined
         onDayLongPress={(day) => {
-          console.log('selected day', day);
+          // console.log('selected day', day);
         }}
         // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
         monthFormat="yyyy MM"
         // Handler which gets executed when visible month changes in calendar. Default = undefined
         onMonthChange={(month) => {
-          console.log('month changed', month);
+          // console.log('month changed', month);
         }}
         // Hide month navigation arrows. Default = false
         hideArrows={false}
         // Replace default arrows with custom ones (direction can be 'left' or 'right')
-        renderArrow={(direction) => (
-          <CalendarArrow
-            direction={direction}
-            setInitialDate={setInitialDate}
-          />
-        )}
+        renderArrow={(direction) => <CalendarArrow direction={direction} />}
         // Do not show days of other months in month page. Default = false
+        theme={{
+          calendarBackground: 'rgba(0,0,0,0.4)',
+          textSectionTitleColor: 'white',
+          dayTextColor: 'white',
+          todayTextColor: 'white',
+          selectedDayBackgroundColor: '#333248',
+          monthTextColor: 'white',
+          // stylesheet: {
+          //   calendar: {
+          //     header: {
+          //       week: {
+          //         marginTop: 30,
+          //         marginHorizontal: 12,
+          //         flexDirection: 'row',
+          //         justifyContent: 'space-between',
+          //       },
+          //     },
+          //   },
+          // },
+        }}
         hideExtraDays
         // If hideArrows = false and hideExtraDays = false do not switch month when tapping on greyed out
         // day from another month that is visible in calendar page. Default = false
@@ -74,7 +99,7 @@ function CalendarScheduled({ markedDates, onMoveToDailyTasks }: IProps) {
         // Show week numbers to the left. Default = false
         showWeekNumbers
         // Handler which gets executed when press arrow icon left. It receive a callback can go back month
-        onPressArrowLeft={(subtractMonth) => {
+        onPressArrowLeft={(subtractMonth, month) => {
           console.log('onPressArrowLeft', subtractMonth);
           subtractMonth();
         }}
@@ -83,10 +108,6 @@ function CalendarScheduled({ markedDates, onMoveToDailyTasks }: IProps) {
           console.log('onPressArrowRight', addMonth);
           addMonth();
         }}
-        // Disable left arrow. Default = false
-        disableArrowLeft
-        // Disable right arrow. Default = false
-        disableArrowRight
         // Disable all touch events for disabled days. can be override with disableTouchEvent in markedDates
         disableAllTouchEventsForDisabledDays
         // Replace default month and year title with custom one. the function receive a date as parameter

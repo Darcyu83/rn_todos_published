@@ -5,6 +5,8 @@ import { TTodosInitialState, TTodo, TTodoList } from './types';
 
 const initialState: TTodosInitialState = {
   list: {},
+  isProcessing: 'ready',
+  error: null,
   // markedDates: {
   // '2022-10-17': {
   //   taskCnt: 0,
@@ -32,7 +34,8 @@ const todosSlice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
-    addTodo: (state, action: PayloadAction<TTodo>) => {
+    addTodo: (state, action: PayloadAction<TTodo>) => {},
+    addTodoSuccess: (state, action: PayloadAction<TTodo>) => {
       const taskId = action.payload.id;
       const startDtString = action.payload.startDtData.dateString;
       const endDtString = action.payload.endDtData.dateString;
@@ -53,10 +56,14 @@ const todosSlice = createSlice({
 
       state.list = todoList;
     },
+    addTodoFailure: (state, action: PayloadAction<{ errMsg: string }>) => {
+      state.error = action.payload.errMsg;
+    },
     addTodoList: (state, action: PayloadAction<TTodoList>) => {
       state.list = action.payload;
     },
-    updateTodo: (state, action: PayloadAction<TTodo>) => {
+    updateTodo: (state, action: PayloadAction<TTodo>) => {},
+    updateTodoSuccess: (state, action: PayloadAction<TTodo>) => {
       const startDtString = action.payload.startDtData.dateString;
       const endDtString = action.payload.endDtData.dateString;
       const dateStringsArr = crateDatesStringArr(startDtString, endDtString);
@@ -66,9 +73,19 @@ const todosSlice = createSlice({
         period: dateStringsArr,
       };
     },
-    removeTodo: (state, action: PayloadAction<{ taskId: number }>) => {
+    updateTodoFailure: (state, action: PayloadAction<{ errMsg: string }>) => {
+      state.error = action.payload.errMsg;
+    },
+    deleteTodo: (state, action: PayloadAction<{ taskId: number }>) => {},
+    deleteTodoSuccess: (state, action: PayloadAction<{ taskId: number }>) => {
       //   state.list = state.list.filter((todo) => todo.id !== action.payload.id);
-      delete state.list[action.payload.taskId];
+
+      const _stateList = state.list;
+      delete _stateList[action.payload.taskId];
+      state.list = _stateList;
+    },
+    deleteTodoFailure: (state, action: PayloadAction<{ errMsg: string }>) => {
+      state.error = action.payload.errMsg;
     },
 
     clearAllTodos: (state) => {

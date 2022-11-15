@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 import { SCREEN_WIDTH } from '../constants';
 
 export const SafeAreaCustomized = styled.SafeAreaView`
+  background-color: white;
   flex: 1;
 `;
 

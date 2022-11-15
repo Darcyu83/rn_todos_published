@@ -32,6 +32,7 @@ import { capitalizeFirstLetter } from '../../utils/stringUtils';
 import { AddIcon, PlusIcon } from '../../components/icons/pngs';
 import { theme } from '../../styles/theme';
 import { AppStyles } from '../../styles/appStyles';
+import { addTodoInFirestore } from '../../utils/firestore';
 
 const Container = styled.View`
   flex: 1;
@@ -66,7 +67,6 @@ const periodInitialState = {
   endDtData: null,
 };
 function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
-  const user = useAppSelector((state) => state.user);
   const [todoTitle, setTodoTitle] = useState('');
   const [todoContent, setTodoContent] = useState('');
   const [{ startDtData, endDtData }, setPeriodData] =
@@ -98,6 +98,7 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
   };
 
   const onAddTodoHandler = () => {
+    setIsOnSaving(true);
     if (!todoTitle) {
       Alert.alert('No Title');
       return;
@@ -115,11 +116,13 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
       todoContent
     );
     dispatch(todosActions.addTodo(params));
+    setIsOnSaving(false);
     onResetStates();
     closeModal();
   };
 
   const onUpdateTodoHandler = () => {
+    setIsOnSaving(true);
     if (!taskModified) {
       Alert.alert('No target to update');
       return;
@@ -144,6 +147,7 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
 
     params.id = taskModified.id;
     dispatch(todosActions.updateTodo(params));
+    setIsOnSaving(false);
     onResetStates();
     closeModal();
   };
@@ -164,53 +168,8 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
 
   const isFocused = useIsFocused();
   useEffect(() => {
-    console.log('Modal be mounted ', isFocused);
-
-    return () => {
-      console.log('Modal be unmounted ', isFocused);
-      onResetStates();
-    };
+    if (!isFocused) onResetStates();
   }, [isFocused]);
-
-  // firestore==============================================================
-  const addTodoInFirestore = async () => {
-    if (!todoTitle) {
-      Alert.alert('No Title');
-      return;
-    }
-    if (!startDtData || !endDtData) {
-      Alert.alert('No Start / End Date');
-      return;
-    }
-    const thisTodoParams: TTodo = onCreateTodoParams(
-      cateSelected,
-      startDtData,
-      endDtData,
-      todoTitle,
-      todoContent
-    );
-
-    if (!user.info.userId) return;
-
-    try {
-      setIsOnSaving(true);
-      console.log('firebase saving Start... ');
-      await firestore()
-        .collection('users')
-        .doc(user.info.userId)
-        .collection('todoList')
-        .doc(String(thisTodoParams.id))
-        .set(thisTodoParams);
-
-      console.log('firebase saving end... ');
-      setIsOnSaving(false);
-      onResetStates();
-      closeModal();
-    } catch (error) {
-      setIsOnSaving(false);
-      console.log('try catching error firebase saving end... ', error);
-    }
-  };
 
   return (
     <Modal transparent visible={visible}>
@@ -315,17 +274,10 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
         <KeyboardAvoidingView style={{}}>
           <OrangeTouchable
             style={{ marginVertical: 3 }}
-            onPress={async () => {
+            onPress={() => {
               Keyboard.dismiss();
-              await addTodoInFirestore();
+              taskModified ? onUpdateTodoHandler() : onAddTodoHandler();
             }}
-          >
-            <Text>Click to Add todos in firestore</Text>
-          </OrangeTouchable>
-
-          <OrangeTouchable
-            style={{ marginVertical: 3 }}
-            onPress={taskModified ? onUpdateTodoHandler : onAddTodoHandler}
           >
             <Text>Click to Add or Update in Redux</Text>
           </OrangeTouchable>

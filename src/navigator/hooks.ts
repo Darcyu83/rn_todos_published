@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import RootBtnNav from './RootBtnNav';
+import RootBtmTabNav from './RootBtmTabNav';
 import {
   TRootNavParamsList,
   TStackScrnProps_Todos,
