@@ -1,19 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Modal, Text, View } from 'react-native';
 import styled from 'styled-components/native';
-import {
-  Calendar,
-  CalendarList,
-  Agenda,
-  DateData,
-} from 'react-native-calendars';
+import { Calendar, DateData } from 'react-native-calendars';
 import { MarkedDates } from 'react-native-calendars/src/types';
-import { ModalTranspBgView } from '../../styles/styledComponents/components';
 import DateString from '../../utils/dateUtils';
 import CalendarArrow from './CalendarArrow';
-import { DotStyle, periodStyle } from '../../styles/calendarStyle';
-import { SCREEN_WIDTH } from '../../styles/constants';
-import { theme } from '../../styles/theme';
+
 import { IPeriod } from '../../screens/todos/types';
 import { createPeriodMarkedDates } from '../../utils/calendarUtils';
 
@@ -81,12 +72,12 @@ function CalendarDatePicker({
       startDtData: _startDtData,
       endDtData: _endDtData,
     }));
-  }, [_startDtData, _endDtData]);
+  }, [_startDtData, _endDtData, setPeriod]);
 
   // 날짜 선택값 바뀔때
   useEffect(() => {
     onDateDataChangedHandler();
-  }, [_startDtData, _endDtData]);
+  }, [_startDtData, _endDtData, onDateDataChangedHandler]);
 
   // 시작일 종료일 바뀔경우
   useEffect(() => {
@@ -122,12 +113,7 @@ function CalendarDatePicker({
         // Hide month navigation arrows. Default = false
         hideArrows={false}
         // Replace default arrows with custom ones (direction can be 'left' or 'right')
-        renderArrow={(direction) => (
-          <CalendarArrow
-            direction={direction}
-            setInitialDate={setInitialDate}
-          />
-        )}
+        renderArrow={(direction) => <CalendarArrow direction={direction} />}
         // Do not show days of other months in month page. Default = false
         hideExtraDays
         // If hideArrows = false and hideExtraDays = false do not switch month when tapping on greyed out

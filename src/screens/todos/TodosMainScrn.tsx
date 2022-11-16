@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ScrollView, Text } from 'react-native';
 import { DateData } from 'react-native-calendars/src/types';
 import styled from 'styled-components/native';
-
-import { useNavigation } from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
 import TaskIndicator from '../../components/calendar/TaskIndicator';
 import { TMarkedDatesCustomed } from '../../components/calendar/types';
 import { PlusIcon } from '../../components/icons/pngs';
@@ -16,6 +15,8 @@ import {
 import { createScheduledDotMakredDates } from '../../utils/calendarUtils';
 import TodoRegisModal from './TodoRegistModal';
 import CalendarScheduled from '../../components/calendar/CalendarScheduled';
+import { GlobalTheme } from '../../styles/theme';
+import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
 
 const Container = styled.View`
   flex: 1;
@@ -30,7 +31,9 @@ const BtnWrapper = styled.View`
   height: ${28}px;
 `;
 
-function TodosMainScrn({ route, navigation }: TStackScrnProps_Todos) {
+function TodosMainScrn(props: TStackScrnProps_Todos) {
+  const { route, navigation } = props;
+
   const { list: todosList } = useAppSelector((state) => state.todos);
   const [markedDates, setMarkedDates] = useState<TMarkedDatesCustomed>({});
 
@@ -50,7 +53,7 @@ function TodosMainScrn({ route, navigation }: TStackScrnProps_Todos) {
   }, [todosList]);
 
   return (
-    <SafeAreaCustomized>
+    <SafeLinearAreaHOC>
       <Container>
         <ScrollView>
           {/* 할일 구분 */}
@@ -81,7 +84,7 @@ function TodosMainScrn({ route, navigation }: TStackScrnProps_Todos) {
         closeModal={() => setIsRegModalShown(false)}
         taskModified={null}
       />
-    </SafeAreaCustomized>
+    </SafeLinearAreaHOC>
   );
 }
 

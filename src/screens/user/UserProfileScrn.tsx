@@ -3,6 +3,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import InlineTextButton from '../../components/bottons/InlineTextButton';
+import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
 import { TUserNavParams } from '../../navigator/branches/user/types';
 import { ScrnTitle } from '../../styles/styledComponents/components';
 
@@ -12,16 +13,23 @@ function UserProfileScrn({
   navigation,
 }: NativeStackScreenProps<TUserNavParams>) {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.4)' }}>
-      <ScrnTitle>UserProfileScrn</ScrnTitle>
-
-      <InlineTextButton
-        title="Go to logOut"
-        onPress={() => {
-          navigation.navigate('UserLogOutScrn');
+    <SafeLinearAreaHOC>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#ffd966',
         }}
-      />
-    </SafeAreaView>
+      >
+        <InlineTextButton
+          title="Go to logOut"
+          onPress={() => {
+            navigation.navigate('UserLogOutScrn');
+          }}
+        />
+      </View>
+    </SafeLinearAreaHOC>
   );
 }
 

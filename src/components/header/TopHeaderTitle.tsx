@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Text, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import Animated, {
   Easing,
   timing,
@@ -19,6 +20,7 @@ const Container = styled.View`
   flex-direction: row;
   justify-content: flex-start;
   align-items: baseline;
+  background-color: transparent;
 `;
 interface IProps {
   title: string;
@@ -45,14 +47,14 @@ function TopHeaderTitle({ title }: IProps) {
     animated1.value = withDelay(
       1000,
       withTiming(0, {
-        duration: 2000,
+        duration: 1000,
       })
     );
 
     animated2.value = withDelay(
       500,
       withTiming(0, {
-        duration: 2000,
+        duration: 1000,
       })
     );
 

@@ -1,23 +1,12 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  Animated,
-  FlatList,
-  KeyboardAvoidingView,
-  Text,
-  View,
-} from 'react-native';
-import { useFrameCallback } from 'react-native-reanimated';
+import { FlatList, KeyboardAvoidingView, Text } from 'react-native';
 import styled from 'styled-components/native';
+import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
 import { TTodosNavParams } from '../../navigator/branches/todos/types';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { todosActions } from '../../redux/todos/todosSlice';
-
-import { TTodo, TTodoList } from '../../redux/todos/types';
-import {
-  OrangeTouchable,
-  SafeAreaCustomized,
-} from '../../styles/styledComponents/components';
+import { useAppSelector } from '../../redux/hooks';
+import { TTodo } from '../../redux/todos/types';
+import { OrangeTouchable } from '../../styles/styledComponents/components';
 import TodoCard from './TodoCard';
 import TodoRegistModal from './TodoRegistModal';
 import { createDailyDetailedTaskList } from './todosUtils';
@@ -66,7 +55,7 @@ function TodosDetailedListScrn({
   const flatlistRef = useRef<FlatList>(null);
 
   return (
-    <SafeAreaCustomized>
+    <SafeLinearAreaHOC>
       <FlatList
         ref={flatlistRef}
         data={createDailyDetailedTaskList(todosList, clickedDateData)}
@@ -82,10 +71,12 @@ function TodosDetailedListScrn({
           flex: 1,
           padding: 10,
         }}
-        contentContainerStyle={{
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-        }}
+        contentContainerStyle={
+          {
+            // justifyContent: 'flex-start',
+            // alignItems: 'center',
+          }
+        }
       />
 
       {/* 등록 버튼 */}
@@ -107,7 +98,7 @@ function TodosDetailedListScrn({
         closeModal={() => setIsRegModalShown(false)}
         taskModified={taskModified}
       />
-    </SafeAreaCustomized>
+    </SafeLinearAreaHOC>
   );
 }
 

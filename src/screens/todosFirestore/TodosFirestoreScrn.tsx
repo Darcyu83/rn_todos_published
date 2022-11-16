@@ -39,6 +39,7 @@ import {
 import { returnLoadingScrn } from '../../components/loader/Loading';
 import { TMarkedDatesCustomed } from '../../components/calendar/types';
 import { TRootNavParamsList } from '../../navigator/types';
+import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
 
 const structureStr = ` ─ project name : rnTodosPublished
               └ users as ID(Collection) - listener point 
@@ -71,9 +72,7 @@ const structureStr = ` ─ project name : rnTodosPublished
                                               dateString: string;
                                           };
                                   }`;
-function TodosFirestoreScrn({
-  navigation,
-}: NativeStackScreenProps<TRootNavParamsList, 'todos'>) {
+function TodosFirestoreScrn({}) {
   const {
     info: { userId },
   } = useAppSelector((state) => state.user);
@@ -150,7 +149,7 @@ function TodosFirestoreScrn({
   returnLoadingScrn(isProcessing);
 
   return (
-    <SafeAreaView style={{ backgroundColor: 'rgba(0,0,0,0.3)', padding: 5 }}>
+    <SafeLinearAreaHOC>
       <Text>Temporary Test Screen for Firestore</Text>
       <ScrollView>
         <Text>List of Todos</Text>
@@ -194,7 +193,7 @@ function TodosFirestoreScrn({
         }}
         taskModified={null}
       />
-    </SafeAreaView>
+    </SafeLinearAreaHOC>
   );
 }
 

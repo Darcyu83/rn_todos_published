@@ -32,6 +32,15 @@ module.exports = {
           [] /* optional array of validators used for propTypes validation */,
       },
     ],
+    'react/jsx-props-no-spreading': [
+      1,
+      {
+        html: 'enforce',
+        custom: 'ignore',
+        explicitSpread: 'enforce',
+        exceptions: ['Component'],
+      },
+    ],
     '@typescript-eslint/no-restricted-imports': [
       'warn',
       {

@@ -1,5 +1,3 @@
-import { DotProps } from 'react-native-calendars/src/calendar/day/dot';
-import { MarkingProps } from 'react-native-calendars/src/calendar/day/marking';
 import { TDot } from '../components/calendar/types';
 import { TTodoCate } from '../redux/todos/types';
 import { getThemeStyle } from '../utils/themeUtils';

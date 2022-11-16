@@ -1,6 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Text, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+
 import TopHeaderTitle from '../../../components/header/TopHeaderTitle';
 import TodosDetailedListScrn from '../../../screens/todos/TodosDetailedListScrn';
 import TodosMainScrn from '../../../screens/todos/TodosMainScrn';
@@ -10,17 +12,31 @@ interface IProps {}
 const Stack = createNativeStackNavigator<TTodosNavParams>();
 function TodosStackNav({}: IProps) {
   return (
-    <Stack.Navigator screenOptions={{ headerShadowVisible: false }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShadowVisible: false,
+        headerTransparent: true,
+      }}
+    >
       <Stack.Screen
         name="TodosMainScrn"
         component={TodosMainScrn}
         options={{
-          headerTitle: () => <TopHeaderTitle title="Calendar" />,
+          headerTitle: (props) => <TopHeaderTitle title="Calendar" />,
         }}
       />
       <Stack.Screen
         name="TodosDetailedListScrn"
         component={TodosDetailedListScrn}
+        options={({ route, navigation }) => ({
+          headerTitle: () => (
+            <TopHeaderTitle
+              title={route.params.clickedDateData.dateString
+                .split('-')
+                .join('/')}
+            />
+          ),
+        })}
       />
     </Stack.Navigator>
   );

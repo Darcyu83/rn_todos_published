@@ -15,7 +15,7 @@ export const ScrnTitle = styled.Text`
 export const SectionTitle = styled.Text`
   font-weight: bold;
   font-size: 18px;
-  color: ${(props) => props.theme.content_bg_primary_accent};
+  color: ${(props) => props.theme.text_white};
 `;
 
 export const OrangeTouchable = styled.TouchableOpacity`

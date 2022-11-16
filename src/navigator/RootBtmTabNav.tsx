@@ -54,6 +54,7 @@ function RootBtmTabNav({}: IProps) {
     <ThemeProvider theme={isDarkMode ? theme.darkMode : theme.lightMode}>
       <Tab.Navigator
         screenOptions={{
+          unmountOnBlur: true,
           headerShown: false,
           tabBarActiveTintColor: '#70d7c7',
           tabBarShowLabel: true,
