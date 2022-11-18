@@ -40,6 +40,7 @@ import { returnLoadingScrn } from '../../components/loader/Loading';
 import { TMarkedDatesCustomed } from '../../components/calendar/types';
 import { TRootNavParamsList } from '../../navigator/types';
 import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
+import SplashScrn from '../../assets/splash/SplashSVG';
 
 const structureStr = ` ─ project name : rnTodosPublished
               └ users as ID(Collection) - listener point 
@@ -151,6 +152,7 @@ function TodosFirestoreScrn({}) {
   return (
     <SafeLinearAreaHOC>
       <Text>Temporary Test Screen for Firestore</Text>
+
       <ScrollView>
         <Text>List of Todos</Text>
 

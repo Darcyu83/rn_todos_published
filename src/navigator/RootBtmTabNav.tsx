@@ -31,12 +31,6 @@ function RootBtmTabNav({}: IProps) {
   useEffect(() => {
     (async () => {
       const remoteDB = await getTodoListFromFirestore();
-      console.log(
-        '%c RootBtmTabNav === size',
-        'background-color: red; color: white',
-        remoteDB.size,
-        Object.keys(todoList).length
-      );
 
       // 파이어 스토어 저장 개수 === 리덕스 저장 개수
       if (remoteDB.size === Object.keys(todoList).length) return;

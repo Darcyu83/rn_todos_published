@@ -27,31 +27,31 @@ interface IProps {
 }
 
 function TopHeaderTitle({ title }: IProps) {
-  const animated1 = useSharedValue(400);
-  const animated2 = useSharedValue(400);
+  const capitalLetterAnimated = useSharedValue(400);
+  const nonCapitalizedLetterAnimated = useSharedValue(400);
   const rotateAnimated = useSharedValue(0);
   const scaleAnimated = useSharedValue(10);
 
   const animatedStyle1 = useAnimatedStyle(() => ({
     transform: [
-      { translateX: animated1.value },
+      { translateX: capitalLetterAnimated.value },
       { rotateX: `${rotateAnimated.value}deg` },
       { scale: scaleAnimated.value },
     ],
   }));
   const animatedStyle2 = useAnimatedStyle(() => ({
-    transform: [{ translateX: animated2.value }],
+    transform: [{ translateX: nonCapitalizedLetterAnimated.value }],
   }));
 
   useEffect(() => {
-    animated1.value = withDelay(
-      1000,
+    capitalLetterAnimated.value = withDelay(
+      1500,
       withTiming(0, {
         duration: 1000,
       })
     );
 
-    animated2.value = withDelay(
+    nonCapitalizedLetterAnimated.value = withDelay(
       500,
       withTiming(0, {
         duration: 1000,
@@ -69,7 +69,12 @@ function TopHeaderTitle({ title }: IProps) {
       1,
       false
     );
-  }, [animated1, animated2, rotateAnimated, scaleAnimated]);
+  }, [
+    capitalLetterAnimated,
+    nonCapitalizedLetterAnimated,
+    rotateAnimated,
+    scaleAnimated,
+  ]);
 
   return (
     <Container>
@@ -90,7 +95,7 @@ function TopHeaderTitle({ title }: IProps) {
         style={[
           {
             fontSize: 18,
-            color: GlobalTheme().text,
+            color: GlobalTheme().text_white,
           },
           animatedStyle2,
         ]}

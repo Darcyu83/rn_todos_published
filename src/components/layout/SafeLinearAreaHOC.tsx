@@ -14,7 +14,8 @@ function SafeLinearAreaHOC({ children }: IProps) {
     <SafeAreaCustomized style={{}}>
       <LinearGradient
         style={{ flex: 1, paddingTop: HEADER_HEIGHT }}
-        colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']}
+        // colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']}
+        colors={['#5d5aa5', '#4d4a95']}
       >
         {children}
       </LinearGradient>
