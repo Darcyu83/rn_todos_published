@@ -30,17 +30,21 @@ function RootBtmTabNav({}: IProps) {
 
   useEffect(() => {
     (async () => {
-      const remoteDB = await getTodoListFromFirestore();
+      try {
+        const remoteDB = await getTodoListFromFirestore();
 
-      // 파이어 스토어 저장 개수 === 리덕스 저장 개수
-      if (remoteDB.size === Object.keys(todoList).length) return;
+        // 파이어 스토어 저장 개수 === 리덕스 저장 개수
+        if (remoteDB.size === Object.keys(todoList).length) return;
 
-      remoteDB.forEach((doc) => {
-        const docId = Number(doc.id);
-        if (!todoList[docId]) {
-          deleteTodoInFirestore(doc.id);
-        }
-      });
+        remoteDB.forEach((doc) => {
+          const docId = Number(doc.id);
+          if (!todoList[docId]) {
+            deleteTodoInFirestore(doc.id);
+          }
+        });
+      } catch (error) {
+        console.log('useEffect==getTodoListFromFirestore', error);
+      }
     })();
   }, [todoList]);
 

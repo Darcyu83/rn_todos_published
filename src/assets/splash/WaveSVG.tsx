@@ -30,7 +30,7 @@ interface IProps {
   bgColor?: string;
 }
 
-function SplashSVG({ bgColor = 'white' }: IProps) {
+function WaveSVG({ bgColor = 'white' }: IProps) {
   const AnimatedPath = Animated.createAnimatedComponent(Path);
 
   const SVG_SIZE = 300;
@@ -46,14 +46,14 @@ function SplashSVG({ bgColor = 'white' }: IProps) {
 
   useEffect(() => {
     progressWave1.value = withRepeat(
-      withTiming(1, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
+      withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
       Infinity,
       true
     );
     progressWave2.value = withDelay(
       300,
       withRepeat(
-        withTiming(1, { duration: 1530, easing: Easing.inOut(Easing.sin) }),
+        withTiming(1, { duration: 1500, easing: Easing.inOut(Easing.sin) }),
         Infinity,
         true
       )
@@ -62,7 +62,7 @@ function SplashSVG({ bgColor = 'white' }: IProps) {
 
   const dataWave1 = useDerivedValue(() => ({
     from: {
-      x: 0,
+      x: -100,
       y: interpolate(
         progressWave2.value,
         [0, 1],
@@ -108,7 +108,7 @@ function SplashSVG({ bgColor = 'white' }: IProps) {
       ),
     },
     to: {
-      x: SVG_SIZE,
+      x: SVG_SIZE + 100,
       y: interpolate(
         progressWave2.value,
         [0, 1],
@@ -119,7 +119,7 @@ function SplashSVG({ bgColor = 'white' }: IProps) {
 
   const dataWave2 = useDerivedValue(() => ({
     from: {
-      x: 0,
+      x: -100,
       y: interpolate(
         progressWave2.value,
         [0, 1],
@@ -160,7 +160,7 @@ function SplashSVG({ bgColor = 'white' }: IProps) {
       ),
     },
     to: {
-      x: SVG_SIZE,
+      x: SVG_SIZE + 100,
       y: interpolate(
         progressWave2.value,
         [0, 1],
@@ -180,43 +180,48 @@ function SplashSVG({ bgColor = 'white' }: IProps) {
     const { from, ctrlPoint1, ctrlPoint3, to } = dataWave2.value;
 
     return {
-      d: `M ${from.x} ${from.y} C ${ctrlPoint1.x} ${ctrlPoint1.y} ${ctrlPoint3.x} ${ctrlPoint3.y} ${to.x} ${to.y} L ${SVG_SIZE} ${SVG_SIZE} L 0 ${SVG_SIZE} Z`,
+      d: `M ${from.x} ${from.y} C ${ctrlPoint1.x} ${ctrlPoint1.y} ${
+        ctrlPoint3.x
+      } ${ctrlPoint3.y} ${to.x} ${to.y} L ${
+        SVG_SIZE + 100
+      } ${SVG_SIZE} L -100 ${SVG_SIZE} Z`,
     };
   });
-  const d =
-    'M -100 100 C 40 10 60 10 100 100 S 150 170 200 100 L200 200 0 200 Z';
 
   return (
-    <Svg width="100%" height="100%" viewBox="-1 -1 299 299">
+    <Svg width="100%" height="100%" viewBox="-90 1 400 300">
       <Mask id="CircleMask">
-        <Rect x={0} y={0} width="100%" height="100%" fill="white" />
-        {/* <Rect x={0} y={0} width="50%" height="50%" fill="black" /> */}
+        <Rect x={-10} y={-10} width={350} height={350} fill="white" />
+        {/* <Rect x={-10} y={-10} width="309" height="309" fill="black" /> */}
         <Circle
-          cx={SVG_SIZE / 2}
+          cx={SVG_SIZE / 2 + 2}
           cy={SVG_SIZE / 2}
           r={SVG_SIZE / 2}
           fill="black"
         />
       </Mask>
+      <G>
+        <Rect x={-90} y={0} width={400} height={300} fill="dodgerblue" />
+        <AnimatedPath
+          id="wave1"
+          fill="rgba(255,255,255,0.6)"
+          animatedProps={pathWave1}
+        />
+        <AnimatedPath id="wave2" fill="#4f4ffa" animatedProps={pathWave2} />
+      </G>
 
-      <Rect width="100%" height="100%" fill="dodgerblue" x={0} y={0} />
-      <AnimatedPath
-        id="wave1"
-        fill="rgba(255,255,255,0.6)"
-        animatedProps={pathWave1}
-      />
-      <AnimatedPath id="wave2" fill="#4f4ffae5" animatedProps={pathWave2} />
-
-      <Rect
-        x={0}
-        y={0}
-        width={SVG_SIZE}
-        height={SVG_SIZE}
+      {/* <Rect
+        x={-30}
+        y={-30}
+        width={350}
+        height={350}
         fill={bgColor}
+        // stroke={bgColor}
+        // strokeWidth={3}
         mask="url(#CircleMask)"
-      />
+      /> */}
     </Svg>
   );
 }
 
-export default SplashSVG;
+export default WaveSVG;

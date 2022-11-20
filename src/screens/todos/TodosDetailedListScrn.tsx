@@ -7,7 +7,7 @@ import { TTodosNavParams } from '../../navigator/branches/todos/types';
 import { useAppSelector } from '../../redux/hooks';
 import { TTodo } from '../../redux/todos/types';
 import { OrangeTouchable } from '../../styles/styledComponents/components';
-import TodoCard from './TodoCard';
+import TodoCard from './TodoCardSwipeableRow';
 import TodoRegistModal from './TodoRegistModal';
 import { createDailyDetailedTaskList } from './todosUtils';
 

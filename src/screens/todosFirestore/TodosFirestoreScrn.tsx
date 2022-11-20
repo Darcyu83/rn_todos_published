@@ -23,7 +23,7 @@ import { SCREEN_WIDTH, WINDOW_WIDTH } from '../../styles/constants';
 
 import InlineTextButton from '../../components/bottons/InlineTextButton';
 import { TTodo, TTodoList } from '../../redux/todos/types';
-import TodoCard from '../todos/TodoCard';
+import TodoCard from '../todos/TodoCardSwipeableRow';
 import { AppStyles } from '../../styles/appStyles';
 import { theme } from '../../styles/theme';
 import { useAppSelector } from '../../redux/hooks';
@@ -40,7 +40,7 @@ import { returnLoadingScrn } from '../../components/loader/Loading';
 import { TMarkedDatesCustomed } from '../../components/calendar/types';
 import { TRootNavParamsList } from '../../navigator/types';
 import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
-import SplashScrn from '../../assets/splash/SplashSVG';
+import SplashScrn from '../../assets/splash/WaveSVG';
 
 const structureStr = ` ─ project name : rnTodosPublished
               └ users as ID(Collection) - listener point 

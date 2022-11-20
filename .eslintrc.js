@@ -66,6 +66,7 @@ module.exports = {
     'import/prefer-default-export': 'warn',
     'no-plusplus': 0,
     'global-require': 0,
+    'no-param-reassign': [2, { props: false }],
   },
   settings: {
     'import/resolver': {
