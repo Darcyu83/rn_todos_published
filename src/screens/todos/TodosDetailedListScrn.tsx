@@ -4,10 +4,11 @@ import { FlatList, KeyboardAvoidingView, Text } from 'react-native';
 import styled from 'styled-components/native';
 import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
 import { TTodosNavParams } from '../../navigator/branches/todos/types';
-import { useAppSelector } from '../../redux/hooks';
-import { TTodo } from '../../redux/todos/types';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { todosActions } from '../../redux/todos/todosSlice';
+import { TTodo, TTodoList } from '../../redux/todos/types';
 import { OrangeTouchable } from '../../styles/styledComponents/components';
-import TodoCard from './TodoCardSwipeableRow';
+import TodoCardSwipeableRow from './TodoCardSwipeableRow';
 import TodoRegistModal from './TodoRegistModal';
 import { createDailyDetailedTaskList } from './todosUtils';
 
@@ -23,8 +24,12 @@ function TodosDetailedListScrn({
   navigation,
 }: NativeStackScreenProps<TTodosNavParams, 'TodosDetailedListScrn'>) {
   const { clickedDateData } = route.params;
+  const { userId } = useAppSelector((state) => state.user.info);
+  const dispatch = useAppDispatch();
 
-  const { list: todosList } = useAppSelector((state) => state.todos);
+  const { list: todoList } = useAppSelector((state) => state.todos);
+
+  const [_todoList, set_TodoList] = useState<TTodo[] | null>(null);
   const [isRegOrUpdatedDone, setIsRegOrUpdatedDone] = useState(false);
 
   // 할일 등록 모달 토글
@@ -34,12 +39,34 @@ function TodosDetailedListScrn({
   const [dailyTaskList, setdailyTaskList] = useState<TTodo[] | null>(null);
 
   // 수정할 할일 정보
-  const [taskModified, setTaskModified] = useState<TTodo | null>(null);
+  const [taskIdBeModified, setTaskIdModified] = useState<number | null>(null);
+  // 삭제할 할일 정보
+  const [taskIdBeDeleted, setTaskIdBeDeleted] = useState<number | null>(null);
 
-  const onPressToModify = (taskInfo: TTodo) => {
-    setTaskModified(taskInfo);
+  // 힐일 수정
+  const onPressToModify = (taskId: number) => {
+    setTaskIdModified(taskId);
     setIsRegModalShown(true);
   };
+
+  // 할일 삭제
+  const onSwipeToDel = useCallback(
+    (todoId: number) => {
+      if (!userId) return;
+
+      console.log('onSwipeToDel ran::');
+      try {
+        dispatch(todosActions.deleteTodo({ taskId: todoId }));
+      } catch (error) {
+        console.log(
+          '%c Remove todo ==== error:: ',
+          'background-color: tomato',
+          error
+        );
+      }
+    },
+    [dispatch, userId]
+  );
 
   const moveToMainScrn = useCallback(() => {
     navigation.navigate('TodosMainScrn');
@@ -50,23 +77,44 @@ function TodosDetailedListScrn({
     if (isRegOrUpdatedDone) moveToMainScrn();
   }, [isRegOrUpdatedDone, moveToMainScrn]);
 
-  useEffect(() => {}, [clickedDateData, todosList]);
+  useEffect(() => {
+    set_TodoList(createDailyDetailedTaskList(todoList, clickedDateData));
+  }, [clickedDateData, todoList]);
 
   const flatlistRef = useRef<FlatList>(null);
+
+  useEffect(() => {
+    if (!taskIdBeDeleted) return;
+    set_TodoList((curr) => {
+      if (!curr) return [] as TTodo[];
+      const newArr = curr.filter((todo) => todo.id !== taskIdBeDeleted);
+      return newArr;
+    });
+    onSwipeToDel(taskIdBeDeleted);
+
+    setTaskIdBeDeleted(null);
+  }, [onSwipeToDel, taskIdBeDeleted]);
 
   return (
     <SafeLinearAreaHOC>
       <FlatList
         ref={flatlistRef}
-        data={createDailyDetailedTaskList(todosList, clickedDateData)}
+        data={_todoList || []}
         keyExtractor={(item, index) => item.id.toString() + index}
-        renderItem={({ item, index }) => (
-          <TodoCard
-            index={index}
-            todo={item}
-            onPressToModify={() => onPressToModify(item)}
-          />
-        )}
+        renderItem={({ item, index }) => {
+          console.log('renderItem ::: ', item);
+
+          return (
+            <TodoCardSwipeableRow
+              index={index}
+              todo={item}
+              onSwipeToDel={() => {
+                setTaskIdBeDeleted(item.id);
+              }}
+              onPressToModify={() => onPressToModify(item)}
+            />
+          );
+        }}
         style={{
           flex: 1,
           padding: 10,
@@ -96,7 +144,7 @@ function TodosDetailedListScrn({
       <TodoRegistModal
         visible={isRegModalShown}
         closeModal={() => setIsRegModalShown(false)}
-        taskModified={taskModified}
+        taskIdBeModified={taskIdBeModified}
       />
     </SafeLinearAreaHOC>
   );

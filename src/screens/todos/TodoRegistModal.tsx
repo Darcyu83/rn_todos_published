@@ -61,14 +61,15 @@ const BtnWrapper = styled.View`
 interface IProps {
   visible: boolean;
   closeModal: () => void;
-  taskModified: TTodo | null;
+  taskIdBeModified: number | null;
 }
 
 const periodInitialState = {
   startDtData: null,
   endDtData: null,
 };
-function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
+function TodoRegistModal({ visible, closeModal, taskIdBeModified }: IProps) {
+  const { list: todoList } = useAppSelector((state) => state.todos);
   const [todoTitle, setTodoTitle] = useState('');
   const [todoContent, setTodoContent] = useState('');
   const [{ startDtData, endDtData }, setPeriodData] =
@@ -101,12 +102,9 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
 
   const onAddTodoHandler = () => {
     setIsOnSaving(true);
-    if (!todoTitle) {
-      Alert.alert('No Title');
-      return;
-    }
-    if (!startDtData || !endDtData) {
-      Alert.alert('No Start / End Date');
+    if (!todoTitle || !startDtData || !endDtData) {
+      Alert.alert('Please input all the information');
+      setIsOnSaving(false);
       return;
     }
 
@@ -126,7 +124,7 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
   const onUpdateTodoHandler = () => {
     setIsOnSaving(true);
 
-    if (!taskModified || !todoTitle || !startDtData || !endDtData) {
+    if (!taskIdBeModified || !todoTitle || !startDtData || !endDtData) {
       Alert.alert('Please input all the information');
       setIsOnSaving(false);
       return;
@@ -140,7 +138,8 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
       todoContent
     );
 
-    params.id = taskModified.id;
+    params.id = taskIdBeModified;
+
     dispatch(todosActions.updateTodo(params));
     setIsOnSaving(false);
     onResetStates();
@@ -149,17 +148,17 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
 
   useEffect(() => {
     // 수정 보드인지 체크
-    console.log('taskModified', taskModified);
-    if (taskModified) {
-      setCateSelected(taskModified.category);
-      setTodoTitle(taskModified.title);
-      setTodoContent(taskModified.todo);
+    console.log('taskIdBeModified', taskIdBeModified);
+    if (taskIdBeModified) {
+      setCateSelected(todoList[taskIdBeModified].info.category);
+      setTodoTitle(todoList[taskIdBeModified].info.title);
+      setTodoContent(todoList[taskIdBeModified].info.todo);
       setPeriodData({
-        startDtData: taskModified.startDtData,
-        endDtData: taskModified.endDtData,
+        startDtData: todoList[taskIdBeModified].info.startDtData,
+        endDtData: todoList[taskIdBeModified].info.endDtData,
       });
     }
-  }, [taskModified]);
+  }, [todoList, taskIdBeModified]);
 
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -238,6 +237,8 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
               {/* 할일 타이틀 */}
               <SectionTitle>Todo Title</SectionTitle>
               <TextInput
+                style={{ color: 'white ' }}
+                placeholderTextColor="white"
                 placeholder="Input Title..."
                 value={todoTitle}
                 onChangeText={(txt) => setTodoTitle(txt)}
@@ -246,6 +247,8 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
               {/* 할일 내용 */}
               <SectionTitle>What to do</SectionTitle>
               <TextInput
+                style={{ color: 'white ' }}
+                placeholderTextColor="white"
                 placeholder="Input Details..."
                 value={todoContent}
                 onChangeText={setTodoContent}
@@ -256,6 +259,7 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
 
               <TextInput
                 editable={false}
+                style={{ color: 'white ' }}
                 value={
                   startDtData ? startDtData.dateString : '시작일을 선택하세요.'
                 }
@@ -264,6 +268,7 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
               <SectionTitle>End Date</SectionTitle>
               <TextInput
                 editable={false}
+                style={{ color: 'white ' }}
                 value={
                   endDtData ? endDtData.dateString : '종료일을 선택하세요.'
                 }
@@ -277,7 +282,7 @@ function TodoRegistModal({ visible, closeModal, taskModified }: IProps) {
               style={{ marginVertical: 3 }}
               onPress={() => {
                 Keyboard.dismiss();
-                taskModified ? onUpdateTodoHandler() : onAddTodoHandler();
+                taskIdBeModified ? onUpdateTodoHandler() : onAddTodoHandler();
               }}
             >
               <Text>Click to Add or Update in Redux</Text>

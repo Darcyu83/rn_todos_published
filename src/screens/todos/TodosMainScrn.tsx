@@ -7,7 +7,7 @@ import TaskIndicator from '../../components/calendar/TaskIndicator';
 import { TMarkedDatesCustomed } from '../../components/calendar/types';
 import { PlusIcon } from '../../components/icons/pngs';
 import { TStackScrnProps_Todos } from '../../navigator/types';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
   OrangeTouchable,
   SafeAreaCustomized,
@@ -17,6 +17,7 @@ import TodoRegisModal from './TodoRegistModal';
 import CalendarScheduled from '../../components/calendar/CalendarScheduled';
 import { GlobalTheme } from '../../styles/theme';
 import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
+import { todosActions } from '../../redux/todos/todosSlice';
 
 const Container = styled.View`
   flex: 1;
@@ -35,6 +36,7 @@ function TodosMainScrn(props: TStackScrnProps_Todos) {
   const { route, navigation } = props;
 
   const { list: todosList } = useAppSelector((state) => state.todos);
+
   const [markedDates, setMarkedDates] = useState<TMarkedDatesCustomed>({});
 
   // 할일 등록 모달
@@ -82,7 +84,7 @@ function TodosMainScrn(props: TStackScrnProps_Todos) {
       <TodoRegisModal
         visible={isRegModalShown}
         closeModal={() => setIsRegModalShown(false)}
-        taskModified={null}
+        taskIdBeModified={null}
       />
     </SafeLinearAreaHOC>
   );
