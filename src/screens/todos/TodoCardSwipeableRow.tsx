@@ -1,13 +1,8 @@
-/* eslint-disable prefer-destructuring */
-import firestore from '@react-native-firebase/firestore';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import {
   Gesture,
-  GestureDetector,
-  GestureEvent,
   PanGestureHandler,
-  PanGestureHandlerEventPayload,
   PanGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
 import Animated, {
@@ -18,13 +13,12 @@ import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
+  withRepeat,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import { EditIcon, TrashBinIcon } from '../../components/icons/pngs';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { todosActions } from '../../redux/todos/todosSlice';
 import { TTodo } from '../../redux/todos/types';
 import {
   BORDER_RADIUS,
@@ -33,7 +27,18 @@ import {
 } from '../../styles/constants';
 import { CustomStyle } from '../../styles/shadowStyle';
 
-const Container = styled.View`
+const OutterContainer = styled.View<{ isLastItem: boolean | null }>`
+  flex: 1;
+  padding-left: 10px;
+  padding-right: 10px;
+  justify-content: center;
+  align-items: center;
+  border-radius: ${BORDER_RADIUS}px;
+  margin-bottom: ${(props) => (props.isLastItem ? 0 : 5)}px;
+  overflow: hidden;
+`;
+
+const Container = styled.Pressable`
   background-color: #333248;
   width: 100%;
   min-height: 30%;
@@ -47,18 +52,6 @@ const Container = styled.View`
 const RowContainer = styled.View`
   justify-content: space-between;
   width: 100%;
-`;
-
-const BtnWrapper = styled.View<{ right: number }>`
-  width: ${25}px;
-  height: ${25}px;
-  z-index: 99;
-  position: absolute;
-  top: 10%;
-  right: ${(props) => props.right}px;
-  border-radius: 999px;
-  background-color: #c0bcbc;
-  border: 3px solid #ffd955;
 `;
 
 const CardTitle = styled.Text`
@@ -81,42 +74,81 @@ const CardContent = styled.Text`
 interface IProps {
   todo: TTodo;
 
-  index: number;
+  isLastItem: boolean | null;
   onSwipeToDel: () => void;
   onPressToModify: () => void;
 }
 
 function TodoCardSwipeableRow({
   todo,
-  index,
+  isLastItem,
   onSwipeToDel,
   onPressToModify,
 }: IProps) {
-  const snapPoints = [-SCREEN_WIDTH * 0.9, -SCREEN_WIDTH / 2, 0];
-
   const translateX = useSharedValue(0);
   const startX = useSharedValue(0);
 
+  const initialitemHeight = useSharedValue(0);
+  const isItemRemoved = useSharedValue(false);
+  // Swipe background content : delete View
   const buttonScale = useSharedValue(0);
-  const startBtnScale = useSharedValue(0);
-
-  const itemHeight = useSharedValue(0);
-
-  const animatedStyle = useAnimatedStyle(() => ({
+  const arrowAnimated = useSharedValue(0);
+  const arrowAnimatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateX: translateX.value,
+        translateX: arrowAnimated.value,
+      },
+    ],
+  }));
+
+  //  Sipe background Text Animated
+  const FONT_SIZE = 14;
+
+  const cardFlipAniamted = useSharedValue(0);
+
+  // const cardFaceOpacityAnimated = useSharedValue(1);
+
+  const cardFrontFlipAniamtedStyle = useAnimatedStyle(() => ({
+    // transform: [{ rotateY: `${cardFlipAniamted.value}deg` }],
+    transform: [
+      {
+        rotateY: `${withTiming(cardFlipAniamted.value)}deg`,
+      },
+    ],
+  }));
+
+  const cardBackFlipAniamtedStyle = useAnimatedStyle(() => ({
+    transform: [{ rotateY: `${cardFlipAniamted.value}deg` }],
+  }));
+
+  const translateAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateX: withTiming(translateX.value, {
+          easing: Easing.inOut(Easing.ease),
+        }),
       },
     ],
   }));
 
   const heightAnimatedStyle = useAnimatedStyle(() => {
-    const style = itemHeight.value !== 0 ? { height: itemHeight.value } : {};
-    return style;
+    if (isItemRemoved.value)
+      return {
+        height: withDelay(
+          300,
+          withTiming(0, { duration: 50 }, () => {
+            runOnJS(onSwipeToDel)();
+          })
+        ),
+      };
+    if (initialitemHeight.value)
+      return { height: withTiming(initialitemHeight.value) };
+
+    return {};
   });
 
   const scaleAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: buttonScale.value }],
+    transform: [{ scale: withTiming(buttonScale.value) }],
   }));
 
   // swipeable with gesture-handler only
@@ -144,6 +176,7 @@ function TodoCardSwipeableRow({
     return result;
   };
 
+  const snapPoints = [-SCREEN_WIDTH * 0.9, -SCREEN_WIDTH / 2, 0];
   const gestureWithAnimated = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
     { x: number; y: number }
@@ -152,85 +185,120 @@ function TodoCardSwipeableRow({
       // ctx.x = translateX.value;
     },
     onActive: (e, ctx) => {
-      translateX.value = e.translationX + startX.value;
+      const newTranslateX = e.translationX + startX.value;
+      translateX.value = newTranslateX;
 
-      buttonScale.value = interpolate(
-        e.translationX + startX.value,
-        [snapPoints[2], snapPoints[1], snapPoints[0]],
-        [0, 1, 2]
+      buttonScale.value = interpolate(newTranslateX, snapPoints, [3, 1, 0]);
+
+      cardFlipAniamted.value = interpolate(
+        newTranslateX,
+        [(-SCREEN_WIDTH * 2) / 3, -SCREEN_WIDTH / 2, 0],
+        [180, 0, 0]
       );
     },
     onEnd: (e, ctx) => {
-      startX.value = translateX.value;
-
-      console.log('velocity ====translationX ', e.velocityX, e.translationX);
-
       let snapPointX = 0;
-      if (e.velocityX >= 5000) {
+      if (e.velocityX >= 8000) {
+        // eslint-disable-next-line prefer-destructuring
         snapPointX = snapPoints[0];
       } else {
         snapPointX = getSnapPoints(translateX.value, e.velocityX, snapPoints);
       }
 
-      translateX.value = withTiming(snapPointX, {
-        easing: Easing.inOut(Easing.ease),
-      });
+      startX.value = snapPointX;
+      translateX.value = snapPointX;
 
-      buttonScale.value = withTiming(
-        interpolate(
-          translateX.value,
-          [snapPoints[2], snapPoints[1], snapPoints[0]],
-          [0, 1, 2]
-        )
+      buttonScale.value = interpolate(snapPointX, snapPoints, [3, 1, 0]);
+
+      cardFlipAniamted.value = interpolate(
+        snapPointX,
+        [(-SCREEN_WIDTH * 2) / 3, -SCREEN_WIDTH / 2, 0],
+        [180, 0, 0]
       );
-      // runOnJS(onSwipeToDel)();
+
+      console.log('snapPointX === snapPoints[0]', snapPointX, snapPoints[0]);
+
+      if (snapPointX === snapPoints[0]) isItemRemoved.value = true;
+      // if (snapPointX === snapPoints[0]) runOnJS(onSwipeToDel)();
     },
   });
 
+  useEffect(() => {
+    arrowAnimated.value = withRepeat(
+      withTiming(-10, { duration: 500, easing: Easing.inOut(Easing.ease) }),
+      Infinity,
+      true
+    );
+  }, [arrowAnimated]);
   return (
-    // <GestureDetector gesture={gesture}>
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'red',
-      }}
-    >
+    // <GestureDetector gesture={}>
+
+    <OutterContainer isLastItem={isLastItem}>
       <Animated.View
         style={[
           {
-            backgroundColor: '#dfd996',
+            backgroundColor: 'crimson',
             borderRadius: 9999,
-            // padding: 10,
+            width: '50%',
+            height: '100%',
             position: 'absolute',
-            right: 0,
-
+            right: 10,
             flexDirection: 'row',
-            justifyContent: 'flex-end',
+            justifyContent: 'center',
             alignItems: 'center',
           },
           scaleAnimatedStyle,
         ]}
       >
-        {/* 삭제 버튼 */}
-        {/* <BtnWrapper right={5}> */}
+        {/* Swipe background Items  */}
         <TouchableOpacity
-          onPress={onSwipeToDel}
-          style={{ width: 100, height: 100 }}
+          onPress={() => {
+            isItemRemoved.value = true;
+          }}
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: '100%',
+          }}
         >
-          <TrashBinIcon width="100%" height="100%" />
+          {/* text Card flip here   "Swipe to delete"  "Delete"  */}
+          <View
+            style={[
+              {
+                width: '80%',
+                height: '80%',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                position: 'absolute',
+                backfaceVisibility: 'hidden',
+              },
+            ]}
+          >
+            {/* text item1 front face */}
+
+            <Animated.View style={[arrowAnimatedStyle]}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontWeight: 'bold',
+                }}
+              >{`<<`}</Text>
+            </Animated.View>
+
+            <Text
+              style={{
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: FONT_SIZE,
+              }}
+            >
+              delete
+            </Text>
+          </View>
         </TouchableOpacity>
-        {/* </BtnWrapper> */}
-        {/* 수정 버튼 */}
-        {/* <BtnWrapper right={35}> */}
-        <TouchableOpacity
-          onPress={onPressToModify}
-          style={{ width: 100, height: 100 }}
-        >
-          <EditIcon />
-        </TouchableOpacity>
-        {/* </BtnWrapper> */}
       </Animated.View>
 
       {/* Swipeable */}
@@ -238,19 +306,25 @@ function TodoCardSwipeableRow({
         <Animated.View
           // eslint-disable-next-line no-return-assign
           style={[
-            { width: '100%', marginBottom: 5, flexDirection: 'row' },
+            { width: '100%', flexDirection: 'row' },
             CustomStyle.shadow,
-            animatedStyle,
+            translateAnimatedStyle,
             heightAnimatedStyle,
           ]}
           onLayout={(e) => {
-            if (!itemHeight.value) {
+            console.log(
+              'onLayout ===initialitemHeight.value  ',
+              initialitemHeight.value,
+              !initialitemHeight.value
+            );
+            if (!initialitemHeight.value) {
+              console.log('onLayout === ', e.nativeEvent.layout.height);
               // 0일때만
-              itemHeight.value = withTiming(e.nativeEvent.layout.height);
+              initialitemHeight.value = e.nativeEvent.layout.height;
             }
           }}
         >
-          <Container>
+          <Container onPress={onPressToModify}>
             <RowContainer>
               {/* ROW1 :  타이틀 */}
               <CardTitle numberOfLines={2} adjustsFontSizeToFit>{`${
@@ -286,7 +360,7 @@ function TodoCardSwipeableRow({
           </Container>
         </Animated.View>
       </PanGestureHandler>
-    </View>
+    </OutterContainer>
   );
 }
 

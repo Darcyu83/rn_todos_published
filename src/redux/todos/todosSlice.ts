@@ -34,7 +34,9 @@ const todosSlice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
-    addTodo: (state, action: PayloadAction<TTodo>) => {},
+    addTodo: (state, action: PayloadAction<TTodo>) => {
+      state.isProcessing = 'processing';
+    },
     addTodoSuccess: (state, action: PayloadAction<TTodo>) => {
       const taskId = action.payload.id;
       const startDtString = action.payload.startDtData.dateString;
@@ -53,16 +55,19 @@ const todosSlice = createSlice({
           period: dateStringsArr,
         };
       }
-
+      state.isProcessing = 'done';
       state.list = todoList;
     },
     addTodoFailure: (state, action: PayloadAction<{ errMsg: string }>) => {
       state.error = action.payload.errMsg;
+      state.isProcessing = 'done';
     },
     addTodoList: (state, action: PayloadAction<TTodoList>) => {
       state.list = action.payload;
     },
-    updateTodo: (state, action: PayloadAction<TTodo>) => {},
+    updateTodo: (state, action: PayloadAction<TTodo>) => {
+      state.isProcessing = 'processing';
+    },
     updateTodoSuccess: (state, action: PayloadAction<TTodo>) => {
       const startDtString = action.payload.startDtData.dateString;
       const endDtString = action.payload.endDtData.dateString;
@@ -72,20 +77,27 @@ const todosSlice = createSlice({
         info: action.payload,
         period: dateStringsArr,
       };
+
+      state.isProcessing = 'done';
     },
     updateTodoFailure: (state, action: PayloadAction<{ errMsg: string }>) => {
       state.error = action.payload.errMsg;
+      state.isProcessing = 'done';
     },
-    deleteTodo: (state, action: PayloadAction<{ taskId: number }>) => {},
+    deleteTodo: (state, action: PayloadAction<{ taskId: number }>) => {
+      state.isProcessing = 'processing';
+    },
     deleteTodoSuccess: (state, action: PayloadAction<{ taskId: number }>) => {
       //   state.list = state.list.filter((todo) => todo.id !== action.payload.id);
 
       const _stateList = state.list;
       delete _stateList[action.payload.taskId];
       state.list = _stateList;
+      state.isProcessing = 'done';
     },
     deleteTodoFailure: (state, action: PayloadAction<{ errMsg: string }>) => {
       state.error = action.payload.errMsg;
+      state.isProcessing = 'done';
     },
 
     clearAllTodos: (state) => {

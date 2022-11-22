@@ -89,6 +89,9 @@ function CalendarDatePicker({
     <CalendarWrapper>
       {/* 달력 */}
       <Calendar
+        style={{
+          padding: 5,
+        }}
         // Initially visible month. Default = now
         initialDate={initialDate}
         // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
@@ -126,13 +129,19 @@ function CalendarDatePicker({
         // Show week numbers to the left. Default = false
         showWeekNumbers={false}
         // Handler which gets executed when press arrow icon left. It receive a callback can go back month
-        onPressArrowLeft={(subtractMonth) => subtractMonth()}
+        onPressArrowLeft={(subtractMonth, month) => {
+          console.log('onPressArrowLeft', subtractMonth);
+          subtractMonth();
+        }}
         // Handler which gets executed when press arrow icon right. It receive a callback can go next month
-        onPressArrowRight={(addMonth) => addMonth()}
+        onPressArrowRight={(addMonth) => {
+          console.log('onPressArrowRight', addMonth);
+          addMonth();
+        }}
         // Disable left arrow. Default = false
-        disableArrowLeft
+        // disableArrowLeft
         // Disable right arrow. Default = false
-        disableArrowRight
+        // disableArrowRight
         // Disable all touch events for disabled days. can be override with disableTouchEvent in markedDates
         disableAllTouchEventsForDisabledDays
         // Replace default month and year title with custom one. the function receive a date as parameter

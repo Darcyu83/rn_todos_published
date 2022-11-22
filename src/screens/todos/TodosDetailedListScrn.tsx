@@ -1,20 +1,25 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Text } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Text, View } from 'react-native';
 import styled from 'styled-components/native';
+import { PlusIcon } from '../../components/icons/pngs';
 import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
 import { TTodosNavParams } from '../../navigator/branches/todos/types';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { todosActions } from '../../redux/todos/todosSlice';
 import { TTodo, TTodoList } from '../../redux/todos/types';
 import { OrangeTouchable } from '../../styles/styledComponents/components';
+import { theme } from '../../styles/theme';
 import TodoCardSwipeableRow from './TodoCardSwipeableRow';
 import TodoRegistModal from './TodoRegistModal';
 import { createDailyDetailedTaskList } from './todosUtils';
 
 const BtnWrapper = styled.View`
-  width: 100%;
-  padding: 2px 5px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: ${28}px;
+  height: ${28}px;
 `;
 
 interface IProps {}
@@ -27,7 +32,9 @@ function TodosDetailedListScrn({
   const { userId } = useAppSelector((state) => state.user.info);
   const dispatch = useAppDispatch();
 
-  const { list: todoList } = useAppSelector((state) => state.todos);
+  const { list: todoList, isProcessing } = useAppSelector(
+    (state) => state.todos
+  );
 
   const [_todoList, set_TodoList] = useState<TTodo[] | null>(null);
   const [isRegOrUpdatedDone, setIsRegOrUpdatedDone] = useState(false);
@@ -83,13 +90,16 @@ function TodosDetailedListScrn({
 
   const flatlistRef = useRef<FlatList>(null);
 
+  // 삭제할 아이템 설정 : 트리거 => 여기서 처리
   useEffect(() => {
     if (!taskIdBeDeleted) return;
+
     set_TodoList((curr) => {
       if (!curr) return [] as TTodo[];
       const newArr = curr.filter((todo) => todo.id !== taskIdBeDeleted);
       return newArr;
     });
+
     onSwipeToDel(taskIdBeDeleted);
 
     setTaskIdBeDeleted(null);
@@ -106,25 +116,19 @@ function TodosDetailedListScrn({
 
           return (
             <TodoCardSwipeableRow
-              index={index}
+              isLastItem={_todoList && index === _todoList.length - 1}
               todo={item}
               onSwipeToDel={() => {
                 setTaskIdBeDeleted(item.id);
               }}
-              onPressToModify={() => onPressToModify(item)}
+              onPressToModify={() => onPressToModify(item.id)}
             />
           );
         }}
         style={{
           flex: 1,
-          padding: 10,
         }}
-        contentContainerStyle={
-          {
-            // justifyContent: 'flex-start',
-            // alignItems: 'center',
-          }
-        }
+        contentContainerStyle={{}}
       />
 
       {/* 등록 버튼 */}
@@ -135,7 +139,7 @@ function TodosDetailedListScrn({
               setIsRegModalShown(true);
             }}
           >
-            <Text>Regist new Todos</Text>
+            <PlusIcon />
           </OrangeTouchable>
         </BtnWrapper>
       </KeyboardAvoidingView>
@@ -146,6 +150,26 @@ function TodosDetailedListScrn({
         closeModal={() => setIsRegModalShown(false)}
         taskIdBeModified={taskIdBeModified}
       />
+
+      {isProcessing === 'processing' && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            zIndex: 999,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ color: theme.darkMode.text, fontSize: 24 }}>
+            Processing...
+          </Text>
+        </View>
+      )}
     </SafeLinearAreaHOC>
   );
 }

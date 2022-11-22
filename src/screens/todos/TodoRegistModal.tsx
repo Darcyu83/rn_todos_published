@@ -37,8 +37,9 @@ import { addTodoInFirestore } from '../../utils/firestore';
 import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
 
 const Container = styled.View`
-  flex: 1;
-  background-color: ${(props) => props.theme.bg};
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
 `;
 const CalendarWrapper = styled.View`
   width: 100%;
@@ -169,7 +170,12 @@ function TodoRegistModal({ visible, closeModal, taskIdBeModified }: IProps) {
     <Modal transparent visible={visible}>
       <Container>
         <LinearGradient
-          style={{ flex: 1 }}
+          style={{
+            width: '100%',
+            height: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
           colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']}
         >
           {isOnSaving && (
@@ -207,7 +213,7 @@ function TodoRegistModal({ visible, closeModal, taskIdBeModified }: IProps) {
 
           {/* 달력 날짜 픽커 */}
           <ScrollView
-            style={{ width: '100%', backgroundColor: 'transparent' }}
+            style={{ width: '100%' }}
             contentContainerStyle={{ padding: 10 }}
           >
             {/* 날짜 선택 */}
@@ -237,8 +243,8 @@ function TodoRegistModal({ visible, closeModal, taskIdBeModified }: IProps) {
               {/* 할일 타이틀 */}
               <SectionTitle>Todo Title</SectionTitle>
               <TextInput
-                style={{ color: 'white ' }}
-                placeholderTextColor="white"
+                style={{ color: 'white' }}
+                placeholderTextColor="skyblue"
                 placeholder="Input Title..."
                 value={todoTitle}
                 onChangeText={(txt) => setTodoTitle(txt)}
@@ -247,8 +253,8 @@ function TodoRegistModal({ visible, closeModal, taskIdBeModified }: IProps) {
               {/* 할일 내용 */}
               <SectionTitle>What to do</SectionTitle>
               <TextInput
-                style={{ color: 'white ' }}
-                placeholderTextColor="white"
+                style={{ color: 'white' }}
+                placeholderTextColor="skyblue"
                 placeholder="Input Details..."
                 value={todoContent}
                 onChangeText={setTodoContent}
@@ -259,7 +265,7 @@ function TodoRegistModal({ visible, closeModal, taskIdBeModified }: IProps) {
 
               <TextInput
                 editable={false}
-                style={{ color: 'white ' }}
+                style={{ color: 'white' }}
                 value={
                   startDtData ? startDtData.dateString : '시작일을 선택하세요.'
                 }
@@ -268,7 +274,7 @@ function TodoRegistModal({ visible, closeModal, taskIdBeModified }: IProps) {
               <SectionTitle>End Date</SectionTitle>
               <TextInput
                 editable={false}
-                style={{ color: 'white ' }}
+                style={{ color: 'white' }}
                 value={
                   endDtData ? endDtData.dateString : '종료일을 선택하세요.'
                 }
@@ -277,21 +283,35 @@ function TodoRegistModal({ visible, closeModal, taskIdBeModified }: IProps) {
           </ScrollView>
 
           {/* 일정 등록 버튼 */}
-          <KeyboardAvoidingView style={{}}>
+          <KeyboardAvoidingView style={{ width: '100%', marginVertical: 10 }}>
             <OrangeTouchable
-              style={{ marginVertical: 3 }}
+              style={{
+                minHeight: 25,
+                marginTop: 5,
+                justifyContent: 'center',
+                padding: 5,
+              }}
               onPress={() => {
                 Keyboard.dismiss();
                 taskIdBeModified ? onUpdateTodoHandler() : onAddTodoHandler();
               }}
             >
-              <Text>Click to Add or Update in Redux</Text>
+              <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                Click to Add or Update in Redux
+              </Text>
             </OrangeTouchable>
             <OrangeTouchable
-              style={{ marginVertical: 3 }}
+              style={{
+                minHeight: 25,
+                marginTop: 5,
+                justifyContent: 'center',
+                padding: 5,
+              }}
               onPress={onClearTodoList}
             >
-              <Text>Remove All Todos in redux</Text>
+              <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                Remove All Todos in redux
+              </Text>
             </OrangeTouchable>
           </KeyboardAvoidingView>
         </LinearGradient>

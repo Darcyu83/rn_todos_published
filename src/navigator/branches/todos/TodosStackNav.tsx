@@ -29,12 +29,18 @@ function TodosStackNav({}: IProps) {
         name="TodosDetailedListScrn"
         component={TodosDetailedListScrn}
         options={({ route, navigation }) => ({
+          headerTintColor: '#ffffff',
           headerTitle: () => (
-            <TopHeaderTitle
-              title={route.params.clickedDateData.dateString
-                .split('-')
-                .join('/')}
-            />
+            <Text
+              style={{
+                alignSelf: 'flex-start',
+                color: 'white',
+                fontSize: 18,
+                fontWeight: 'bold',
+              }}
+            >
+              {route.params.clickedDateData.dateString.split('-').join('/')}
+            </Text>
           ),
         })}
       />
