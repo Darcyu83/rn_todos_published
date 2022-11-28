@@ -15,7 +15,6 @@ interface IProps {
 function CalendarScheduled({ markedDates, onMoveToDailyTasks }: IProps) {
   const today = useMemo<string>(() => {
     const _today = DateString.convertDateToYYYYMMDD(new Date());
-    console.log('today = useMemo ', _today);
     return _today;
   }, []);
   // 오늘 날짜

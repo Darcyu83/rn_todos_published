@@ -1,6 +1,12 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Text, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 import styled from 'styled-components/native';
 import { PlusIcon } from '../../components/icons/pngs';
 import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
@@ -10,6 +16,7 @@ import { todosActions } from '../../redux/todos/todosSlice';
 import { TTodo, TTodoList } from '../../redux/todos/types';
 import { OrangeTouchable } from '../../styles/styledComponents/components';
 import { theme } from '../../styles/theme';
+import TodoCard from './TodoCard';
 import TodoCardSwipeableRow from './TodoCardSwipeableRow';
 import TodoRegistModal from './TodoRegistModal';
 import { createDailyDetailedTaskList } from './todosUtils';
@@ -36,7 +43,7 @@ function TodosDetailedListScrn({
     (state) => state.todos
   );
 
-  const [_todoList, set_TodoList] = useState<TTodo[] | null>(null);
+  const [_todoList, set_TodoList] = useState<TTodo[]>([]);
   const [isRegOrUpdatedDone, setIsRegOrUpdatedDone] = useState(false);
 
   // 할일 등록 모달 토글
@@ -62,6 +69,7 @@ function TodosDetailedListScrn({
       if (!userId) return;
 
       console.log('onSwipeToDel ran::');
+
       try {
         dispatch(todosActions.deleteTodo({ taskId: todoId }));
       } catch (error) {
@@ -84,52 +92,44 @@ function TodosDetailedListScrn({
     if (isRegOrUpdatedDone) moveToMainScrn();
   }, [isRegOrUpdatedDone, moveToMainScrn]);
 
+  const isInitialLoadingDone = useRef<boolean>(false);
+
   useEffect(() => {
-    set_TodoList(createDailyDetailedTaskList(todoList, clickedDateData));
-  }, [clickedDateData, todoList]);
+    // 초기 데이터 로딩
+    // if (isInitialLoadingDone.current) return;
 
-  const flatlistRef = useRef<FlatList>(null);
+    const reduxTodoList = createDailyDetailedTaskList(
+      todoList,
+      clickedDateData
+    );
 
-  // 삭제할 아이템 설정 : 트리거 => 여기서 처리
-  useEffect(() => {
-    if (!taskIdBeDeleted) return;
+    set_TodoList(reduxTodoList);
 
-    set_TodoList((curr) => {
-      if (!curr) return [] as TTodo[];
-      const newArr = curr.filter((todo) => todo.id !== taskIdBeDeleted);
-      return newArr;
-    });
+    isInitialLoadingDone.current = true;
 
-    onSwipeToDel(taskIdBeDeleted);
-
-    setTaskIdBeDeleted(null);
-  }, [onSwipeToDel, taskIdBeDeleted]);
+    return () => {
+      console.log('todo Detailed screen unmounted ::: ');
+    };
+  }, [todoList, clickedDateData]);
 
   return (
     <SafeLinearAreaHOC>
-      <FlatList
-        ref={flatlistRef}
-        data={_todoList || []}
-        keyExtractor={(item, index) => item.id.toString() + index}
-        renderItem={({ item, index }) => {
-          console.log('renderItem ::: ', item);
-
-          return (
-            <TodoCardSwipeableRow
-              isLastItem={_todoList && index === _todoList.length - 1}
-              todo={item}
-              onSwipeToDel={() => {
-                setTaskIdBeDeleted(item.id);
-              }}
-              onPressToModify={() => onPressToModify(item.id)}
-            />
-          );
-        }}
-        style={{
-          flex: 1,
-        }}
-        contentContainerStyle={{}}
-      />
+      <ScrollView>
+        {_todoList.map((item, index) => (
+          <TodoCardSwipeableRow
+            key={item.id}
+            isLastItem={_todoList && index === _todoList.length - 1}
+            todo={item}
+            removeItem={() => {
+              set_TodoList((curr) =>
+                curr.filter((todo) => todo.id !== item.id)
+              );
+              onSwipeToDel(item.id);
+            }}
+            onPressToModify={() => onPressToModify(item.id)}
+          />
+        ))}
+      </ScrollView>
 
       {/* 등록 버튼 */}
       <KeyboardAvoidingView>
@@ -147,7 +147,10 @@ function TodosDetailedListScrn({
       {/* 일정 등록 모달 */}
       <TodoRegistModal
         visible={isRegModalShown}
-        closeModal={() => setIsRegModalShown(false)}
+        closeModal={() => {
+          setTaskIdModified(null);
+          setIsRegModalShown(false);
+        }}
         taskIdBeModified={taskIdBeModified}
       />
 

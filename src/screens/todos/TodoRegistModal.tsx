@@ -149,8 +149,8 @@ function TodoRegistModal({ visible, closeModal, taskIdBeModified }: IProps) {
 
   useEffect(() => {
     // 수정 보드인지 체크
-    console.log('taskIdBeModified', taskIdBeModified);
     if (taskIdBeModified) {
+      console.log('taskIdBeModified', taskIdBeModified);
       setCateSelected(todoList[taskIdBeModified].info.category);
       setTodoTitle(todoList[taskIdBeModified].info.title);
       setTodoContent(todoList[taskIdBeModified].info.todo);

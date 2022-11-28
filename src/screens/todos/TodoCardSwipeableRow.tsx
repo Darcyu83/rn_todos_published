@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import {
   Gesture,
@@ -68,6 +68,7 @@ const SubTitle = styled.Text`
   color: white;
 `;
 const CardContent = styled.Text`
+  flex: 1;
   color: #c0bcbc;
   margin-bottom: 5px;
 `;
@@ -75,21 +76,25 @@ interface IProps {
   todo: TTodo;
 
   isLastItem: boolean | null;
-  onSwipeToDel: () => void;
+  removeItem: () => void;
   onPressToModify: () => void;
 }
 
 function TodoCardSwipeableRow({
   todo,
   isLastItem,
-  onSwipeToDel,
+  removeItem,
   onPressToModify,
 }: IProps) {
+  // 아이템 초기 높이 설정 여부
+  const isInitialHeightSet = useRef(false);
+
   const translateX = useSharedValue(0);
   const startX = useSharedValue(0);
 
   const initialitemHeight = useSharedValue(0);
-  const isItemRemoved = useSharedValue(false);
+  const removableItemHeight = useSharedValue(0);
+
   // Swipe background content : delete View
   const buttonScale = useSharedValue(0);
   const arrowAnimated = useSharedValue(0);
@@ -132,17 +137,13 @@ function TodoCardSwipeableRow({
   }));
 
   const heightAnimatedStyle = useAnimatedStyle(() => {
-    if (isItemRemoved.value)
+    if (initialitemHeight.value !== 0)
       return {
-        height: withDelay(
-          300,
-          withTiming(0, { duration: 50 }, () => {
-            runOnJS(onSwipeToDel)();
-          })
+        height: withTiming(
+          initialitemHeight.value - removableItemHeight.value,
+          { easing: Easing.inOut(Easing.ease) }
         ),
       };
-    if (initialitemHeight.value)
-      return { height: withTiming(initialitemHeight.value) };
 
     return {};
   });
@@ -216,10 +217,11 @@ function TodoCardSwipeableRow({
         [180, 0, 0]
       );
 
-      console.log('snapPointX === snapPoints[0]', snapPointX, snapPoints[0]);
-
-      if (snapPointX === snapPoints[0]) isItemRemoved.value = true;
-      // if (snapPointX === snapPoints[0]) runOnJS(onSwipeToDel)();
+      // 높이 0 후 리덕스 데이터 처리
+      if (snapPointX === snapPoints[0]) {
+        removableItemHeight.value = initialitemHeight.value;
+        runOnJS(removeItem)();
+      }
     },
   });
 
@@ -229,7 +231,12 @@ function TodoCardSwipeableRow({
       Infinity,
       true
     );
-  }, [arrowAnimated]);
+
+    return () => {};
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     // <GestureDetector gesture={}>
 
@@ -253,7 +260,7 @@ function TodoCardSwipeableRow({
         {/* Swipe background Items  */}
         <TouchableOpacity
           onPress={() => {
-            isItemRemoved.value = true;
+            removableItemHeight.value = initialitemHeight.value;
           }}
           style={{
             flexDirection: 'row',
@@ -312,15 +319,11 @@ function TodoCardSwipeableRow({
             heightAnimatedStyle,
           ]}
           onLayout={(e) => {
-            console.log(
-              'onLayout ===initialitemHeight.value  ',
-              initialitemHeight.value,
-              !initialitemHeight.value
-            );
-            if (!initialitemHeight.value) {
-              console.log('onLayout === ', e.nativeEvent.layout.height);
-              // 0일때만
+            if (!isInitialHeightSet.current) {
+              // 첫 로딩일 경우 셋팅
               initialitemHeight.value = e.nativeEvent.layout.height;
+
+              isInitialHeightSet.current = true;
             }
           }}
         >

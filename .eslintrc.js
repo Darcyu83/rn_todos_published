@@ -67,6 +67,7 @@ module.exports = {
     'no-plusplus': 0,
     'global-require': 0,
     'no-param-reassign': [2, { props: false }],
+    'consistent-return': [0, { treatUndefinedAsUnspecified: true }],
   },
   settings: {
     'import/resolver': {
