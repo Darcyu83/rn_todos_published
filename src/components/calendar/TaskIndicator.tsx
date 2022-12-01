@@ -51,7 +51,7 @@ function TaskIndicator({}: IProps) {
       <CategorySection>
         {arry.map((key) => (
           <Category key={key}>
-            <Text style={{ textAlign: 'center' }}>
+            <Text style={{ textAlign: 'center', color: 'white' }}>
               {capitalizeFirstLetter(DotStyle[key].key)}
             </Text>
             <DotCircle dotColor={DotStyle[key].color} />

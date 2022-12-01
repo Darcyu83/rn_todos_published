@@ -78,6 +78,7 @@ interface IProps {
   isLastItem: boolean | null;
   removeItem: () => void;
   onPressToModify: () => void;
+  onScroll: (y: number) => void;
 }
 
 function TodoCardSwipeableRow({
@@ -85,6 +86,7 @@ function TodoCardSwipeableRow({
   isLastItem,
   removeItem,
   onPressToModify,
+  onScroll,
 }: IProps) {
   // 아이템 초기 높이 설정 여부
   const isInitialHeightSet = useRef(false);
@@ -111,10 +113,7 @@ function TodoCardSwipeableRow({
 
   const cardFlipAniamted = useSharedValue(0);
 
-  // const cardFaceOpacityAnimated = useSharedValue(1);
-
   const cardFrontFlipAniamtedStyle = useAnimatedStyle(() => ({
-    // transform: [{ rotateY: `${cardFlipAniamted.value}deg` }],
     transform: [
       {
         rotateY: `${withTiming(cardFlipAniamted.value)}deg`,
@@ -196,6 +195,8 @@ function TodoCardSwipeableRow({
         [(-SCREEN_WIDTH * 2) / 3, -SCREEN_WIDTH / 2, 0],
         [180, 0, 0]
       );
+
+      runOnJS(onScroll)(e.translationY);
     },
     onEnd: (e, ctx) => {
       let snapPointX = 0;
@@ -261,6 +262,7 @@ function TodoCardSwipeableRow({
         <TouchableOpacity
           onPress={() => {
             removableItemHeight.value = initialitemHeight.value;
+            removeItem();
           }}
           style={{
             flexDirection: 'row',

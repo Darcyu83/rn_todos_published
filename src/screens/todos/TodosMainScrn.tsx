@@ -1,23 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ScrollView, Text } from 'react-native';
+import { Keyboard, ScrollView, Text } from 'react-native';
 import { DateData } from 'react-native-calendars/src/types';
 import styled from 'styled-components/native';
-import LinearGradient from 'react-native-linear-gradient';
 import TaskIndicator from '../../components/calendar/TaskIndicator';
 import { TMarkedDatesCustomed } from '../../components/calendar/types';
 import { PlusIcon } from '../../components/icons/pngs';
 import { TStackScrnProps_Todos } from '../../navigator/types';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import {
-  OrangeTouchable,
-  SafeAreaCustomized,
-} from '../../styles/styledComponents/components';
+import { useAppSelector } from '../../redux/hooks';
+import { OrangeTouchable } from '../../styles/styledComponents/components';
 import { createScheduledDotMakredDates } from '../../utils/calendarUtils';
 import TodoRegisModal from './TodoRegistModal';
 import CalendarScheduled from '../../components/calendar/CalendarScheduled';
-import { GlobalTheme } from '../../styles/theme';
 import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
-import { todosActions } from '../../redux/todos/todosSlice';
 
 const Container = styled.View`
   flex: 1;
@@ -83,7 +77,10 @@ function TodosMainScrn(props: TStackScrnProps_Todos) {
       {/* 일정 등록 모달 */}
       <TodoRegisModal
         visible={isRegModalShown}
-        closeModal={() => setIsRegModalShown(false)}
+        closeModal={() => {
+          setIsRegModalShown(false);
+          Keyboard.dismiss();
+        }}
         taskIdBeModified={null}
       />
     </SafeLinearAreaHOC>

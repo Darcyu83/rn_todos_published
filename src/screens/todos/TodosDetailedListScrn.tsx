@@ -2,11 +2,17 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   FlatList,
+  Keyboard,
   KeyboardAvoidingView,
   ScrollView,
   Text,
   View,
 } from 'react-native';
+import Animated, {
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import { PlusIcon } from '../../components/icons/pngs';
 import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
@@ -44,7 +50,6 @@ function TodosDetailedListScrn({
   );
 
   const [_todoList, set_TodoList] = useState<TTodo[]>([]);
-  const [isRegOrUpdatedDone, setIsRegOrUpdatedDone] = useState(false);
 
   // 할일 등록 모달 토글
   const [isRegModalShown, setIsRegModalShown] = useState(false);
@@ -88,38 +93,27 @@ function TodosDetailedListScrn({
   }, [navigation]);
 
   useEffect(() => {
-    // 새 일정 등록 또는 수정 후 메인 화면으로
-    if (isRegOrUpdatedDone) moveToMainScrn();
-  }, [isRegOrUpdatedDone, moveToMainScrn]);
-
-  const isInitialLoadingDone = useRef<boolean>(false);
-
-  useEffect(() => {
-    // 초기 데이터 로딩
-    // if (isInitialLoadingDone.current) return;
-
     const reduxTodoList = createDailyDetailedTaskList(
       todoList,
       clickedDateData
     );
 
     set_TodoList(reduxTodoList);
-
-    isInitialLoadingDone.current = true;
-
-    return () => {
-      console.log('todo Detailed screen unmounted ::: ');
-    };
   }, [todoList, clickedDateData]);
+
+  const scrollViewRef = useRef<ScrollView | null>(null);
 
   return (
     <SafeLinearAreaHOC>
-      <ScrollView>
+      <ScrollView ref={scrollViewRef} style={{ flex: 1, marginBottom: 5 }}>
         {_todoList.map((item, index) => (
           <TodoCardSwipeableRow
             key={item.id}
             isLastItem={_todoList && index === _todoList.length - 1}
             todo={item}
+            onScroll={(y: number) => {
+              scrollViewRef.current?.scrollTo({ x: 0, y: -y, animated: true });
+            }}
             removeItem={() => {
               set_TodoList((curr) =>
                 curr.filter((todo) => todo.id !== item.id)
@@ -150,6 +144,7 @@ function TodosDetailedListScrn({
         closeModal={() => {
           setTaskIdModified(null);
           setIsRegModalShown(false);
+          Keyboard.dismiss();
         }}
         taskIdBeModified={taskIdBeModified}
       />
