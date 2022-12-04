@@ -82,14 +82,26 @@ function AuthProvider({ children }: IProps) {
       await auth().signOut();
       console.log('Logout success :: ');
     } catch (error) {
-      console.log('Sing out Failed :: ', error);
+      console.log('Logout Failed :: ', error);
+    }
+  }, []);
+
+  const sendMailToResetPwd = useCallback(async (email: string) => {
+    try {
+      await auth().sendPasswordResetEmail(email);
+      Alert.alert('Please check your email');
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
     }
   }, []);
 
   const authContextValues = useMemo(
-    () => ({ user, login, register, logout }),
-    [user, login, register, logout]
+    () => ({ user, login, register, logout, sendMailToResetPwd }),
+    [user, login, register, logout, sendMailToResetPwd]
   );
+
   return (
     <AuthContext.Provider value={authContextValues}>
       {children}

@@ -6,4 +6,5 @@ export type AuthContextState = {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  sendMailToResetPwd: (email: string) => Promise<void>;
 };

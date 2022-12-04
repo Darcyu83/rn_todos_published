@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Alert,
   Button,
   ImageBackground,
   KeyboardAvoidingView,
@@ -13,6 +14,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TRootNavParamsList } from '../../../navigator/types';
 import { AppStyles } from '../../../styles/appStyles';
 import InlineTextButton from '../../../components/bottons/InlineTextButton';
+import useAuthContext from '../../../context/auth/hooks/useAuthContext';
 
 interface IProps {
   navigation: NativeStackNavigationProp<TRootNavParamsList>;
@@ -21,6 +23,12 @@ interface IProps {
 function UserResetPwScrn({ navigation }: IProps) {
   const [email, setEmail] = useState('');
   const [validationMsg, setValidationMsg] = useState('');
+
+  const { sendMailToResetPwd } = useAuthContext();
+
+  const onClickToReset = async (_email: string) => {
+    await sendMailToResetPwd(_email);
+  };
   return (
     <ImageBackground
       style={[AppStyles.container]}
@@ -32,7 +40,7 @@ function UserResetPwScrn({ navigation }: IProps) {
       >
         {/* title */}
         <Text style={[AppStyles.lightText, AppStyles.header]}>
-          Rest Passwrord
+          Reset Passwrord
         </Text>
 
         {/* info validation message  */}
@@ -62,7 +70,11 @@ function UserResetPwScrn({ navigation }: IProps) {
         </View>
 
         {/* Reset 버튼 */}
-        <Button title="Reset Password" color="#ffd966" />
+        <Button
+          onPress={() => onClickToReset(email)}
+          title="Reset Password"
+          color="#ffd966"
+        />
       </KeyboardAvoidingView>
     </ImageBackground>
   );
