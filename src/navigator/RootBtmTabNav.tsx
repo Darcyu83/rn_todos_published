@@ -17,11 +17,11 @@ import {
 import BedTimeStackNav from './branches/bedTime/BedTimeStackNav';
 import TodosStackNav from './branches/todos/TodosStackNav';
 import UserStackNav from './branches/user/UserStackNav';
-import { TRootNavParamsList } from './types';
+import { TRootNavParamList } from './types';
 
 interface IProps {}
 
-const Tab = createBottomTabNavigator<TRootNavParamsList>();
+const Tab = createBottomTabNavigator<TRootNavParamList>();
 
 function RootBtmTabNav({}: IProps) {
   const userToken = useAppSelector((state) => state.user.info.userToken);

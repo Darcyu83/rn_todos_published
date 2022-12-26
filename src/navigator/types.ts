@@ -9,14 +9,21 @@ type TNavScrnParams_Todos = NavigatorScreenParams<TTodosNavParams>;
 type TNavScrnParams_User = NavigatorScreenParams<TUserNavParams>;
 type TNavScrnParams_Bedtime = NavigatorScreenParams<TBedTimeNavParams>;
 
-export type TRootNavParamsList = {
+export type TRootNavParamList = {
   todos: TNavScrnParams_Todos;
-
   auth: TNavScrnParams_User;
   user: TNavScrnParams_User;
   bedtime: TNavScrnParams_Bedtime;
 };
 
-export type TTabScrnProps_Root = BottomTabScreenProps<TRootNavParamsList>;
+export type TTabScrnProps_Root = BottomTabScreenProps<TRootNavParamList>;
 export type TStackScrnProps_Todos = NativeStackScreenProps<TTodosNavParams>;
 export type TStackScrnProps_User = NativeStackScreenProps<TUserNavParams>;
+
+// =======================================================================
+
+// 드로우어 네비게이션
+export type TDrawerNavParamList = {
+  home: TNavScrnParams_Todos;
+  any: undefined;
+};

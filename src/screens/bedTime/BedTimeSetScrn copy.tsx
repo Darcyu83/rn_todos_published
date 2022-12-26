@@ -46,6 +46,7 @@ function BedTimeSetScrn({
     anim.start();
 
     return () => anim.stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // const pieSlices = pieShape().value((d) => valueAccessor(d))(data);

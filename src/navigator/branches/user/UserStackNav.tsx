@@ -28,14 +28,7 @@ function UserStackNav({}: IProps) {
           <UserStack.Screen
             name="UserLogOutScrn"
             component={UserLogOutScrn}
-            options={(route) => {
-              console.log(
-                '%c route ============',
-                'background-color: red',
-                route
-              );
-              return { headerShown: true };
-            }}
+            options={(route) => ({ headerShown: true })}
           />
         </>
       ) : (

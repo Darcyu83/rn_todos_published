@@ -18,7 +18,6 @@ function InlineTextButton({ title, onPress }: IProps) {
             pressed
               ? AppStyles.pressedInlineTextButton
               : AppStyles.inlineTextButton,
-            ,
           ]}
         >
           {title}

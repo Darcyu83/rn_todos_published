@@ -54,6 +54,8 @@ module.exports = {
     '@typescript-eslint/no-empty-interface': 'warn',
     '@typescript-eslint/no-unused-vars': 'warn',
     '@typescript-eslint/no-unused-expressions': 'warn',
+    '@typescript-eslint/no-use-before-define': 'off',
+
     'no-unused-expressions': 'off',
     'arrow-parens': 0,
     'import/no-cycle': 0,
