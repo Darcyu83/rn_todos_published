@@ -2,6 +2,6 @@ export type TUserNavParams = {
   UserProfileScrn: undefined;
   UserSignInScrn: undefined;
   UserSignUpScrn: undefined;
-  UserLogOutScrn: undefined;
+  UserLogOutScrn: undefined | { userNm: string };
   UserResetPwScrn: undefined;
 };

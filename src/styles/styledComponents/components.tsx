@@ -12,6 +12,7 @@ export const ScrnTitle = styled.Text`
   font-size: 24px;
   margin: 5px 0px;
 `;
+
 export const SectionTitle = styled.Text`
   font-weight: bold;
   font-size: 18px;

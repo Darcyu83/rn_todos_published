@@ -24,6 +24,7 @@ export type TStackScrnProps_User = NativeStackScreenProps<TUserNavParams>;
 
 // 드로우어 네비게이션
 export type TDrawerNavParamList = {
-  home: TNavScrnParams_Todos;
-  any: undefined;
+  todoList: TNavScrnParams_Todos;
+  myProfile: TNavScrnParams_User;
+  signOut: undefined;
 };

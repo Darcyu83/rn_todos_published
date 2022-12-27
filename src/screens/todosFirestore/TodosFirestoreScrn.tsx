@@ -38,7 +38,6 @@ import {
 } from '../../utils/calendarUtils';
 import { returnLoadingScrn } from '../../components/loader/Loading';
 import { TMarkedDatesCustomed } from '../../components/calendar/types';
-import { TRootNavParamsList } from '../../navigator/types';
 import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
 import SplashScrn from '../../assets/splash/WaveSVG';
 
@@ -88,63 +87,67 @@ function TodosFirestoreScrn({}) {
   useEffect(() => {
     if (!userId) return;
 
-    // users collection listener
-    firestore()
-      .collection('users')
-      .onSnapshot((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
+    try {
+      // users collection listener
+      firestore()
+        .collection('users')
+        .onSnapshot((querySnapshot) => {
+          querySnapshot.forEach((documentSnapshot) => {
+            console.log(
+              '%c  ./userEmail/ collection documentSnapshot',
+              'background-color: dodgerblue',
+              documentSnapshot.data()
+            );
+          });
+        });
+
+      // users/userEmail document listener
+      firestore()
+        .collection('users')
+        .doc(userId)
+        .onSnapshot((documentSnapshot) => {
           console.log(
-            '%c  ./userEmail/ collection documentSnapshot',
-            'background-color: dodgerblue',
+            '%c users/userEmail documentSnapshot',
+            'background-color: black; color: white',
             documentSnapshot.data()
           );
         });
-      });
 
-    // users/userEmail document listener
-    firestore()
-      .collection('users')
-      .doc(userId)
-      .onSnapshot((documentSnapshot) => {
-        console.log(
-          '%c users/userEmail documentSnapshot',
-          'background-color: black; color: white',
-          documentSnapshot.data()
-        );
-      });
+      // users/userEmail/todoList collection listener
+      firestore()
+        .collection('users')
+        .doc(userId)
+        .collection('todoList')
+        .onSnapshot((querySnapshot) => {
+          let todoListObj: TTodoList = {};
+          querySnapshot.forEach((documentSnapshot) => {
+            console.log(
+              '%c users/userEmail/todoList collection documentSnapshot',
+              'background-color: red',
+              documentSnapshot.data()
+            );
 
-    // users/userEmail/todoList collection listener
-    firestore()
-      .collection('users')
-      .doc(userId)
-      .collection('todoList')
-      .onSnapshot((querySnapshot) => {
-        let todoListObj: TTodoList = {};
-        querySnapshot.forEach((documentSnapshot) => {
-          console.log(
-            '%c users/userEmail/todoList collection documentSnapshot',
-            'background-color: red',
-            documentSnapshot.data()
-          );
+            const info: TTodo = documentSnapshot.data() as TTodo;
+            const period = crateDatesStringArr(
+              info.startDtData.dateString,
+              info.endDtData.dateString
+            );
 
-          const info: TTodo = documentSnapshot.data() as TTodo;
-          const period = crateDatesStringArr(
-            info.startDtData.dateString,
-            info.endDtData.dateString
-          );
+            todoListObj = {
+              ...todoListObj,
+              [Number(documentSnapshot.id)]: {
+                info,
+                period,
+              },
+            };
+          });
 
-          todoListObj = {
-            ...todoListObj,
-            [Number(documentSnapshot.id)]: {
-              info,
-              period,
-            },
-          };
+          const _markedDates = createScheduledDotMakredDates(todoListObj);
+          setMarkedDates(_markedDates);
         });
-
-        const _markedDates = createScheduledDotMakredDates(todoListObj);
-        setMarkedDates(_markedDates);
-      });
+    } catch (error) {
+      if (error instanceof Error) console.log(error.message);
+    }
   }, [userId]);
 
   returnLoadingScrn(isProcessing);
@@ -193,7 +196,7 @@ function TodosFirestoreScrn({}) {
         closeModal={() => {
           setIsRegModalShown(false);
         }}
-        taskModified={null}
+        taskIdBeModified={null}
       />
     </SafeLinearAreaHOC>
   );

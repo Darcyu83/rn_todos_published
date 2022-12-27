@@ -1,12 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { View } from 'react-native';
+import { Button, View } from 'react-native';
 
 import SafeLinearAreaHOC from '../../components/layout/SafeLinearAreaHOC';
 import { TUserNavParams } from '../../navigator/branches/user/types';
 import SplashScrn from '../../assets/splash/SplashScrn';
 import InlineTextButton from '../../components/bottons/InlineTextButton';
 import PangestureTest from '../../components/gesturehanlder/PangestureTest';
+import { ScrnTitle } from '../../styles/styledComponents/components';
 
 interface IProps {}
 
@@ -23,14 +24,14 @@ function UserProfileScrn({
           backgroundColor: '#ffd966',
         }}
       >
-        <InlineTextButton
-          title="Go to logOut"
-          onPress={() => {
-            navigation.navigate('UserLogOutScrn');
-          }}
-        />
+        <ScrnTitle>User Profile Screen</ScrnTitle>
       </View>
-
+      <Button
+        title="Go to logOut"
+        onPress={() => {
+          navigation.navigate('UserLogOutScrn');
+        }}
+      />
       <PangestureTest />
     </SafeLinearAreaHOC>
   );

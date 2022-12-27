@@ -3,13 +3,25 @@ import {
   DrawerContentScrollView,
   DrawerItem,
   DrawerItemList,
+  getDrawerStatusFromState,
   useDrawerProgress,
+  useDrawerStatus,
 } from '@react-navigation/drawer';
-import { DrawerContentComponentProps } from '@react-navigation/drawer/lib/typescript/src/types';
+import {
+  DrawerContentComponentProps,
+  DrawerNavigationProp,
+  DrawerScreenProps,
+} from '@react-navigation/drawer/lib/typescript/src/types';
 import { getHeaderTitle } from '@react-navigation/elements';
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { Pressable, Text, useWindowDimensions, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Pressable,
+  SafeAreaView,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import Animated, {
   Adaptable,
   Extrapolate,
@@ -20,16 +32,18 @@ import Animated, {
 } from 'react-native-reanimated';
 import TopHeaderTitle from '../components/header/TopHeaderTitle';
 import { useAppSelector } from '../redux/hooks';
+import UserLogOutScrn from '../screens/user/auth/UserLogOutScrn';
+import UserProfileScrn from '../screens/user/UserProfileScrn';
 import TodosStackNav from './branches/todos/TodosStackNav';
 import UserStackNav from './branches/user/UserStackNav';
 import RootBtmTabNav from './RootBtmTabNav';
 import { TDrawerNavParamList } from './types';
 
-interface IProps {}
-
+type TDrawerNavigation = DrawerNavigationProp<TDrawerNavParamList>;
+type TDrawerScreenProps = DrawerScreenProps<TDrawerNavParamList>;
 const Drawer = createDrawerNavigator<TDrawerNavParamList>();
 
-function RootDrawerNav({}) {
+function RootDrawerNav() {
   const dimensions = useWindowDimensions();
 
   return (
@@ -37,12 +51,14 @@ function RootDrawerNav({}) {
       //   defaultStatus="open"
       //  드로우 패널 아이템 커스텀
       //   drawerContent={(props) => <CustomDrawerContent {...props} />}
-      screenOptions={({ navigation, route }) => ({
+      screenOptions={({}) => ({
         headerTransparent: true,
         headerShown: false,
+
         drawerType: 'front',
+
         drawerStatusBarAnimation: 'fade',
-        // overlayColor: 'transparent',
+        overlayColor: 'transparent',
         drawerStyle: {
           backgroundColor: '#c6cbef',
           //   width: dimensions.width * 0.6,
@@ -61,23 +77,26 @@ function RootDrawerNav({}) {
         // drawerPosition: 'right',
       })}
     >
-      <Drawer.Screen
-        name="home"
-        // options={{ headerTitle: 'YUds Drawer Nav Test : TODOS' }}
-      >
+      <Drawer.Screen name="todoList">
         {(props) => (
           <FloatingScrn>
             <RootBtmTabNav />
           </FloatingScrn>
         )}
       </Drawer.Screen>
-      <Drawer.Screen
-        name="any"
-        // options={{ headerTitle: 'YUds Drawer Nav Test : TODOS' }}
-      >
+
+      <Drawer.Screen name="myProfile">
         {(props) => (
           <FloatingScrn>
-            <Text> TEXT TEST </Text>
+            <UserProfileScrn {...props} />
+          </FloatingScrn>
+        )}
+      </Drawer.Screen>
+
+      <Drawer.Screen name="signOut">
+        {(props) => (
+          <FloatingScrn>
+            <UserLogOutScrn {...props} />
           </FloatingScrn>
         )}
       </Drawer.Screen>
@@ -86,6 +105,35 @@ function RootDrawerNav({}) {
 }
 
 export default RootDrawerNav;
+
+export function TestNavBar({ navigation }: { navigation: TDrawerNavigation }) {
+  return (
+    <SafeAreaView>
+      <Text
+        onPress={() =>
+          navigation.navigate('todoList', { screen: 'TodosMainScrn' })
+        }
+      >
+        Todo Home
+      </Text>
+
+      <Text
+        onPress={() => {
+          navigation.navigate('myProfile', { screen: 'UserProfileScrn' });
+        }}
+      >
+        My Profile
+      </Text>
+      <Text
+        onPress={() => {
+          navigation.navigate('signOut');
+        }}
+      >
+        User sign out
+      </Text>
+    </SafeAreaView>
+  );
+}
 
 // ========================================================================
 
